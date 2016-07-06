@@ -30,6 +30,7 @@ Canvas::Canvas() : GUIElement(0){
 	this->height = ofGetHeight() - Globals::Theme.button.height * 2;
 
 	this->initGrid();
+	
 }
 
 //---------------------------VIRTUAL--------------------------//
