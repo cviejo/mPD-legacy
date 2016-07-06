@@ -1,4 +1,7 @@
 mPD
 ===
 
-Is a GUI for pure data using openFrameworks and ofxPd. Code will be submitted here at some point, for now only used for feature requests, enhancements and bug tracking.
+Description
+-----------
+
+Is a [Pure Data](http://pure-data.info) GUI for mobile devices using [openFrameworks](http://www.openframeworks.cc).
