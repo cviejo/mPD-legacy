@@ -6,8 +6,4 @@ string           Globals::UserFolder = ofFilePath::getCurrentWorkingDirectory();
 float            Globals::DPI        = 350;
 mPDTheme         Globals::Theme;
 mPDSettings      Globals::Settings;
-#ifndef WIN32
 ofxPd            Globals::Pd;
-#else
-PdMock           Globals::Pd;
-#endif
