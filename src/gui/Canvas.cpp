@@ -72,6 +72,9 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 		}
 		else if (aAppEvent.message == "settings-button"){
 		}
+		else if (aAppEvent.message == "trash-button"){
+			Globals::Pd.canvasDelete();
+		}
 	}
 	else if(aAppEvent.type == AppEvent::TYPE_CREATE_OBJECT){
 
