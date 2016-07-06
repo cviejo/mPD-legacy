@@ -47,10 +47,10 @@ void Canvas::draw(){
 
 	ofTranslate(_draggedLoc + _offsetLoc);
 
-	this->drawRegion();
 	this->drawConnections(canvas);
 	this->drawCanvas(canvas);
 	this->drawConnecting();
+	this->drawRegion();
 
 	ofPopMatrix();
 }

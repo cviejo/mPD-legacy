@@ -18,9 +18,9 @@ class Canvas : public GUIElement, public PdReceiver {
 		Canvas();
 
 		virtual void draw();
-		virtual void onPressed(int aX, int aY, int aId);
-		virtual void onDragged(int aX, int aY, int aId);
-		virtual void onReleased(int aX, int aY, int aId);
+		virtual void onPressed    (int aX, int aY, int aId);
+		virtual void onDragged    (int aX, int aY, int aId);
+		virtual void onReleased   (int aX, int aY, int aId);
 		virtual void onDoubleClick(int aX, int aY);
 		virtual void onAppEvent(AppEvent& aAppEvent);
 		virtual void onPressCancel();
