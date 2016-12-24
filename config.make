@@ -106,6 +106,7 @@
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
 # PROJECT_CFLAGS = 
+PROJECT_CFLAGS = -DHAVE_UNISTD_H -DUSEAPI_DUMMY -DPD -DLIBPD_USE_STD_MUTEX
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
