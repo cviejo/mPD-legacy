@@ -23,8 +23,8 @@ class ofApp : public ofBaseApp {
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
 		void mousePressed(int x, int y, int button);
+		void mouseDragged(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void mouseEntered(int x, int y);
 		void mouseExited(int x, int y);
@@ -51,7 +51,15 @@ class ofApp : public ofBaseApp {
 		void cancelPressed();
 
 #ifdef TARGET_ANDROID
+		bool onScaleBegin(ofxAndroidScaleEventArgs& aArgs);
+		bool onScale(ofxAndroidScaleEventArgs& aArgs);
+		bool onScaleEnd(ofxAndroidScaleEventArgs& aArgs);
 		void swipe(ofxAndroidSwipeDir swipeDir, int id);
+#else
+		// void mouseDragged (int aX, int aY, int aButton) { touchMoved(aX, aY, aButton); }
+		// void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
+		// void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
+		void mouseScrolled(ofMouseEventArgs & mouse);
 #endif
 
 	private:

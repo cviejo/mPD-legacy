@@ -193,5 +193,43 @@ void ofApp::cancelPressed(){ }
 #ifdef TARGET_ANDROID
 //--------------------------------------------------------------
 void ofApp::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
+
+
+//--------------------------------------------------------------
+bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
+
+	ofLogVerbose("[begin] log.");
+
+	// Globals::Pd.setCanvasMode(CANVAS_MODE_NONE);
+
+	// _canvas->scaling = true;
+
+	return true;
+}
+
+
+//--------------------------------------------------------------
+bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
+
+	// Globals::Settings.scale = Globals::Settings.scale * aArgs.getScaleFactor();
+
+	// ofLog(OF_LOG_VERBOSE, "[temp] focus:" + ofToString(aArgs.getFocusX()) + " " + ofToString(aArgs.getFocusY()));
+	// ofLog(OF_LOG_VERBOSE, "[temp] scale:" + ofToString(aArgs.getScaleFactor()));
+
+	// _canvas->setFocus(aArgs.getFocusX(), aArgs.getFocusY());
+
+	return true;
+}
+
+
+//--------------------------------------------------------------
+bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
+
+	// ofLog(OF_LOG_VERBOSE, "[end] log.");
+
+	// _canvas->scaling = false;
+
+	return true;
+}
 #endif
 
