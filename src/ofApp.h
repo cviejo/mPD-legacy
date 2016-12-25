@@ -1,10 +1,21 @@
 #pragma once
 
 #include "ofMain.h"
+#ifdef TARGET_ANDROID
+#include "ofxAndroid.h"
+#endif
 
-class ofApp : public ofBaseApp{
+
+#ifdef TARGET_ANDROID
+class ofApp : public ofxAndroidApp {
+#else
+class ofApp : public ofBaseApp {
+#endif
 
 	public:
+
+		vector <string> gui_items;
+
 		void setup();
 		void update();
 		void draw();
@@ -21,4 +32,30 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+		void audioReceived (float * aInput,  int aBufferSize, int aChannelCount);
+		void audioRequested(float * aOutput, int aBufferSize, int aChannelCount);
+
+		void touchDown(int x, int y, int id);
+		void touchMoved(int x, int y, int id);
+		void touchUp(int x, int y, int id);
+		void touchDoubleTap(int x, int y, int id);
+		void touchCancelled(int x, int y, int id);
+
+		void pause();
+		void stop();
+		void resume();
+		void reloadTextures();
+
+		bool backPressed();
+		void okPressed();
+		void cancelPressed();
+
+#ifdef TARGET_ANDROID
+		void swipe(ofxAndroidSwipeDir swipeDir, int id);
+#endif
+
+	private:
+
+		void initAudio();
 };
+
