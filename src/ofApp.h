@@ -17,7 +17,6 @@ class ofApp : public ofBaseApp {
 		vector <string> gui_items;
 
 		void setup();
-		void update();
 		void draw();
 
 		void keyPressed(int key);
@@ -65,5 +64,6 @@ class ofApp : public ofBaseApp {
 	private:
 
 		void initAudio();
+		void initSearchPaths();
 };
 

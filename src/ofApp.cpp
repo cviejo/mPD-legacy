@@ -36,7 +36,19 @@ void ofApp::initAudio(){
 
 
 //--------------------------------------------------------------
-void ofApp::update(){ }
+void initSearchPaths(){
+
+	ofDirectory extrasFolder("extra");
+
+	extrasFolder.listDir();
+
+	for(int i = 0; i < extrasFolder.size(); i++){
+
+		if (extrasFolder.getFile(i).isDirectory()){
+			PdGui::instance().addToSearchPath(extrasFolder.getPath(i));
+		}
+	}
+}
 
 
 //--------------------------------------------------------------
@@ -72,11 +84,23 @@ void ofApp::draw(){
 			ofDrawRectangle(cnv->region);
 		}
 	}
+
+	ofDisableAlphaBlending();
+	ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);  
 }
 
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){ }
+void ofApp::keyPressed(int key){
+
+	if (key == 'a'){
+		PdGui::instance().canvasUndo();
+	}
+	else if (key == 'b'){
+	}
+	else if (key == 'c'){
+	}
+}
 
 
 //--------------------------------------------------------------
