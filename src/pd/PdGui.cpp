@@ -33,13 +33,7 @@ extern "C" {
 
 
 //--------------------------------------------------------------
-void gui_msg_hook(char* msg){
-
-	// ofLogVerbose("gui msg") << msg;
-
-	PdGui::instance().guiMessage(msg);
-
-}
+void gui_msg_hook(char* msg){ PdGui::instance().guiMessage(msg); }
 
 
 //----------------------------------------------------------
@@ -139,7 +133,7 @@ void PdGui::clear() {
 //----------------------------------------------------------
 void PdGui::startAudio() {
 
-	this->_computing = true;
+	_computing = true;
 
 	PdBase::computeAudio(true);
 }
@@ -148,7 +142,7 @@ void PdGui::startAudio() {
 //----------------------------------------------------------
 void PdGui::stopAudio() {
 
-	this->_computing = false;
+	_computing = false;
 
 	PdBase::computeAudio(false);
 }
@@ -339,6 +333,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_draw_io"){
+		// "x102162000",".x102162000.t101252050",".x102162000.t101252050",78,337,85,340,78,326,"o",0,0,0
 	}
 	else if (guiMsg.command == "gui_canvas_line"){
 
@@ -426,6 +421,9 @@ void PdGui::guiMessage(string aMsg){
 		if (canvas != NULL){
 			canvas->mode = PdCanvas::MODE_NONE;
 		}
+	}
+	else if (guiMsg.command == "gui_iemgui_label_new"){
+		// "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
 	}
 	else {
 		ofLogVerbose("pd") << aMsg;

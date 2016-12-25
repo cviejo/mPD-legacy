@@ -15,10 +15,7 @@ class PdConnection
 
 		string id;
 		bool   signal;
-		int    x1;
-		int    y1;
-		int    x2;
-		int    y2;
+		int    x1, y1, x2, y2;
 };
 
 
@@ -41,6 +38,7 @@ class PdNode : public ofRectangle
 		string       patchId;
 		vector<bool> inlets;
 		vector<bool> outlets;
+		string       text;
 
 		PdNode(string aId){
 			this->id = aId;
@@ -80,6 +78,12 @@ class PdNode : public ofRectangle
 			// this->object    = aObject;
 			// this->parent    = aParent;
 		// }
+};
+
+
+//--------------------------------------------------------------
+class PdIemGui : public PdNode
+{
 };
 
 

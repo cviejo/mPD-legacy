@@ -178,9 +178,7 @@ void ofApp::reloadTextures(){ }
 
 
 //--------------------------------------------------------------
-bool ofApp::backPressed(){
-	return false;
-}
+bool ofApp::backPressed(){ return false; }
 
 
 //--------------------------------------------------------------
