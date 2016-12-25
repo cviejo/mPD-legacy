@@ -20,9 +20,9 @@ extern "C" {
 	void canvas_mouseup   (t_canvas *x, t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich);
 	void canvas_editmode  (t_canvas *x, t_floatarg state);
 	void canvas_doclear   (t_canvas *x);
-	// void canvas_copy      (t_canvas *x);
-	// void canvas_paste     (t_canvas *x);
-	// void canvas_undo      (t_canvas *x);
+	void canvas_copy      (t_canvas *x);
+	void canvas_paste     (t_canvas *x);
+	void canvas_undo_undo (t_canvas *x);
 	void canvas_duplicate (t_canvas *x);
 	void canvas_cut       (t_canvas *x);
 	void canvas_menusave  (t_canvas *x);
@@ -246,21 +246,15 @@ void PdGui::canvasDelete(){ canvas_doclear(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasUndo(){
-	// canvas_undo(pd_getcanvaslist());
-}
+void PdGui::canvasUndo(){ canvas_undo_undo(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasCopy(){
-	// canvas_copy(pd_getcanvaslist());
-}
+void PdGui::canvasCopy(){ canvas_copy(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasPaste(){
-	// canvas_paste(pd_getcanvaslist());
-}
+void PdGui::canvasPaste(){ canvas_paste(pd_getcanvaslist()); }
 
 // move to some utils class / module
 //--------------------------------------------------------------

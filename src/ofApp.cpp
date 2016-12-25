@@ -196,7 +196,7 @@ void ofApp::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
 
 
 //--------------------------------------------------------------
-bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
+bool ofApp::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
 	ofLogVerbose("[begin] log.");
 
@@ -209,7 +209,7 @@ bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
 
 //--------------------------------------------------------------
-bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
+bool ofApp::onScale(ofxAndroidScaleEventArgs& aArgs) {
 
 	// Globals::Settings.scale = Globals::Settings.scale * aArgs.getScaleFactor();
 
@@ -223,7 +223,7 @@ bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
 
 
 //--------------------------------------------------------------
-bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
+bool ofApp::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 	// ofLog(OF_LOG_VERBOSE, "[end] log.");
 
@@ -231,5 +231,29 @@ bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 	return true;
 }
-#endif
+#else
 
+//--------------------------------------------------------------
+void ofApp::mouseScrolled(ofMouseEventArgs& mouse){
+
+	ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
+	ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
+
+	// Globals::Pd.setCanvasMode(CANVAS_MODE_NONE);
+
+	// _canvas->scaling = true;
+
+	// Globals::Settings.scale = Globals::Settings.scale + (mouse.scrollY * 0.1f);
+
+	// _canvas->setFocus(mouse.x, mouse.y);
+
+	// _canvas->scaling = false;
+
+	// ofLog(OF_LOG_VERBOSE, "[temp] focus:" + ofToString(aArgs.getFocusX()) + " " + ofToString(aArgs.getFocusY()));
+	// ofLog(OF_LOG_VERBOSE, "[temp] scale:" + ofToString(aArgs.getScaleFactor()));
+
+	// _canvas->setFocus(aArgs.getFocusX(), aArgs.getFocusY());
+
+	// _canvas->scaling = false;
+}
+#endif

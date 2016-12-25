@@ -36,7 +36,7 @@ void glist_setlastxy(t_glist *gl, int xval, int yval);
 static void glist_donewloadbangs(t_glist *x);
 static t_binbuf *canvas_docopy(t_canvas *x);
 static void canvas_dopaste(t_canvas *x, t_binbuf *b);
-static void canvas_paste(t_canvas *x);
+void canvas_paste(t_canvas *x);
 static void canvas_clearline(t_canvas *x);
 static t_binbuf *copy_binbuf;
 static int clipboard_istext = 0;
@@ -5934,7 +5934,7 @@ void glob_clipboard_text(t_pd *dummy, float f)
     clipboard_istext = (int)f;
 }
 
-static void canvas_copy(t_canvas *x)
+void canvas_copy(t_canvas *x)
 {
     if (!x->gl_editor || !x->gl_editor->e_selection)
         return;
@@ -6369,7 +6369,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     //fprintf(stderr,"end dopaste\n");
 }
 
-static void canvas_paste(t_canvas *x)
+void canvas_paste(t_canvas *x)
 {
     if (!x->gl_editor)
         return;

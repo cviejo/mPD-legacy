@@ -14,11 +14,11 @@ class PdConnection
 	public:
 
 		string id;
-		bool signal;
-		int  x1;
-		int  y1;
-		int  x2;
-		int  y2;
+		bool   signal;
+		int    x1;
+		int    y1;
+		int    x2;
+		int    y2;
 };
 
 
@@ -35,10 +35,12 @@ class PdNode : public ofRectangle
 			TYPE_INVALID,
 		};
 
-		int    backgroundColor = 255;
-		bool   selected        = false;
-		string id;
-		string patchId;
+		int          backgroundColor = 255;
+		bool         selected        = false;
+		string       id;
+		string       patchId;
+		vector<bool> inlets;
+		vector<bool> outlets;
 
 		PdNode(string aId){
 			this->id = aId;
@@ -64,8 +66,6 @@ class PdNode : public ofRectangle
 		// string         label            = "empty";
 		// ofPoint        labelLoc;
 		// int            labelFontSize;
-		// vector<bool>   inlets;
-		// vector<bool>   outlets;
 		// t_gobj*        object;
 		// t_canvas*      parent;
 
