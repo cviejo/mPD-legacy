@@ -12,6 +12,7 @@ void ofApp::setup(){
 	ofSetFrameRate(21);
 
 	this->initAudio();
+	this->initSearchPaths();
 }
 
 
@@ -36,7 +37,7 @@ void ofApp::initAudio(){
 
 
 //--------------------------------------------------------------
-void initSearchPaths(){
+void ofApp::initSearchPaths(){
 
 	ofDirectory extrasFolder("extra");
 
@@ -120,24 +121,6 @@ void ofApp::mouseMoved(int x, int y ){ }
 
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-	PdGui::instance().canvasDragged(x/2, y/2);
-}
-
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-	PdGui::instance().canvasPressed(x/2, y/2);
-}
-
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-	PdGui::instance().canvasReleased(x/2, y/2);
-}
-
-
-//--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){ }
 
 
@@ -174,15 +157,21 @@ void ofApp::audioRequested(float * output, int bufferSize, int nChannels) {
 
 
 //--------------------------------------------------------------
-void ofApp::touchDown(int x, int y, int id){ }
+void ofApp::touchDown(int x, int y, int id){
+	PdGui::instance().canvasPressed(x/2, y/2);
+}
 
 
 //--------------------------------------------------------------
-void ofApp::touchMoved(int x, int y, int id){ }
+void ofApp::touchMoved(int x, int y, int id){
+	PdGui::instance().canvasDragged(x/2, y/2);
+}
 
 
 //--------------------------------------------------------------
-void ofApp::touchUp(int x, int y, int id){ }
+void ofApp::touchUp(int x, int y, int id){
+	PdGui::instance().canvasReleased(x/2, y/2);
+}
 
 
 //--------------------------------------------------------------

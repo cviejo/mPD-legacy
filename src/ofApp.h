@@ -55,9 +55,9 @@ class ofApp : public ofBaseApp {
 		bool onScaleEnd(ofxAndroidScaleEventArgs& aArgs);
 		void swipe(ofxAndroidSwipeDir swipeDir, int id);
 #else
-		// void mouseDragged (int aX, int aY, int aButton) { touchMoved(aX, aY, aButton); }
-		// void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
-		// void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
+		void mouseDragged (int aX, int aY, int aButton) { touchMoved(aX, aY, aButton); }
+		void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
+		void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
 		void mouseScrolled(ofMouseEventArgs & mouse);
 #endif
 
