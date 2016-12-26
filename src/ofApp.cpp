@@ -6,13 +6,14 @@
 void ofApp::setup(){
 
 	// ofSetBackgroundAuto(false);
-	ofBackground(124);
-	ofSetColor(255,255,255);
+	// ofBackground(0);
+	ofBackground(255);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
 
 	this->initAudio();
 	this->initSearchPaths();
+	this->initEventListeners();
 }
 
 
@@ -53,6 +54,19 @@ void ofApp::initSearchPaths(){
 
 
 //--------------------------------------------------------------
+void ofApp::initEventListeners(){
+
+#ifdef TARGET_ANDROID
+	ofAddListener(ofxAndroidEvents().scaleBegin, this, &App::onScaleBegin);
+	ofAddListener(ofxAndroidEvents().scale,      this, &App::onScale);
+	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &App::onScaleEnd);
+#else
+	ofAddListener(ofEvents().mouseScrolled,      this, &App::mouseScrolled);
+#endif
+}
+
+
+//--------------------------------------------------------------
 void ofApp::draw(){
 
 	ofScale(2, 2);
@@ -61,9 +75,9 @@ void ofApp::draw(){
 
 	ofSetColor(255);
 
-	for (auto cnv : canvases){
+	for (auto& canvas : canvases){
 
-		for (auto node : cnv->nodes){
+		for (auto node : canvas->nodes){
 			ofSetColor(0);
 			// ofDrawRectangle(node->x, node->y, node->width, node->height);
 			ofDrawRectangle(*node);
@@ -85,14 +99,14 @@ void ofApp::draw(){
 			}
 		}
 
-		for (auto node : cnv->connections){
+		for (auto node : canvas->connections){
 			ofSetColor(0);
 			ofDrawLine(node->x1, node->y1, node->x2, node->y2);
 		}
 
-		if (cnv->mode == PdCanvas::MODE_REGION){
+		if (canvas->mode == PdCanvas::MODE_REGION){
 			ofSetColor(0, 120);
-			ofDrawRectangle(cnv->region);
+			ofDrawRectangle(canvas->region);
 		}
 	}
 
