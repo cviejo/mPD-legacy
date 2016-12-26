@@ -104,12 +104,7 @@ PdCanvas* PdGui::openPatch(const string& aPath) {
 
 
 //--------------------------------------------------------------------
-void PdGui::closePatch(PdCanvas& aCanvas) {
-	
-	ofLogVerbose("Pd") << "closing patch: " + aCanvas.patch.filename();
-	
-	PdBase::closePatch(aCanvas.patch);
-}
+void PdGui::closePatch(PdCanvas& aCanvas) { PdBase::closePatch(aCanvas.patch); }
 
 
 //--------------------------------------------------------------------
@@ -325,15 +320,30 @@ void PdGui::guiMessage(string aMsg){
 			guiMsg.parseColor(2);
 			guiMsg.parseRect(4);
 
-			node->x = guiMsg.x;
-			node->y = guiMsg.y;
-
-			node->setSize(guiMsg.width, guiMsg.height);
+			node->set(guiMsg); // ofRectangle
 			node->backgroundColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_draw_io"){
 		// "x102162000",".x102162000.t101252050",".x102162000.t101252050",78,337,85,340,78,326,"o",0,0,0
+
+		auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId);
+
+		if (node != NULL){
+
+			guiMsg.parseRect(3);
+
+			PdIo io;
+
+			io.set(guiMsg);
+
+			if (guiMsg.args[9] == "i") {
+				node->inlets.push_back(io);
+			}
+			else {
+				node->outlets.push_back(io);
+			}
+		}
 	}
 	else if (guiMsg.command == "gui_canvas_line"){
 
@@ -395,6 +405,14 @@ void PdGui::guiMessage(string aMsg){
 				if (node->selected){
 					node->x += ofToInt(guiMsg.args[1]);
 					node->y += ofToInt(guiMsg.args[2]);
+					for (auto& inlet : node->inlets){
+						inlet.x += ofToInt(guiMsg.args[1]);
+						inlet.y += ofToInt(guiMsg.args[2]);
+					}
+					for (auto& outlet : node->outlets){
+						outlet.x += ofToInt(guiMsg.args[1]);
+						outlet.y += ofToInt(guiMsg.args[2]);
+					}
 				}
 			}
 		}
@@ -407,10 +425,7 @@ void PdGui::guiMessage(string aMsg){
 
 			guiMsg.parseRect(1);
 
-			canvas->region.x = guiMsg.x;
-			canvas->region.y = guiMsg.y;
-			canvas->region.setSize(guiMsg.width, guiMsg.height);
-
+			canvas->region.set(guiMsg); // ofRectangle
 			canvas->mode = PdCanvas::MODE_REGION;
 		}
 	}
@@ -425,8 +440,8 @@ void PdGui::guiMessage(string aMsg){
 	else if (guiMsg.command == "gui_iemgui_label_new"){
 		// "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
 	}
-	else {
+	// else {
 		ofLogVerbose("pd") << aMsg;
-	}
+	// }
 }
 

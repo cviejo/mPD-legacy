@@ -20,6 +20,21 @@ class PdConnection
 
 
 //--------------------------------------------------------------
+class PdIo : public ofRectangle
+{
+	public:
+
+		enum IoType {
+			TYPE_INLET = 0,
+			TYPE_OUTLET
+		};
+
+		string id;
+		bool   signal;
+};
+
+
+//--------------------------------------------------------------
 class PdNode : public ofRectangle
 {
 	public:
@@ -36,13 +51,47 @@ class PdNode : public ofRectangle
 		bool         selected        = false;
 		string       id;
 		string       patchId;
-		vector<bool> inlets;
-		vector<bool> outlets;
+		vector<PdIo> inlets;
+		vector<PdIo> outlets;
 		string       text;
 
 		PdNode(string aId){
 			this->id = aId;
 		}
+};
+
+
+//--------------------------------------------------------------
+class PdIemGui : public PdNode
+{
+	public:
+
+		int    value = 0;
+		PdNode label;
+};
+
+
+//--------------------------------------------------------------
+class PdCanvas : public PdNode {
+
+	public:
+
+		enum CanvasMode {
+			MODE_NONE = 0,
+			MODE_MOVE,
+			MODE_CONNECT,
+			MODE_REGION
+		};
+
+		CanvasMode            mode;
+		Patch                 patch;
+		vector<PdNode*>       nodes;
+		vector<PdConnection*> connections;
+		ofRectangle           region;
+
+		PdCanvas(string aId) : PdNode(aId) {}
+};
+
 
 		// bool           selected         = false;
 		// // bool           control          = false;
@@ -78,33 +127,3 @@ class PdNode : public ofRectangle
 			// this->object    = aObject;
 			// this->parent    = aParent;
 		// }
-};
-
-
-//--------------------------------------------------------------
-class PdIemGui : public PdNode
-{
-};
-
-
-//--------------------------------------------------------------
-class PdCanvas : public PdNode {
-
-	public:
-
-		enum CanvasMode {
-			MODE_NONE = 0,
-			MODE_MOVE,
-			MODE_CONNECT,
-			MODE_REGION
-		};
-
-		CanvasMode            mode;
-		Patch                 patch;
-		vector<PdNode*>       nodes;
-		vector<PdConnection*> connections;
-		ofRectangle           region;
-
-		PdCanvas(string aId) : PdNode(aId) {}
-};
-

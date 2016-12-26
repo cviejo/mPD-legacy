@@ -64,7 +64,8 @@ void ofApp::draw(){
 
 		for (auto node : cnv->nodes){
 			ofSetColor(0);
-			ofDrawRectangle(node->x, node->y, node->width, node->height);
+			// ofDrawRectangle(node->x, node->y, node->width, node->height);
+			ofDrawRectangle(*node);
 			if (node->selected){
 				ofSetColor(255,0,0);
 			}
@@ -72,6 +73,15 @@ void ofApp::draw(){
 				ofSetHexColor(node->backgroundColor);
 			}
 			ofDrawRectangle(node->x + 1, node->y + 1, node->width - 2, node->height - 2);
+
+			for (auto inlet : node->inlets){
+				ofSetColor(255,255,0);
+				ofDrawRectangle(inlet);
+			}
+			for (auto outlet : node->outlets){
+				ofSetColor(255,255,0);
+				ofDrawRectangle(outlet);
+			}
 		}
 
 		for (auto node : cnv->connections){
@@ -93,13 +103,11 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
-	if (key == 'a'){
-		PdGui::instance().canvasUndo();
-	}
-	else if (key == 'b'){
-	}
-	else if (key == 'c'){
-	}
+	// debugging
+	if (key == 'a'){ }
+	else if (key == 'c'){ PdGui::instance().canvasCopy(); }
+	else if (key == 'p'){ PdGui::instance().canvasPaste(); }
+	else if (key == 'u'){ PdGui::instance().canvasUndo(); }
 }
 
 
@@ -279,3 +287,4 @@ void ofApp::mouseScrolled(ofMouseEventArgs& mouse){
 	// _canvas->scaling = false;
 }
 #endif
+

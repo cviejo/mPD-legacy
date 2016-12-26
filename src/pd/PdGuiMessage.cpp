@@ -28,7 +28,6 @@ void PdGuiMessage::parseIds(){
 		this->canvasId = this->unquote(this->args[0]);
 	}
 
-	// if (this->args.size() > 1 && this->args[1].find(this->args[0]) == 0){
 	if (this->args.size() > 1 && this->args[1].find("\"") == 0){
 		this->nodeId = this->unquote(this->args[1]);
 	}
