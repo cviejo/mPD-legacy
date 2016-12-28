@@ -23,7 +23,7 @@ class Canvas : public GuiElement {
 		virtual void onDragged    (int aX, int aY, int aId);
 		virtual void onReleased   (int aX, int aY, int aId);
 		virtual void onDoubleClick(int aX, int aY);
-		// virtual void onAppEvent(AppEvent& aAppEvent);
+		virtual void onAppEvent(AppEvent& aAppEvent);
 		virtual void onPressCancel();
 
 		// void print(const string& message); // pd receiver callbacks

@@ -220,6 +220,8 @@ bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
 	ofLogVerbose("[begin] log.");
 
+	AppEvent event(AppEvent::TYPE_SCALE_BEGIN);
+	ofNotifyEvent(AppEvent::events, event);
 	// Globals::Pd.setCanvasMode(CANVAS_MODE_NONE);
 
 	// _canvas->scaling = true;
@@ -231,6 +233,11 @@ bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 //--------------------------------------------------------------
 bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
 
+	AppEvent event(AppEvent::TYPE_SCALE, "", aArgs.getFocusX(), aArgs.getFocusY());
+
+	event.value = aArgs.getScaleFactor();
+
+	ofNotifyEvent(AppEvent::events, event);
 	// Globals::Settings.scale = Globals::Settings.scale * aArgs.getScaleFactor();
 
 	// ofLog(OF_LOG_VERBOSE, "[temp] focus:" + ofToString(aArgs.getFocusX()) + " " + ofToString(aArgs.getFocusY()));
@@ -245,6 +252,8 @@ bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
 //--------------------------------------------------------------
 bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
+	AppEvent event(AppEvent::TYPE_SCALE_END);
+	ofNotifyEvent(AppEvent::events, event);
 	// ofLog(OF_LOG_VERBOSE, "[end] log.");
 
 	// _canvas->scaling = false;
@@ -259,6 +268,11 @@ void App::mouseScrolled(ofMouseEventArgs& mouse){
 	ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
 	ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
 
+	AppEvent event(AppEvent::TYPE_SCALE, "", mouse.x, mouse.y);
+
+	event.value = mouse.scrollY * 0.1f;
+
+	ofNotifyEvent(AppEvent::events, event);
 	// Globals::Pd.setCanvasMode(CANVAS_MODE_NONE);
 
 	// _canvas->scaling = true;

@@ -15,7 +15,9 @@ class AppEvent : public ofEventArgs {
 			TYPE_CREATE_OBJECT,
 			TYPE_TAB_STATE_CHANGED,
 			TYPE_PD_PRINT,
-			TYPE_SCALE
+			TYPE_SCALE_BEGIN,
+			TYPE_SCALE,
+			TYPE_SCALE_END
 		};
 
 		static ofEvent<AppEvent> events;
@@ -30,7 +32,4 @@ class AppEvent : public ofEventArgs {
 		AppEvent(EventType aType, string aMsg, float aFloat)   : type(aType), message(aMsg), value (aFloat){}
 		AppEvent(EventType aType, string aMsg, int aX, int aY) : type(aType), message(aMsg), x(aX), y(aY){}
 };
-
-
-ofEvent<AppEvent> AppEvent::events;
 

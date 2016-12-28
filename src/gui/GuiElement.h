@@ -1,13 +1,17 @@
 #pragma once
 
 #include "ofMain.h"
-// #include "../util/AppEvent.h"
+#include "AppEvent.h"
 
 
 //--------------------------------------------------------------
 class GuiElement : public ofRectangle {
 
 	public:
+
+		GuiElement(){
+			ofAddListener(AppEvent::events, this, &GuiElement::onAppEvent);
+		}
 
 		string      id        = "";
 		bool        visible   = true;
@@ -18,7 +22,7 @@ class GuiElement : public ofRectangle {
 		virtual void update(){};
 		virtual void draw(){};
 		virtual void init(int aWidth, int aHeight){};
-		// virtual void onAppEvent(AppEvent& aAppEvent){};
+		virtual void onAppEvent(AppEvent& aAppEvent){};
 		virtual void onClick(){};
 		virtual void onPressed(int aX, int aY, int aId){};
 		virtual void onDragged(int aX, int aY, int aId){};

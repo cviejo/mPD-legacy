@@ -7,7 +7,7 @@ Canvas::Canvas(){
 	_viewPort.setPosition(0, 0);
 	_scale = 1.f;
 
-	this->x      = 400;
+	this->x      = 0;
 	this->y      = 0;
 	this->width  = ofGetWidth();
 	this->height = ofGetHeight();
@@ -181,6 +181,57 @@ void Canvas::onDoubleClick(int aX, int aY){
 
 //--------------------------------------------------------------
 void Canvas::onPressCancel(){
+}
+
+
+//--------------------------------------------------------------
+void Canvas::onAppEvent(AppEvent& aAppEvent){
+
+	ofLogVerbose("event") << "hm";
+	if (aAppEvent.type == AppEvent::TYPE_SCALE){
+#ifdef TARGET_ANDROID
+		_scale *= aAppEvent.value;
+#else
+		_scale += aAppEvent.value;
+#endif
+	}
+
+	// if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED){
+
+		// if (aAppEvent.message == "edit-button"){
+			// Globals::Pd.setCanvasEditMode(aAppEvent.value);
+		// }
+		// else if (aAppEvent.message == "grid-button"){
+			// Globals::Settings.gridActive = aAppEvent.value;
+			// Globals::Pd.setCanvasGridMode(aAppEvent.value);
+		// }
+		// else if (aAppEvent.message == "settings-button"){
+		// }
+		// else if (aAppEvent.message == "trash-button"){
+			// Globals::Pd.canvasDelete();
+		// }
+		// else if (aAppEvent.message == "copy-button"){
+			// Globals::Pd.canvasCopy();
+		// }
+		// else if (aAppEvent.message == "paste-button"){
+			// Globals::Pd.canvasPaste();
+		// }
+		// else if (aAppEvent.message == "undo-button"){
+			// Globals::Pd.canvasUndo();
+		// }
+	// }
+	// else if(aAppEvent.type == AppEvent::TYPE_CREATE_OBJECT){
+
+		// PdNode node;
+
+		// ofPoint loc = this->transformLoc(aAppEvent.x, aAppEvent.y, TRANSFORM_MPD_TO_PD);
+
+		// node.className = aAppEvent.message;
+		// node.x         = loc.x;
+		// node.y         = loc.y;
+
+		// Globals::Pd.canvasCreateObject(node);
+	// }
 }
 
 
