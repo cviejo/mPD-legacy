@@ -14,7 +14,8 @@ class AppEvent : public ofEventArgs {
 			TYPE_SCROLLER_LETTER_CHANGED,
 			TYPE_CREATE_OBJECT,
 			TYPE_TAB_STATE_CHANGED,
-			TYPE_PD_PRINT
+			TYPE_PD_PRINT,
+			TYPE_SCALE
 		};
 
 		static ofEvent<AppEvent> events;
@@ -30,4 +31,6 @@ class AppEvent : public ofEventArgs {
 		AppEvent(EventType aType, string aMsg, int aX, int aY) : type(aType), message(aMsg), x(aX), y(aY){}
 };
 
+
 ofEvent<AppEvent> AppEvent::events;
+
