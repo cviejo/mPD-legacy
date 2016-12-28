@@ -8,9 +8,9 @@
 
 
 #ifdef TARGET_ANDROID
-class ofApp : public ofxAndroidApp {
+class App : public ofxAndroidApp {
 #else
-class ofApp : public ofBaseApp {
+class App : public ofBaseApp {
 #endif
 
 	public:

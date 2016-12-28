@@ -12,14 +12,10 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 	public:
 
+		// singleton
 		static PdGui& instance();
 
-		bool init(const int inputChannels,
-		          const int outputChannels,
-		          const int sampleRate,
-		          const int ticksPerBuffer=32,
-		          bool queued=false);
-
+		bool              init(const int in, const int out, const int sampleRate, const int ticks=32,bool queued=false);
 		void              clear();
 		void              startAudio();
 		void              stopAudio();
@@ -43,6 +39,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 	private:
 
+		// singleton
 		PdGui();
 		virtual ~PdGui();
 		void operator = (PdGui& from) {}
@@ -56,7 +53,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		int               _outputChannels;
 		int               _inputChannels;
 
-		string unquote(string& str);
+		string            unquote(string& str);
 		string            getPatchId(Patch& patch);
 		void              evaluateBuffer(string& str);
 };

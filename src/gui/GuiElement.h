@@ -13,11 +13,7 @@ class GuiElement : public ofRectangle {
 		bool        visible   = true;
 		bool        clickable = true;
 		bool        pressed   = false;
-		int         z         = 0;
-		ofPoint     press;
-
-		GuiElement(int aZ = 0);
-		~GuiElement(void);
+		ofPoint     pressedPoint;
 
 		virtual void update(){};
 		virtual void draw(){};

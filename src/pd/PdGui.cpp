@@ -281,13 +281,13 @@ void PdGui::evaluateBuffer(string& aBuffer){
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
-	// ofLogVerbose("pd") << aMsg;
+	ofLogVerbose("pd") << aMsg;
 
 	PdGuiMessage guiMsg(aMsg);
 
 	if (guiMsg.command == "gui_canvas_new"){
 
-		if (this->getCanvas(guiMsg.canvasId) == NULL) {
+		if (!this->getCanvas(guiMsg.canvasId)) {
 
 			auto mapCommand = guiMsg.canvasId + " map 1";
 
@@ -298,38 +298,30 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
-
-		if (canvas != NULL){
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdNode* node = new PdNode(guiMsg.nodeId);
 
 			node->patchId = guiMsg.canvasId;
-			node->x       = ofToInt(guiMsg.args[3]);
-			node->y       = ofToInt(guiMsg.args[4]);
+			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
 
 			canvas->nodes.push_back(node);
 		}
 	}
 	else if (guiMsg.command == "gui_text_draw_border"){
 
-		auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId);
-
-		if (node != NULL){
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			guiMsg.parseColor(2);
 			guiMsg.parseRect(4);
 
-			node->set(guiMsg); // ofRectangle
+			node->set(guiMsg);
 			node->backgroundColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_draw_io"){
-		// "x102162000",".x102162000.t101252050",".x102162000.t101252050",78,337,85,340,78,326,"o",0,0,0
 
-		auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId);
-
-		if (node != NULL){
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			guiMsg.parseRect(3);
 
@@ -347,9 +339,7 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_canvas_line"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
-
-		if (canvas != NULL){
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdConnection* conn = new PdConnection();
 
@@ -364,9 +354,7 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_canvas_update_line"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
-
-		if (canvas != NULL){
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			for (auto conn : canvas->connections){
 
@@ -381,37 +369,31 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_gobj_select"){
 
-		auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId);
-
-		if (node != NULL){
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			node->selected = true;
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_deselect"){
 
-		auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId);
-
-		if (node != NULL){
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			node->selected = false;
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_displace_withtag"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
-		if (canvas != NULL){
+			ofPoint offset(ofToInt(guiMsg.args[1]), ofToInt(guiMsg.args[2]));
 
-			for (auto node : canvas->nodes){
+			for (auto& node : canvas->nodes){
+
 				if (node->selected){
-					node->x += ofToInt(guiMsg.args[1]);
-					node->y += ofToInt(guiMsg.args[2]);
+					node->translate(offset);
 					for (auto& inlet : node->inlets){
-						inlet.x += ofToInt(guiMsg.args[1]);
-						inlet.y += ofToInt(guiMsg.args[2]);
+						inlet.translate(offset);
 					}
 					for (auto& outlet : node->outlets){
-						outlet.x += ofToInt(guiMsg.args[1]);
-						outlet.y += ofToInt(guiMsg.args[2]);
+						outlet.translate(offset);
 					}
 				}
 			}
@@ -419,29 +401,25 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_canvas_move_selection"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
-
-		if (canvas != NULL){
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			guiMsg.parseRect(1);
 
-			canvas->region.set(guiMsg); // ofRectangle
+			canvas->region.set(guiMsg);
 			canvas->mode = PdCanvas::MODE_REGION;
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_hide_selection"){
 
-		auto canvas = this->getCanvas(guiMsg.canvasId);
-
-		if (canvas != NULL){
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 			canvas->mode = PdCanvas::MODE_NONE;
 		}
 	}
 	else if (guiMsg.command == "gui_iemgui_label_new"){
 		// "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
 	}
-	// else {
-		ofLogVerbose("pd") << aMsg;
-	// }
+	else {
+		// ofLogVerbose("pd") << aMsg;
+	}
 }
 

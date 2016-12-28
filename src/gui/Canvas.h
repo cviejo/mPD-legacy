@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "GuiElement.h"
+#include "PdGui.h"
 // #include "../Globals.h"
 // #include "../util/Font.h"
 // #include "../util/AppEvent.h"
@@ -17,19 +18,22 @@ class Canvas : public GuiElement {
 
 		Canvas();
 
-		// virtual void draw();
-		// virtual void onPressed    (int aX, int aY, int aId);
-		// virtual void onDragged    (int aX, int aY, int aId);
-		// virtual void onReleased   (int aX, int aY, int aId);
-		// virtual void onDoubleClick(int aX, int aY);
+		virtual void draw();
+		virtual void onPressed    (int aX, int aY, int aId);
+		virtual void onDragged    (int aX, int aY, int aId);
+		virtual void onReleased   (int aX, int aY, int aId);
+		virtual void onDoubleClick(int aX, int aY);
 		// virtual void onAppEvent(AppEvent& aAppEvent);
-		// virtual void onPressCancel();
+		virtual void onPressCancel();
 
 		// void print(const string& message); // pd receiver callbacks
 		// void setFocus(int x, int y);
 		// void initGrid();
 
 	private:
+
+		float       _scale;
+		ofRectangle _viewPort; // in PD coordinates
 
 		// CanvasRenderer* _renderer;
 		// ofPoint         _mouseLoc;   // stored in PD coordinates
@@ -43,7 +47,7 @@ class Canvas : public GuiElement {
 
 		// void    clipOffset();
 		// void    drawGrid();
-		// void    drawRegion();
+		void    drawRegion(PdCanvas* aCanvas);
 		// void    drawConsole();
 		// void    drawCanvas(PdNode& aCanvas);
 		// void    drawConnections(PdNode& aCanvas);
@@ -58,5 +62,6 @@ class Canvas : public GuiElement {
 
 		// void    drawMessage(PdNode& aNode);
 		// void    drawAtom(PdNode& aNode);
+		ofPoint transformToPdCoordinates(float aX, float aY);
 };
 

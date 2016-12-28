@@ -1,10 +1,10 @@
-#include "ofApp.h"
+#include "App.h"
 #include "PdGui.h"
 #include "Canvas.h"
 
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void App::setup(){
 
 	// ofSetBackgroundAuto(false);
 	// ofBackground(0);
@@ -21,7 +21,7 @@ void ofApp::setup(){
 
 
 //--------------------------------------------------------------
-void ofApp::initAudio(){
+void App::initAudio(){
 
 	auto outputChannels = 2;
 	auto inputChannels  = 2;
@@ -41,7 +41,7 @@ void ofApp::initAudio(){
 
 
 //--------------------------------------------------------------
-void ofApp::initSearchPaths(){
+void App::initSearchPaths(){
 
 	ofDirectory extrasFolder("extra");
 
@@ -57,20 +57,20 @@ void ofApp::initSearchPaths(){
 
 
 //--------------------------------------------------------------
-void ofApp::initEventListeners(){
+void App::initEventListeners(){
 
 #ifdef TARGET_ANDROID
-	ofAddListener(ofxAndroidEvents().scaleBegin, this, &ofApp::onScaleBegin);
-	ofAddListener(ofxAndroidEvents().scale,      this, &ofApp::onScale);
-	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &ofApp::onScaleEnd);
+	ofAddListener(ofxAndroidEvents().scaleBegin, this, &App::onScaleBegin);
+	ofAddListener(ofxAndroidEvents().scale,      this, &App::onScale);
+	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &App::onScaleEnd);
 #else
-	ofAddListener(ofEvents().mouseScrolled,      this, &ofApp::mouseScrolled);
+	ofAddListener(ofEvents().mouseScrolled,      this, &App::mouseScrolled);
 #endif
 }
 
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void App::draw(){
 
 	// if (Globals::AppState == APP_STATE_START){ return; }
 
@@ -89,7 +89,7 @@ void ofApp::draw(){
 
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void App::keyPressed(int key){
 
 	// debugging
 	if      (key == 'a'){ }
@@ -100,15 +100,15 @@ void ofApp::keyPressed(int key){
 
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){ }
+void App::windowResized(int w, int h){ }
 
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){ }
+void App::gotMessage(ofMessage msg){ }
 
 
 //--------------------------------------------------------------
-void ofApp::audioReceived(float * input, int bufferSize, int nChannels) {
+void App::audioReceived(float * input, int bufferSize, int nChannels) {
 
 	// TODO: if computing
 	PdGui::instance().audioIn(input, bufferSize, nChannels);
@@ -116,7 +116,7 @@ void ofApp::audioReceived(float * input, int bufferSize, int nChannels) {
 
 
 //--------------------------------------------------------------
-void ofApp::audioRequested(float * output, int bufferSize, int nChannels) {
+void App::audioRequested(float * output, int bufferSize, int nChannels) {
 
 	// TODO: if computing
 	PdGui::instance().audioOut(output, bufferSize, nChannels);
@@ -124,7 +124,7 @@ void ofApp::audioRequested(float * output, int bufferSize, int nChannels) {
 
 
 //--------------------------------------------------------------
-void ofApp::touchDown(int aX, int aY, int aId){
+void App::touchDown(int aX, int aY, int aId){
 
 	if (aId){ return; } // pd can't handle multitouch anyway
 
@@ -142,7 +142,7 @@ void ofApp::touchDown(int aX, int aY, int aId){
 
 
 //--------------------------------------------------------------
-void ofApp::touchMoved(int aX, int aY, int aId){
+void App::touchMoved(int aX, int aY, int aId){
 
 	if (aId){ return; }
 
@@ -156,7 +156,7 @@ void ofApp::touchMoved(int aX, int aY, int aId){
 
 
 //--------------------------------------------------------------
-void ofApp::touchUp(int aX, int aY, int aId){
+void App::touchUp(int aX, int aY, int aId){
 
 	if (aId){ return; }
 
@@ -176,47 +176,47 @@ void ofApp::touchUp(int aX, int aY, int aId){
 
 
 //--------------------------------------------------------------
-void ofApp::touchDoubleTap(int aX, int aY, int aId){ }
+void App::touchDoubleTap(int aX, int aY, int aId){ }
 
 
 //--------------------------------------------------------------
-void ofApp::touchCancelled(int x, int y, int id){ }
+void App::touchCancelled(int x, int y, int id){ }
 
 
 //--------------------------------------------------------------
-void ofApp::pause(){ }
+void App::pause(){ }
 
 
 //--------------------------------------------------------------
-void ofApp::stop(){ }
+void App::stop(){ }
 
 
 //--------------------------------------------------------------
-void ofApp::resume(){ }
+void App::resume(){ }
 
 
 //--------------------------------------------------------------
-void ofApp::reloadTextures(){ }
+void App::reloadTextures(){ }
 
 
 //--------------------------------------------------------------
-bool ofApp::backPressed(){ return false; }
+bool App::backPressed(){ return false; }
 
 
 //--------------------------------------------------------------
-void ofApp::okPressed(){ }
+void App::okPressed(){ }
 
 
 //--------------------------------------------------------------
-void ofApp::cancelPressed(){ }
+void App::cancelPressed(){ }
 
 #ifdef TARGET_ANDROID
 //--------------------------------------------------------------
-void ofApp::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
+void App::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
 
 
 //--------------------------------------------------------------
-bool ofApp::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
+bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
 	ofLogVerbose("[begin] log.");
 
@@ -229,7 +229,7 @@ bool ofApp::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
 
 //--------------------------------------------------------------
-bool ofApp::onScale(ofxAndroidScaleEventArgs& aArgs) {
+bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
 
 	// Globals::Settings.scale = Globals::Settings.scale * aArgs.getScaleFactor();
 
@@ -243,7 +243,7 @@ bool ofApp::onScale(ofxAndroidScaleEventArgs& aArgs) {
 
 
 //--------------------------------------------------------------
-bool ofApp::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
+bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 	// ofLog(OF_LOG_VERBOSE, "[end] log.");
 
@@ -254,7 +254,7 @@ bool ofApp::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 #else
 
 //--------------------------------------------------------------
-void ofApp::mouseScrolled(ofMouseEventArgs& mouse){
+void App::mouseScrolled(ofMouseEventArgs& mouse){
 
 	ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
 	ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
