@@ -2,14 +2,14 @@
 
 #include "ofMain.h"
 #include "GuiElement.h"
-#include "../Globals.h"
-#include "../util/Font.h"
-#include "../util/AppEvent.h"
-#include "./canvas-renderers/CanvasRenderer.h"
+// #include "../Globals.h"
+// #include "../util/Font.h"
+// #include "../util/AppEvent.h"
+// #include "./canvas-renderers/CanvasRenderer.h"
 
 
 //--------------------------------------------------------------
-class Canvas : public GuiElement, public PdReceiver {
+class Canvas : public GuiElement {
 
 	public:
 

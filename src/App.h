@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "GuiElement.h"
 #ifdef TARGET_ANDROID
 #include "ofxAndroid.h"
 #endif
@@ -13,8 +14,6 @@ class ofApp : public ofBaseApp {
 #endif
 
 	public:
-
-		vector <string> gui_items;
 
 		void setup();
 		void draw();
@@ -55,7 +54,10 @@ class ofApp : public ofBaseApp {
 
 	private:
 
+		vector<GuiElement*> _guiElements;
+
 		void initAudio();
 		void initSearchPaths();
+		void initEventListeners();
 };
 

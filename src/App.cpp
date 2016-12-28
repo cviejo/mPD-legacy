@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "PdGui.h"
+#include "Canvas.h"
 
 
 //--------------------------------------------------------------
@@ -14,6 +15,8 @@ void ofApp::setup(){
 	this->initAudio();
 	this->initSearchPaths();
 	this->initEventListeners();
+
+	_guiElements.push_back(new Canvas());
 }
 
 
@@ -57,11 +60,11 @@ void ofApp::initSearchPaths(){
 void ofApp::initEventListeners(){
 
 #ifdef TARGET_ANDROID
-	ofAddListener(ofxAndroidEvents().scaleBegin, this, &App::onScaleBegin);
-	ofAddListener(ofxAndroidEvents().scale,      this, &App::onScale);
-	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &App::onScaleEnd);
+	ofAddListener(ofxAndroidEvents().scaleBegin, this, &ofApp::onScaleBegin);
+	ofAddListener(ofxAndroidEvents().scale,      this, &ofApp::onScale);
+	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &ofApp::onScaleEnd);
 #else
-	ofAddListener(ofEvents().mouseScrolled,      this, &App::mouseScrolled);
+	ofAddListener(ofEvents().mouseScrolled,      this, &ofApp::mouseScrolled);
 #endif
 }
 
@@ -69,49 +72,19 @@ void ofApp::initEventListeners(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	ofScale(2, 2);
+	// if (Globals::AppState == APP_STATE_START){ return; }
 
-	vector<PdCanvas*> canvases = PdGui::instance().getCanvases();
+	ofEnableAlphaBlending();
 
-	ofSetColor(255);
+	for (auto& elem : _guiElements){
 
-	for (auto& canvas : canvases){
-
-		for (auto node : canvas->nodes){
-			ofSetColor(0);
-			// ofDrawRectangle(node->x, node->y, node->width, node->height);
-			ofDrawRectangle(*node);
-			if (node->selected){
-				ofSetColor(255,0,0);
-			}
-			else {
-				ofSetHexColor(node->backgroundColor);
-			}
-			ofDrawRectangle(node->x + 1, node->y + 1, node->width - 2, node->height - 2);
-
-			for (auto inlet : node->inlets){
-				ofSetColor(255,255,0);
-				ofDrawRectangle(inlet);
-			}
-			for (auto outlet : node->outlets){
-				ofSetColor(255,255,0);
-				ofDrawRectangle(outlet);
-			}
-		}
-
-		for (auto node : canvas->connections){
-			ofSetColor(0);
-			ofDrawLine(node->x1, node->y1, node->x2, node->y2);
-		}
-
-		if (canvas->mode == PdCanvas::MODE_REGION){
-			ofSetColor(0, 120);
-			ofDrawRectangle(canvas->region);
+		if(elem->visible){
+			elem->draw();
 		}
 	}
 
 	ofDisableAlphaBlending();
-	ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);  
+	ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
 }
 
 
@@ -119,7 +92,7 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
 
 	// debugging
-	if (key == 'a'){ }
+	if      (key == 'a'){ }
 	else if (key == 'c'){ PdGui::instance().canvasCopy(); }
 	else if (key == 'p'){ PdGui::instance().canvasPaste(); }
 	else if (key == 'u'){ PdGui::instance().canvasUndo(); }
@@ -151,25 +124,59 @@ void ofApp::audioRequested(float * output, int bufferSize, int nChannels) {
 
 
 //--------------------------------------------------------------
-void ofApp::touchDown(int x, int y, int id){
-	PdGui::instance().canvasPressed(x/2, y/2);
+void ofApp::touchDown(int aX, int aY, int aId){
+
+	if (aId){ return; } // pd can't handle multitouch anyway
+
+	for (auto& elem : _guiElements){
+
+		if (elem->visible && elem->clickable && elem->inside(aX, aY)){
+
+			elem->pressed = true;
+			elem->pressedPoint.set(aX, aY);
+			elem->onPressed(aX, aY, aId);
+			break;
+		}
+	}
 }
 
 
 //--------------------------------------------------------------
-void ofApp::touchMoved(int x, int y, int id){
-	PdGui::instance().canvasDragged(x/2, y/2);
+void ofApp::touchMoved(int aX, int aY, int aId){
+
+	if (aId){ return; }
+
+	for (auto& elem : _guiElements){
+
+		if (elem->pressed){
+			elem->onDragged(aX, aY, aId);
+		}
+	}
 }
 
 
 //--------------------------------------------------------------
-void ofApp::touchUp(int x, int y, int id){
-	PdGui::instance().canvasReleased(x/2, y/2);
+void ofApp::touchUp(int aX, int aY, int aId){
+
+	if (aId){ return; }
+
+	for (auto& elem : _guiElements){
+
+		if (elem->pressed){
+
+			if (elem->inside(aX, aY)){
+				elem->onClick();
+			}
+
+			elem->onReleased(aX, aY, aId);
+			elem->pressed = false;
+		}
+	}
 }
 
 
 //--------------------------------------------------------------
-void ofApp::touchDoubleTap(int x, int y, int id){ }
+void ofApp::touchDoubleTap(int aX, int aY, int aId){ }
 
 
 //--------------------------------------------------------------
