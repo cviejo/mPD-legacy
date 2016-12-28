@@ -310,7 +310,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_numbox_new"){
-		// gui_numbox_new "x1021ad400","x10198a800","xfcfcfc",99,44,54,14,1
+
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdNode* node = new PdNode(guiMsg.nodeId);
