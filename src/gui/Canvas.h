@@ -47,14 +47,14 @@ class Canvas : public GuiElement {
 
 		// void    clipOffset();
 		// void    drawGrid();
+		void    drawCanvas(PdNode* aCanvas);
+		void    drawConnections(PdNode* aCanvas);
 		void    drawRegion(PdCanvas* aCanvas);
+		void    drawNodeBackground(PdNode* aNode);
 		// void    drawConsole();
-		// void    drawCanvas(PdNode& aCanvas);
-		// void    drawConnections(PdNode& aCanvas);
 		// void    drawConnecting();
 		// void    drawControl(PdNode& aNode);
 		// void    drawControlBackground(PdNode& aNode);
-		// void    drawNodeBackground(PdNode& aNode);
 		// void    drawNodeText(PdNode& aNode);
 		// void    drawNodeLabel(PdNode& aNode);
 		// void    drawIO(PdNode& aNode, bool aInlet);

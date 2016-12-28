@@ -39,17 +39,18 @@ class PdNode : public ofRectangle
 {
 	public:
 
-		enum NodeType {
-			TYPE_TEXT = 0,
-			TYPE_CONTROL,
-			TYPE_GRAPH,
-			TYPE_COMMENT,
-			TYPE_INVALID,
-		};
+		// enum NodeType {
+			// TYPE_TEXT = 0,
+			// TYPE_CONTROL,
+			// TYPE_GRAPH,
+			// TYPE_COMMENT,
+			// TYPE_INVALID,
+		// };
 
 		int          backgroundColor = 255;
 		bool         selected        = false;
 		string       id;
+		string       type;
 		string       patchId;
 		vector<PdIo> inlets;
 		vector<PdIo> outlets;

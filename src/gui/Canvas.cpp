@@ -9,8 +9,12 @@ Canvas::Canvas(){
 
 	this->x      = 0;
 	this->y      = 0;
-	this->width  = ofGetWidth();
-	this->height = ofGetHeight();
+	// this->width  = ofGetWidth();
+	// this->height = ofGetHeight();
+	this->width  = 400;
+	this->height = 400;
+
+	_viewPort.setSize(this->width * _scale, this->height * _scale);
 	// _renderer = new CanvasRenderer();
 	// // _renderer.font = _font;
 
@@ -41,6 +45,9 @@ Canvas::Canvas(){
 //--------------------------------------------------------------
 void Canvas::draw(){
 
+	ofSetColor(110);
+	ofDrawRectangle(*this);
+
 	ofPushMatrix();
 	ofTranslate(this->x, this->y);
 	ofScale(_scale, _scale);
@@ -52,24 +59,20 @@ void Canvas::draw(){
 	for (auto& canvas : canvases){
 
 		for (auto node : canvas->nodes){
-			ofSetColor(0);
-			// ofDrawRectangle(node->x, node->y, node->width, node->height);
-			ofDrawRectangle(*node);
-			if (node->selected){
-				ofSetColor(255,0,0);
-			}
-			else {
-				ofSetHexColor(node->backgroundColor);
-			}
-			ofDrawRectangle(node->x + 1, node->y + 1, node->width - 2, node->height - 2);
 
-			for (auto inlet : node->inlets){
-				ofSetColor(255,255,0);
-				ofDrawRectangle(inlet);
-			}
-			for (auto outlet : node->outlets){
-				ofSetColor(255,255,0);
-				ofDrawRectangle(outlet);
+			if (_viewPort.intersects(*node)){
+
+				this->drawNodeBackground(node);
+
+				for (auto inlet : node->inlets){
+					ofSetColor(255,255,0);
+					ofDrawRectangle(inlet);
+				}
+
+				for (auto outlet : node->outlets){
+					ofSetColor(255,255,0);
+					ofDrawRectangle(outlet);
+				}
 			}
 		}
 
@@ -105,6 +108,219 @@ void Canvas::drawRegion(PdCanvas* aCanvas){
 
 
 //--------------------------------------------------------------
+void Canvas::drawNodeBackground(PdNode* aNode){
+
+	ofFill();
+
+	int top    = aNode->getTop();
+	int left   = aNode->getLeft();
+	int right  = aNode->getRight();
+	int bottom = aNode->getBottom();
+
+
+	if (aNode->selected){
+		ofSetColor(140);
+		ofDrawRectangle(aNode->x - 2, aNode->y - 2, aNode->width + 4, aNode->height + 4);
+	}
+
+
+	if (aNode->type == "msg"){
+
+		// ofSetColor(Globals::Theme.node.color.border);
+		ofSetColor(192);
+		ofBeginShape();
+			ofVertex(left,      top);
+			ofVertex(right + 4, top);
+			ofVertex(right,     top + 4);
+			ofVertex(right,     bottom - 4);
+			ofVertex(right + 4, bottom);
+			ofVertex(left,      bottom);
+		ofEndShape();
+
+		// ofSetColor(255);
+		ofSetColor(248, 248, 246);
+		ofBeginShape();
+			ofVertex(left + 1,  top + 1);
+			ofVertex(right + 2, top + 1);
+			ofVertex(right - 1, top + 4);
+			ofVertex(right - 1, bottom - 4);
+			ofVertex(right + 2, bottom - 1);
+			ofVertex(left + 1,  bottom - 1);
+		ofEndShape();
+	}
+	else if (aNode->type == "atom" || aNode->type == "numbox"){
+
+		ofSetColor(192);
+		ofBeginShape();
+			ofVertex(left,      top);
+			ofVertex(right - 4, top);
+			ofVertex(right,     top + 4);
+			ofVertex(right,     bottom);
+			ofVertex(left,      bottom);
+		ofEndShape();
+
+		ofSetColor(224);
+		ofBeginShape();
+			ofVertex(left + 1,  top + 1);
+			ofVertex(right - 4, top + 1);
+			ofVertex(right - 1, top + 4);
+			ofVertex(right - 1, bottom - 1);
+			ofVertex(left + 1,  bottom - 1);
+		ofEndShape();
+	}
+	else {
+		
+		// if (aNode->type == PdNode::TYPE_CONTROL){
+			// ofSetColor(0);
+		// }
+		// else{
+			// ofSetColor(192);
+		// }
+
+		// ofSetColor(aNode->control ? 0 : 192);
+		// ofSetColor(aNode->valid ? Globals::Theme.node.color.border :
+		//                          Globals::Theme.node.color.invalid);
+		
+		// ofDrawRectangle(*node);
+
+		// ofSetColor(Globals::Theme.node.color.background);
+		// ofSetColor(246, 248, 248);
+//		if (aNode->className == "tgl"){
+//		if (aNode->control){
+		// if (aNode->type == PdNode::TYPE_CONTROL){
+			// ofSetHexColor(aNode->backgroundColor);
+		// }
+		// ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
+
+		ofDrawRectangle(*aNode);
+
+		if (aNode->selected){
+			ofSetColor(255,0,0);
+		}
+		else {
+			ofSetHexColor(aNode->backgroundColor);
+		}
+
+		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
+	}
+
+
+
+
+	// if (aNode->className == "gatom"){
+
+		// // ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+		// // ofSetColor(Globals::Theme.node.color.border);
+		// ofSetColor(192);
+		// ofBeginShape();
+			// ofVertex(left, top);
+			// ofVertex(right - 4, top);
+			// ofVertex(right, top + 4);
+			// ofVertex(right, bottom);
+			// ofVertex(left, bottom);
+		// ofEndShape();
+
+		// ofSetColor(224);
+		// ofBeginShape();
+			// ofVertex(left + 1, top + 1);
+			// ofVertex(right - 4, top + 1);
+			// ofVertex(right - 1, top + 4);
+			// ofVertex(right - 1, bottom - 1);
+			// ofVertex(left + 1, bottom - 1);
+		// ofEndShape();
+	// }
+	// else if (aNode->className == "nbx"){
+
+		// // ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+		// // ofSetColor(Globals::Theme.node.color.border);
+		// ofSetColor(0);
+		// ofBeginShape();
+			// ofVertex(left, top);
+			// ofVertex(right - 4, top);
+			// ofVertex(right, top + 4);
+			// ofVertex(right, bottom);
+			// ofVertex(left, bottom);
+		// ofEndShape();
+
+		// ofSetColor(252);
+		// ofBeginShape();
+			// ofVertex(left + 1, top + 1);
+			// ofVertex(right - 4, top + 1);
+			// ofVertex(right - 1, top + 4);
+			// ofVertex(right - 1, bottom - 1);
+			// ofVertex(left + 1, bottom - 1);
+		// ofEndShape();
+
+		// ofSetColor(0);
+		// ofDrawTriangle(left + 0, top + 0,
+							// left + 0, bottom - 0,
+							// left + 7, top + aNode->height / 2);
+
+		// ofSetColor(252);
+		// ofDrawTriangle(left + 1, top + 2,
+							// left + 1, bottom - 2,
+							// left + 6, top + aNode->height / 2);
+
+		// ofSetColor(0);
+		// this->drawNodeText(aNode->content,
+								 // left + 8,
+								 // bottom - 3,
+								 // // top + Globals::Theme.node.font.height,
+								 // // node.bottom - Globals::Theme.node.io.height - 1,
+								 // Globals::Theme.node.font.height);
+	// }
+	// else if (aNode->className == "message"){
+
+		// // ofSetColor(Globals::Theme.node.color.border);
+		// ofSetColor(192);
+		// ofBeginShape();
+			// ofVertex(left, top);
+			// ofVertex(right + 4, top);
+			// ofVertex(right, top + 4);
+			// ofVertex(right, bottom - 4);
+			// ofVertex(right + 4, bottom);
+			// ofVertex(left, bottom);
+		// ofEndShape();
+
+		// // ofSetColor(255);
+		// ofSetColor(248, 248, 246);
+		// ofBeginShape();
+			// ofVertex(left + 1, top + 1);
+			// ofVertex(right + 2, top + 1);
+			// ofVertex(right - 1, top + 4);
+			// ofVertex(right - 1, bottom - 4);
+			// ofVertex(right + 2, bottom - 1);
+			// ofVertex(left + 1, bottom - 1);
+		// ofEndShape();
+	// }
+	// else {
+		
+		// if (aNode->type == PdNode::TYPE_CONTROL){
+			// ofSetColor(0);
+		// }
+		// else{
+			// ofSetColor(192);
+		// }
+
+// //		ofSetColor(aNode->control ? 0 : 192);
+		// // ofSetColor(aNode->valid ? Globals::Theme.node.color.border :
+		// //                          Globals::Theme.node.color.invalid);
+		
+		// ofDrawRectangle(left, top, aNode->width, aNode->height);
+
+		// // ofSetColor(Globals::Theme.node.color.background);
+		// ofSetColor(246, 248, 248);
+// //		if (aNode->className == "tgl"){
+// //		if (aNode->control){
+		// if (aNode->type == PdNode::TYPE_CONTROL){
+			// ofSetHexColor(aNode->backgroundColor);
+		// }
+		// ofDrawRectangle(left + 1, top + 1, aNode->width - 2, aNode->height - 2);
+	// }
+}
+
+
+//--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
@@ -127,6 +343,7 @@ void Canvas::onDragged(int aX, int aY, int aId){
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
 	PdGui::instance().canvasDragged(p.x, p.y);
+
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
 	// CanvasMode mode = Globals::Pd.getCanvasMode();
@@ -187,13 +404,24 @@ void Canvas::onPressCancel(){
 //--------------------------------------------------------------
 void Canvas::onAppEvent(AppEvent& aAppEvent){
 
-	ofLogVerbose("event") << "hm";
-	if (aAppEvent.type == AppEvent::TYPE_SCALE){
-#ifdef TARGET_ANDROID
-		_scale *= aAppEvent.value;
-#else
-		_scale += aAppEvent.value;
-#endif
+	switch(aAppEvent.type){
+
+		case AppEvent::TYPE_SCALE_BEGIN:
+			break;
+
+
+		case AppEvent::TYPE_SCALE:
+			#ifdef TARGET_ANDROID
+			_scale *= aAppEvent.value;
+			#else
+			_scale += aAppEvent.value;
+			#endif
+			_viewPort.setSize(this->width / _scale, this->height / _scale);
+			break;
+
+
+		default:
+			break;
 	}
 
 	// if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED){
@@ -233,6 +461,35 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 		// Globals::Pd.canvasCreateObject(node);
 	// }
 }
+
+
+//--------------------------------------------------------------
+
+// void Canvas::setFocus(int aX, int aY){
+
+	// auto focusLoc  = this->transformToPdCoordinates(aX, aY);
+	// auto offsetLoc = this->transformToPdCoordinates(this->width * .5f, this->height * .5f);
+
+	// _viewPort.setPosition(focusLoc - offsetLoc);
+
+	// // this->clipOffset();
+// }
+
+
+//--------------------------------------------------------------
+
+// void Canvas::clipOffset(){
+
+	// if(_draggedLoc.x + _offsetLoc.x > 0){
+		// _offsetLoc .x = 0;
+		// _draggedLoc.x = 0;
+	// }
+
+	// if(_draggedLoc.y + _offsetLoc.y > 0){
+		// _offsetLoc .y = 0;
+		// _draggedLoc.y = 0;
+	// }
+// }
 
 
 //--------------------------------------------------------------

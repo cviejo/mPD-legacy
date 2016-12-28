@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "ofMain.h"
 #include "AppEvent.h"
 
@@ -13,11 +14,11 @@ class GuiElement : public ofRectangle {
 			ofAddListener(AppEvent::events, this, &GuiElement::onAppEvent);
 		}
 
-		string      id        = "";
-		bool        visible   = true;
-		bool        clickable = true;
-		bool        pressed   = false;
-		ofPoint     pressedPoint;
+		string  id        = "";
+		bool    visible   = true;
+		bool    clickable = true;
+		bool    pressed   = false;
+		ofPoint pressedPoint;
 
 		virtual void update(){};
 		virtual void draw(){};

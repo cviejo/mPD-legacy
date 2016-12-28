@@ -15,10 +15,11 @@ class PdGuiMessage : public ofRectangle {
 		string nodeId;
 		int    color;
 
-
 		PdGuiMessage(string aMsg);
-		void parseIds();
-		void parseRect(int index);
-		void parseColor(int index);
+
+		void   parseIds();
+		void   parseRect(int index);
+		void   parseColor(int index);
 		string unquote(string& str);
 };
+
