@@ -38,8 +38,44 @@ Canvas::Canvas(){
 	// this->width  = ofGetWidth();
 	// this->height = ofGetHeight() - Globals::Theme.button.height * 2;
 
-	// this->initGrid();
+	this->initGrid();
 }
+
+
+//--------------------------------------------------------------
+void Canvas::initGrid(){
+
+	int stepWidth  = 20;//Globals::Theme.grid.cell.width  + 0.5f;
+	int stepHeight = 20;//Globals::Theme.grid.cell.height + 0.5f;
+	int gridWidth  = this->width  + stepWidth * 3;
+	int gridHeight = this->height + stepWidth * 3;
+
+	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
+	_grid.begin();
+
+	ofClear(255,255,255, 0);
+	// ofBackground(Globals::Theme.canvas.color.background);
+	// ofSetColor(Globals::Theme.canvas.color.background);
+	ofSetColor(0);
+	// ofBackground(0,0,255);
+	// ofSetColor(0,0,255);
+	// ofDrawRectangle(0, 0, gridWidth, gridHeight);
+	// ofSetColor(Globals::Theme.grid.color.front);
+	ofSetColor(200);
+
+	for(int i = 0; i < gridWidth; i += stepWidth){
+		for(int j = 0; j < gridHeight; j += stepHeight){
+			ofDrawCircle(i, j, 1);
+		}
+	}
+
+	_grid.end();
+
+	// Globals::Pd.setCanvasGridMode(true);
+	// Globals::Pd.setCanvasGridSize(Globals::Theme.grid.cell.width, 
+											// Globals::Theme.grid.cell.height);
+}
+
 
 //---------------------------VIRTUAL--------------------------//
 //--------------------------------------------------------------
@@ -51,6 +87,12 @@ void Canvas::draw(){
 	ofPushMatrix();
 	ofTranslate(this->x, this->y);
 	ofScale(_scale, _scale);
+
+	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
+	//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
+
+	ofSetColor(200);
+	_grid.draw(0, 0);
 
 	vector<PdCanvas*> canvases = PdGui::instance().getCanvases();
 
@@ -77,9 +119,10 @@ void Canvas::draw(){
 			}
 		}
 
-		for (auto node : canvas->connections){
-			ofSetColor(0);
-			ofDrawLine(node->x1, node->y1, node->x2, node->y2);
+		for (auto conn : canvas->connections){
+			ofSetColor(119);
+			ofSetLineWidth(2);
+			ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
 		}
 
 		if (canvas->mode == PdCanvas::MODE_REGION){
@@ -130,7 +173,6 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 
 
 	if (aNode->type == "msg"){
-
 		// ofSetColor(Globals::Theme.node.color.border);
 		ofSetColor(borderCol);
 		ofBeginShape();
@@ -175,6 +217,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofEndShape();
 
 		if (aNode->type == "numbox") {
+
 			ofSetColor(numboxBorderCol);
 			ofDrawTriangle(left + 0, top + 0,
 			               left + 0, bottom - 0,

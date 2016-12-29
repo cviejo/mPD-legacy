@@ -327,7 +327,6 @@ void PdGui::guiMessage(string aMsg){
 	else if (guiMsg.command == "gui_text_set"){
 
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-
 			node->text = this->unquote(guiMsg.args[2]);
 		}
 	}
@@ -342,11 +341,9 @@ void PdGui::guiMessage(string aMsg){
 			node->backgroundColor = guiMsg.color;
 		}
 	}
-	else if (guiMsg.command == "gui_message_draw_border" || 
-	         guiMsg.command == "gui_atom_draw_border"){
+	else if (guiMsg.command == "gui_message_draw_border" || guiMsg.command == "gui_atom_draw_border"){
 
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-
 			node->setSize(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
 		}
 	}
@@ -399,16 +396,26 @@ void PdGui::guiMessage(string aMsg){
 			}
 		}
 	}
-	else if (guiMsg.command == "gui_gobj_select"){
+	else if (guiMsg.command == "gui_canvas_delete_line"){
+		// gui_canvas_delete_line "x7fcd78914400","newcord"
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
-		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-			node->selected = true;
+			auto conns = canvas->connections;
+
+			for (auto& conn : conns){
+
+				if (conn->id == guiMsg.nodeId){
+					  delete conn;
+					  conn = NULL;
+				}
+			}
+			conns.erase(remove(conns.begin(), conns.end(), static_cast<PdConnection*>(NULL)), end(conns));
 		}
 	}
-	else if (guiMsg.command == "gui_gobj_deselect"){
+	else if (guiMsg.command == "gui_gobj_select" || guiMsg.command == "gui_gobj_deselect"){
 
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-			node->selected = false;
+			node->selected = guiMsg.command == "gui_gobj_select";
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_displace_withtag"){

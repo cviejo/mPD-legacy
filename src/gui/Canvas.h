@@ -28,23 +28,23 @@ class Canvas : public GuiElement {
 
 		// void print(const string& message); // pd receiver callbacks
 		// void setFocus(int x, int y);
-		// void initGrid();
 
 	private:
 
-		float       _scale;
-		ofRectangle _viewPort; // in PD coordinates
+		float          _scale;
+		ofFbo          _grid;
+		ofTrueTypeFont _font;
+		ofRectangle    _viewPort; // in PD coordinates
 
 		// CanvasRenderer* _renderer;
 		// ofPoint         _mouseLoc;   // stored in PD coordinates
 		// ofPoint         _pressLoc;   // stored in PD coordinates
 		// ofPoint         _draggedLoc; // stored in mPD coordinates (only relevant to mPD)
 		// ofPoint         _offsetLoc;  // stored in mPD coordinates (only relevant to mPD)
-		// ofFbo           _grid;
-		// Font            _font;
 		// Font            _consoleFont;
 		// vector<string>  _logs;
 
+		void    initGrid();
 		// void    clipOffset();
 		// void    drawGrid();
 		void    drawCanvas(PdNode* aCanvas);
