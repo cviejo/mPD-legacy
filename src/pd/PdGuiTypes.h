@@ -24,11 +24,6 @@ class PdIo : public ofRectangle
 {
 	public:
 
-		enum IoType {
-			TYPE_INLET = 0,
-			TYPE_OUTLET
-		};
-
 		string id;
 		bool   signal;
 };

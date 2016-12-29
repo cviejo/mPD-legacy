@@ -351,7 +351,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_draw_io"){
-
+		// "x7fd63490ce00",".x7fd63490ce00.t7fd633ccaa50",".x7fd63490ce00.t7fd633ccaa50",36,37,43,40,36,16,"o",0,0,0
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			guiMsg.parseRect(3);
@@ -359,6 +359,7 @@ void PdGui::guiMessage(string aMsg){
 			PdIo io;
 
 			io.set(guiMsg);
+			io.signal = guiMsg.args[11] != "0";
 
 			if (guiMsg.args[9] == "i") {
 				node->inlets.push_back(io);

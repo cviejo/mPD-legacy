@@ -45,7 +45,7 @@ Canvas::Canvas(){
 //--------------------------------------------------------------
 void Canvas::draw(){
 
-	ofSetColor(110);
+	ofSetColor(0);
 	ofDrawRectangle(*this);
 
 	ofPushMatrix();
@@ -64,14 +64,15 @@ void Canvas::draw(){
 
 				this->drawNodeBackground(node);
 
+				ofSetColor(0);
+				ofDrawBitmapString(node->text, node->getBottomLeft());
+
 				for (auto inlet : node->inlets){
-					ofSetColor(255,255,0);
-					ofDrawRectangle(inlet);
+					this->drawNodeIo(inlet);
 				}
 
 				for (auto outlet : node->outlets){
-					ofSetColor(255,255,0);
-					ofDrawRectangle(outlet);
+					this->drawNodeIo(outlet);
 				}
 			}
 		}
@@ -117,6 +118,10 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	int right  = aNode->getRight();
 	int bottom = aNode->getBottom();
 
+	int borderCol = 204;
+	int numboxBorderCol = 168;
+	int backCol   = 240;
+
 
 	if (aNode->selected){
 		ofSetColor(140);
@@ -127,7 +132,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	if (aNode->type == "msg"){
 
 		// ofSetColor(Globals::Theme.node.color.border);
-		ofSetColor(192);
+		ofSetColor(borderCol);
 		ofBeginShape();
 			ofVertex(left,      top);
 			ofVertex(right + 4, top);
@@ -150,7 +155,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	}
 	else if (aNode->type == "atom" || aNode->type == "numbox"){
 
-		ofSetColor(192);
+		ofSetColor(borderCol);
 		ofBeginShape();
 			ofVertex(left,      top);
 			ofVertex(right - 4, top);
@@ -159,7 +164,8 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofVertex(left,      bottom);
 		ofEndShape();
 
-		ofSetColor(224);
+		ofSetColor(backCol);
+		// ofSetColor(248, 248, 246);
 		ofBeginShape();
 			ofVertex(left + 1,  top + 1);
 			ofVertex(right - 4, top + 1);
@@ -167,6 +173,26 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofVertex(right - 1, bottom - 1);
 			ofVertex(left + 1,  bottom - 1);
 		ofEndShape();
+
+		if (aNode->type == "numbox") {
+			ofSetColor(numboxBorderCol);
+			ofDrawTriangle(left + 0, top + 0,
+			               left + 0, bottom - 0,
+			               left + 7, top + aNode->height / 2);
+
+			ofSetColor(backCol);
+			ofDrawTriangle(left + 1, top + 2,
+			               left + 1, bottom - 2,
+			               left + 6, top + aNode->height / 2);
+
+			ofSetColor(0);
+			// this->drawNodeText(aNode->content,
+									 // left + 8,
+									 // bottom - 3,
+									 // // top + Globals::Theme.node.font.height,
+									 // // node.bottom - Globals::Theme.node.io.height - 1,
+									 // Globals::Theme.node.font.height);
+		}
 	}
 	else {
 		
@@ -192,6 +218,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		// }
 		// ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 
+		ofSetColor(borderCol);
 		ofDrawRectangle(*aNode);
 
 		if (aNode->selected){
@@ -203,9 +230,6 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 
 		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 	}
-
-
-
 
 	// if (aNode->className == "gatom"){
 
@@ -317,6 +341,29 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		// }
 		// ofDrawRectangle(left + 1, top + 1, aNode->width - 2, aNode->height - 2);
 	// }
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawNodeIo(PdIo& aIo){
+
+	ofFill();
+
+	if (aIo.height == 1){
+
+		ofSetColor(0);
+		ofDrawRectangle(aIo);
+	}
+	else {
+
+		ofSetColor(119);
+		ofDrawRectangle(aIo);
+
+		if (!aIo.signal){
+			ofSetColor(255);
+			ofDrawRectangle(aIo.x + 1, aIo.y + 1, aIo.width - 2, aIo.height - 2);
+		}
+	}
 }
 
 
