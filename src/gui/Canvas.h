@@ -51,6 +51,7 @@ class Canvas : public GuiElement {
 		void    drawConnections(PdNode* aCanvas);
 		void    drawRegion(PdCanvas* aCanvas);
 		void    drawNodeBackground(PdNode* aNode);
+		void    drawNodeText(PdNode* aNode);
 		void    drawNodeIo(PdIo& aIo);
 		// void    drawConsole();
 		// void    drawConnecting();

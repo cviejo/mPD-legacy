@@ -16,8 +16,8 @@ Canvas::Canvas(){
 
 	_viewPort.setSize(this->width * _scale, this->height * _scale);
 
-	_font.load("fonts/UbuntuMono-R.ttf", 10, true, true);
-	_font.setLineHeight(10.0f);
+	_font.load("fonts/UbuntuMono-R.ttf", 70, true, true);
+	_font.setLineHeight(100.0f);
 	// _renderer = new CanvasRenderer();
 	// // _renderer.font = _font;
 
@@ -89,7 +89,7 @@ void Canvas::draw(){
 
 	ofPushMatrix();
 	ofTranslate(this->x, this->y);
-	ofScale(0.10f, 0.10f);
+	// ofScale(0.10f, 0.10f);
 	ofScale(_scale, _scale);
 
 	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
@@ -109,9 +109,7 @@ void Canvas::draw(){
 			if (_viewPort.intersects(*node)){
 
 				this->drawNodeBackground(node);
-
-				ofSetColor(0);
-				_font.drawString(node->text, node->x + node->textPosition.x, node->y + node->textPosition.y);
+				this->drawNodeText(node);
 
 				for (auto inlet : node->inlets){
 					this->drawNodeIo(inlet);
@@ -266,13 +264,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofSetColor(borderCol);
 		ofDrawRectangle(*aNode);
 
-		if (aNode->selected){
-			ofSetColor(255,0,0);
-		}
-		else {
-			ofSetHexColor(aNode->backgroundColor);
-		}
-
+		ofSetHexColor(aNode->backgroundColor);
 		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 	}
 
@@ -386,6 +378,17 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		// }
 		// ofDrawRectangle(left + 1, top + 1, aNode->width - 2, aNode->height - 2);
 	// }
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawNodeText(PdNode* aNode){
+
+	ofSetColor(0);
+
+	ofScale(0.10f, 0.10f);
+	_font.drawString(aNode->text, (aNode->x + aNode->textPosition.x) * 10.0f, (aNode->y + aNode->textPosition.y) * 10.0f);
+	ofScale(10.0f, 10.0f);
 }
 
 

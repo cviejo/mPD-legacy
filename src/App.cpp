@@ -94,6 +94,7 @@ void App::keyPressed(int key){
 	// debugging
 	if      (key == 'a'){ }
 	else if (key == 'c'){ PdGui::instance().canvasCopy(); }
+	else if (key == 'e'){ PdGui::instance().canvasCopy(); }
 	else if (key == 'p'){ PdGui::instance().canvasPaste(); }
 	else if (key == 'u'){ PdGui::instance().canvasUndo(); }
 }
