@@ -50,6 +50,7 @@ class PdNode : public ofRectangle
 		vector<PdIo> inlets;
 		vector<PdIo> outlets;
 		string       text;
+		ofPoint      textPosition;
 
 		PdNode(string aId){
 			this->id = aId;

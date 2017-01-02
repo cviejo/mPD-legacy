@@ -9,12 +9,15 @@ Canvas::Canvas(){
 
 	this->x      = 0;
 	this->y      = 0;
-	// this->width  = ofGetWidth();
-	// this->height = ofGetHeight();
-	this->width  = 400;
-	this->height = 400;
+	this->width  = ofGetWidth();
+	this->height = ofGetHeight();
+	// this->width  = 400;
+	// this->height = 400;
 
 	_viewPort.setSize(this->width * _scale, this->height * _scale);
+
+	_font.load("fonts/UbuntuMono-R.ttf", 10, true, true);
+	_font.setLineHeight(10.0f);
 	// _renderer = new CanvasRenderer();
 	// // _renderer.font = _font;
 
@@ -53,16 +56,16 @@ void Canvas::initGrid(){
 	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
 	_grid.begin();
 
-	ofClear(255,255,255, 0);
+	ofClear(255, 0);
 	// ofBackground(Globals::Theme.canvas.color.background);
 	// ofSetColor(Globals::Theme.canvas.color.background);
-	ofSetColor(0);
+	// ofSetColor(0);
 	// ofBackground(0,0,255);
-	// ofSetColor(0,0,255);
-	// ofDrawRectangle(0, 0, gridWidth, gridHeight);
+	ofSetColor(0);
+	ofDrawRectangle(0, 0, gridWidth, gridHeight);
 	// ofSetColor(Globals::Theme.grid.color.front);
-	ofSetColor(200);
 
+	ofSetColor(200);
 	for(int i = 0; i < gridWidth; i += stepWidth){
 		for(int j = 0; j < gridHeight; j += stepHeight){
 			ofDrawCircle(i, j, 1);
@@ -86,6 +89,7 @@ void Canvas::draw(){
 
 	ofPushMatrix();
 	ofTranslate(this->x, this->y);
+	ofScale(0.10f, 0.10f);
 	ofScale(_scale, _scale);
 
 	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
@@ -107,7 +111,7 @@ void Canvas::draw(){
 				this->drawNodeBackground(node);
 
 				ofSetColor(0);
-				ofDrawBitmapString(node->text, node->getBottomLeft());
+				_font.drawString(node->text, node->x + node->textPosition.x, node->y + node->textPosition.y);
 
 				for (auto inlet : node->inlets){
 					this->drawNodeIo(inlet);
@@ -161,16 +165,14 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	int right  = aNode->getRight();
 	int bottom = aNode->getBottom();
 
-	int borderCol = 204;
+	int borderCol       = 204;
 	int numboxBorderCol = 168;
-	int backCol   = 240;
-
+	int backCol         = 240;
 
 	if (aNode->selected){
 		ofSetColor(140);
 		ofDrawRectangle(aNode->x - 2, aNode->y - 2, aNode->width + 4, aNode->height + 4);
 	}
-
 
 	if (aNode->type == "msg"){
 		// ofSetColor(Globals::Theme.node.color.border);
@@ -187,12 +189,12 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		// ofSetColor(255);
 		ofSetColor(248, 248, 246);
 		ofBeginShape();
-			ofVertex(left + 1,  top + 1);
+			ofVertex(left  + 1, top + 1);
 			ofVertex(right + 2, top + 1);
 			ofVertex(right - 1, top + 4);
 			ofVertex(right - 1, bottom - 4);
 			ofVertex(right + 2, bottom - 1);
-			ofVertex(left + 1,  bottom - 1);
+			ofVertex(left  + 1, bottom - 1);
 		ofEndShape();
 	}
 	else if (aNode->type == "atom" || aNode->type == "numbox"){
@@ -228,7 +230,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			               left + 1, bottom - 2,
 			               left + 6, top + aNode->height / 2);
 
-			ofSetColor(0);
+			// ofSetColor(0);
 			// this->drawNodeText(aNode->content,
 									 // left + 8,
 									 // bottom - 3,
@@ -394,7 +396,8 @@ void Canvas::drawNodeIo(PdIo& aIo){
 
 	if (aIo.height == 1){
 
-		ofSetColor(0);
+		// ofSetColor(0);
+		ofSetColor(119);
 		ofDrawRectangle(aIo);
 	}
 	else {

@@ -324,6 +324,14 @@ void PdGui::guiMessage(string aMsg){
 			canvas->nodes.push_back(node);
 		}
 	}
+	else if (guiMsg.command == "gui_text_new"){
+		// gui_text_new "x7fbe1412a600",".x7fbe1412a600.t7fbe13deb990","atom",0,2,10,"0",5
+
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			node->text = this->unquote(guiMsg.args[6]);
+			node->textPosition.set(ofToInt(guiMsg.args[4]), ofToInt(guiMsg.args[5]));
+		}
+	}
 	else if (guiMsg.command == "gui_text_set"){
 
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
