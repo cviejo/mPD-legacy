@@ -86,6 +86,8 @@ class PdCanvas : public PdNode {
 		vector<PdNode*>       nodes;
 		vector<PdConnection*> connections;
 		ofRectangle           region;
+		ofRectangle           viewPort; // in PD coordinates
+		float                 scale;
 
 		PdCanvas(string aId) : PdNode(aId) {}
 };

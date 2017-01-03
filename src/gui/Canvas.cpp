@@ -43,7 +43,7 @@ Canvas::Canvas(){
 
 	this->initGrid();
 
-	PdGui::instance().canvasPressed(_current, p.x, p.y);
+	// PdGui::instance().canvasPressed(_current, p.x, p.y);
 }
 
 

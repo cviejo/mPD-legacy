@@ -33,9 +33,9 @@ class Canvas : public GuiElement {
 	private:
 
 		PdCanvas*      _current = NULL;
-		float          _scale;
 		ofFbo          _grid;
 		ofTrueTypeFont _font;
+		float          _scale;
 		ofRectangle    _viewPort; // in PD coordinates
 
 		// CanvasRenderer* _renderer;

@@ -11,6 +11,7 @@ void App::setup(){
 	ofBackground(255);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
+	ofSetWindowPosition(152,1094);
 
 	this->initAudio();
 	this->initSearchPaths();
@@ -37,7 +38,6 @@ void App::initAudio(){
 
 	PdGui::instance().startAudio();
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-
 }
 
 
@@ -85,7 +85,10 @@ void App::draw(){
 	}
 
 	ofDisableAlphaBlending();
-	ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
+
+	// ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
+	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
+	// ofDrawBitmapString("y:   " + ofToString(ofGetWindowPositionY()), 30, 50);
 }
 
 
