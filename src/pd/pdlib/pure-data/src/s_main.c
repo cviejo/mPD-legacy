@@ -156,7 +156,9 @@ int sys_hostfontsize(int fontsize)
 
 int sys_fontwidth(int fontsize)
 {
-    return (sys_findfont(fontsize)->fi_width);
+    // mPD
+    // TODO: better than hard-coding this
+    return 6;//(sys_findfont(fontsize)->fi_width);
 }
 
 int sys_fontheight(int fontsize)

@@ -42,6 +42,8 @@ Canvas::Canvas(){
 	// this->height = ofGetHeight() - Globals::Theme.button.height * 2;
 
 	this->initGrid();
+
+	PdGui::instance().canvasPressed(_current, p.x, p.y);
 }
 
 
@@ -80,6 +82,12 @@ void Canvas::initGrid(){
 }
 
 
+//--------------------------------------------------------------
+void Canvas::set(PdCanvas* aCanvas){
+	_current = aCanvas;
+}
+
+
 //---------------------------VIRTUAL--------------------------//
 //--------------------------------------------------------------
 void Canvas::draw(){
@@ -98,39 +106,41 @@ void Canvas::draw(){
 	ofSetColor(200);
 	_grid.draw(0, 0);
 
-	vector<PdCanvas*> canvases = PdGui::instance().getCanvases();
+	if (_current == NULL){ return; }
 
 	ofSetColor(255);
 
-	for (auto& canvas : canvases){
+	for (auto node : _current->nodes){
 
-		for (auto node : canvas->nodes){
+		if (_viewPort.intersects(*node)){
 
-			if (_viewPort.intersects(*node)){
+			this->drawNodeBackground(node);
+			this->drawNodeText(node);
 
-				this->drawNodeBackground(node);
-				this->drawNodeText(node);
+			for (auto inlet : node->inlets){
+				this->drawNodeIo(inlet);
+			}
 
-				for (auto inlet : node->inlets){
-					this->drawNodeIo(inlet);
-				}
-
-				for (auto outlet : node->outlets){
-					this->drawNodeIo(outlet);
-				}
+			for (auto outlet : node->outlets){
+				this->drawNodeIo(outlet);
 			}
 		}
+	}
 
-		for (auto conn : canvas->connections){
-			ofSetColor(119);
-			ofSetLineWidth(2);
-			ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
-		}
+	for (auto conn : _current->connections){
+		ofSetColor(119);
+		ofSetLineWidth(2);
+		ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
+	}
 
-		if (canvas->mode == PdCanvas::MODE_REGION){
-			ofSetColor(0, 120);
-			ofDrawRectangle(canvas->region);
-		}
+	if (_current->mode == PdCanvas::MODE_REGION){
+		ofSetColor(0, 120);
+		ofDrawRectangle(_current->region);
+	}
+
+	if (_current->editMode){
+		ofSetColor(255,  0, 0);
+		ofDrawCircle(50, ofGetHeight() - 50, 10, 10);
 	}
 
 	ofPopMatrix();
@@ -421,7 +431,7 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	PdGui::instance().canvasPressed(p.x, p.y);
+	PdGui::instance().canvasPressed(_current, p.x, p.y);
 
 	// if (!scaling){
 
@@ -438,7 +448,7 @@ void Canvas::onDragged(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	PdGui::instance().canvasDragged(p.x, p.y);
+	PdGui::instance().canvasDragged(_current, p.x, p.y);
 
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
@@ -467,7 +477,7 @@ void Canvas::onReleased(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	PdGui::instance().canvasReleased(p.x, p.y);
+	PdGui::instance().canvasReleased(_current, p.x, p.y);
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
 	// _offsetLoc.x += _draggedLoc.x;

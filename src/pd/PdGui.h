@@ -3,6 +3,7 @@
 
 #include "PdBase.hpp"
 #include "PdGuiTypes.h"
+#include "m_pd.h"
 
 
 using namespace pd;
@@ -21,13 +22,13 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		void              stopAudio();
 		PdCanvas*         openPatch(const string& aPath); // naming/types are a bit off on these two
 		void              closePatch(PdCanvas& aPatch);
-		void              canvasPressed (int x, int y);
-		void              canvasDragged (int x, int y);
-		void              canvasReleased(int x, int y);
-		void              canvasDelete();
-		void              canvasCopy();
-		void              canvasPaste();
-		void              canvasUndo();
+		void              canvasPressed (PdCanvas* canvas, int x, int y);
+		void              canvasDragged (PdCanvas* canvas, int x, int y);
+		void              canvasReleased(PdCanvas* canvas, int x, int y);
+		void              canvasDelete  (PdCanvas* canvas);
+		void              canvasCopy    (PdCanvas* canvas);
+		void              canvasPaste   (PdCanvas* canvas);
+		void              canvasUndo    (PdCanvas* canvas);
 		void              guiMessage(string aMessage);
 		vector<PdCanvas*> getCanvases();
 		PdCanvas*         getCanvas(string aId);
@@ -56,5 +57,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		string            unquote(string& str);
 		string            getPatchId(Patch& patch);
 		void              evaluateBuffer(string& str);
+
+		t_canvas*         getPdCanvas(string aId);
 };
 

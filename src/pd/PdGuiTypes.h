@@ -81,6 +81,7 @@ class PdCanvas : public PdNode {
 		};
 
 		CanvasMode            mode;
+		bool                  editMode;
 		Patch                 patch;
 		vector<PdNode*>       nodes;
 		vector<PdConnection*> connections;

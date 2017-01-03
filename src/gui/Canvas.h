@@ -25,12 +25,14 @@ class Canvas : public GuiElement {
 		virtual void onDoubleClick(int aX, int aY);
 		virtual void onAppEvent(AppEvent& aAppEvent);
 		virtual void onPressCancel();
+		void         set(PdCanvas* canvas);
 
 		// void print(const string& message); // pd receiver callbacks
 		// void setFocus(int x, int y);
 
 	private:
 
+		PdCanvas*      _current = NULL;
 		float          _scale;
 		ofFbo          _grid;
 		ofTrueTypeFont _font;

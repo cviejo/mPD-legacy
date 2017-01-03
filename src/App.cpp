@@ -37,6 +37,7 @@ void App::initAudio(){
 
 	PdGui::instance().startAudio();
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+
 }
 
 
@@ -93,10 +94,10 @@ void App::keyPressed(int key){
 
 	// debugging
 	if      (key == 'a'){ }
-	else if (key == 'c'){ PdGui::instance().canvasCopy(); }
-	else if (key == 'e'){ PdGui::instance().canvasCopy(); }
-	else if (key == 'p'){ PdGui::instance().canvasPaste(); }
-	else if (key == 'u'){ PdGui::instance().canvasUndo(); }
+	else if (key == 'c'){ PdGui::instance().canvasCopy(NULL); }
+	else if (key == 'e'){ PdGui::instance().canvasCopy(NULL); }
+	else if (key == 'p'){ PdGui::instance().canvasPaste(NULL); }
+	else if (key == 'u'){ PdGui::instance().canvasUndo(NULL); }
 }
 
 

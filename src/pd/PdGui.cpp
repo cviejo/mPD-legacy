@@ -219,31 +219,31 @@ PdNode* PdGui::getNode(string aCanvasId, string aNodeId){
 
 
 //--------------------------------------------------------------
-void PdGui::canvasPressed(int x, int y){  canvas_mousedown(pd_getcanvaslist(), x, y, 0, 0); }
+void PdGui::canvasPressed(PdCanvas* canvas, int x, int y){ canvas_mousedown((t_canvas*)pd_getcanvaslist(), x, y, 0, 0); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasDragged(int x, int y){  canvas_motion(pd_getcanvaslist(), x, y, 0); }
+void PdGui::canvasDragged(PdCanvas* canvas, int x, int y){ canvas_motion((t_canvas*)pd_getcanvaslist(), x, y, 0); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasReleased(int x, int y){ canvas_mouseup(pd_getcanvaslist(), x, y, 0); }
+void PdGui::canvasReleased(PdCanvas* canvas, int x, int y){ canvas_mouseup((t_canvas*)pd_getcanvaslist(), x, y, 0); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasDelete(){ canvas_doclear(pd_getcanvaslist()); }
+void PdGui::canvasDelete(PdCanvas* canvas){ canvas_doclear(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasUndo(){ canvas_undo_undo(pd_getcanvaslist()); }
+void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasCopy(){ canvas_copy(pd_getcanvaslist()); }
+void PdGui::canvasCopy(PdCanvas* canvas){ canvas_copy(pd_getcanvaslist()); }
 
 
 //--------------------------------------------------------------
-void PdGui::canvasPaste(){ canvas_paste(pd_getcanvaslist()); }
+void PdGui::canvasPaste(PdCanvas* canvas){ canvas_paste(pd_getcanvaslist()); }
 
 // move to some utils class / module
 //--------------------------------------------------------------
@@ -294,6 +294,13 @@ void PdGui::guiMessage(string aMsg){
 			_canvases.push_back(new PdCanvas(guiMsg.canvasId));
 
 			this->evaluateBuffer(mapCommand);
+		}
+	}
+	else if (guiMsg.command == "gui_canvas_set_editmode"){
+		// gui_canvas_set_editmode "x7f9244127e00",1
+
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
+			canvas->editMode = ofToBool(guiMsg.args[1]);
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
