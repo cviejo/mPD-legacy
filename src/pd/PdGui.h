@@ -37,6 +37,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		virtual void      audioIn (float * input,  int bufferSize, int channelCount);
 		virtual void      audioOut(float * output, int bufferSize, int channelCount);
 
+		void              evaluateBuffer(string& str);
 
 	private:
 
@@ -56,7 +57,6 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 		string            unquote(string& str);
 		string            getPatchId(Patch& patch);
-		void              evaluateBuffer(string& str);
 
 		t_canvas*         getPdCanvas(string aId);
 };

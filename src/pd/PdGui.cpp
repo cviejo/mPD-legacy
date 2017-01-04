@@ -22,7 +22,7 @@ extern "C" {
 	void canvas_doclear   (t_canvas *x);
 	void canvas_copy      (t_canvas *x);
 	void canvas_paste     (t_canvas *x);
-	void canvas_undo_undo (t_canvas *x);
+	// void canvas_undo_undo (t_canvas *x);
 	void canvas_duplicate (t_canvas *x);
 	void canvas_cut       (t_canvas *x);
 	void canvas_menusave  (t_canvas *x);
@@ -234,8 +234,13 @@ void PdGui::canvasReleased(PdCanvas* canvas, int x, int y){ canvas_mouseup((t_ca
 void PdGui::canvasDelete(PdCanvas* canvas){ canvas_doclear(pd_getcanvaslist()); }
 
 
+                    // else binbuf_eval(inbinbuf, 0, 0, 0);
 //--------------------------------------------------------------
-void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
+// void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
+void PdGui::canvasUndo(PdCanvas* canvas){
+	auto cmd = (_canvases[0])->id + " undo";
+	this->evaluateBuffer(cmd);
+}
 
 
 //--------------------------------------------------------------
@@ -385,13 +390,16 @@ void PdGui::guiMessage(string aMsg){
 
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
+			guiMsg.parseRect(7);
+
 			PdConnection* conn = new PdConnection();
 
 			conn->id = guiMsg.nodeId;
-			conn->x1 = ofToInt(guiMsg.args[7]);
-			conn->y1 = ofToInt(guiMsg.args[8]);
-			conn->x2 = ofToInt(guiMsg.args[10]);
-			conn->y2 = ofToInt(guiMsg.args[11]);
+			conn->set(guiMsg);
+			// conn->x1 = ofToInt(guiMsg.args[7]);
+			// conn->y1 = ofToInt(guiMsg.args[8]);
+			// conn->x2 = ofToInt(guiMsg.args[10]);
+			// conn->y2 = ofToInt(guiMsg.args[11]);
 
 			canvas->connections.push_back(conn);
 		}
@@ -403,10 +411,12 @@ void PdGui::guiMessage(string aMsg){
 			for (auto conn : canvas->connections){
 
 				if(conn->id == guiMsg.nodeId){
-					conn->x1 = ofToInt(guiMsg.args[2]);
-					conn->y1 = ofToInt(guiMsg.args[3]);
-					conn->x2 = ofToInt(guiMsg.args[4]);
-					conn->y2 = ofToInt(guiMsg.args[5]);
+					guiMsg.parseRect(2);
+					conn->set(guiMsg);
+					// conn->x1 = ofToInt(guiMsg.args[2]);
+					// conn->y1 = ofToInt(guiMsg.args[3]);
+					// conn->x2 = ofToInt(guiMsg.args[4]);
+					// conn->y2 = ofToInt(guiMsg.args[5]);
 				}
 			}
 		}

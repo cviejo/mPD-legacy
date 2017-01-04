@@ -9,23 +9,18 @@ using namespace pd;
 
 
 //--------------------------------------------------------------
-class PdConnection
-{
-	public:
-
-		string id;
-		bool   signal;
-		int    x1, y1, x2, y2;
-};
-
-
-//--------------------------------------------------------------
 class PdIo : public ofRectangle
 {
 	public:
 
 		string id;
 		bool   signal;
+};
+
+
+//--------------------------------------------------------------
+class PdConnection : public PdIo
+{
 };
 
 
@@ -80,14 +75,14 @@ class PdCanvas : public PdNode {
 			MODE_REGION
 		};
 
+		float                 scale = 1.0f;
 		CanvasMode            mode;
 		bool                  editMode;
 		Patch                 patch;
 		vector<PdNode*>       nodes;
 		vector<PdConnection*> connections;
 		ofRectangle           region;
-		ofRectangle           viewPort; // in PD coordinates
-		float                 scale;
+		ofRectangle           viewPort;
 
 		PdCanvas(string aId) : PdNode(aId) {}
 };

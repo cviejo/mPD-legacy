@@ -4,8 +4,8 @@
 //--------------------------------------------------------------
 Canvas::Canvas(){
 
-	_viewPort.setPosition(0, 0);
-	_scale = 1.f;
+	// _current->viewPort.setPosition(0, 0);
+	// _current->scale = 1.f;
 
 	this->x      = 0;
 	this->y      = 0;
@@ -14,7 +14,6 @@ Canvas::Canvas(){
 	// this->width  = 400;
 	// this->height = 400;
 
-	_viewPort.setSize(this->width * _scale, this->height * _scale);
 
 	_font.load("fonts/UbuntuMono-R.ttf", 70, true, true);
 	_font.setLineHeight(100.0f);
@@ -95,24 +94,22 @@ void Canvas::draw(){
 	ofSetColor(0);
 	ofDrawRectangle(*this);
 
+	if (_current == NULL){ return; }
+
 	ofPushMatrix();
 	ofTranslate(this->x, this->y);
-	// ofScale(0.10f, 0.10f);
-	ofScale(_scale, _scale);
+	ofScale(_current->scale, _current->scale);
 
 	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
 	//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
-
 	ofSetColor(200);
 	_grid.draw(0, 0);
-
-	if (_current == NULL){ return; }
 
 	ofSetColor(255);
 
 	for (auto node : _current->nodes){
 
-		if (_viewPort.intersects(*node)){
+		if (_current->viewPort.intersects(*node)){
 
 			this->drawNodeBackground(node);
 			this->drawNodeText(node);
@@ -130,7 +127,8 @@ void Canvas::draw(){
 	for (auto conn : _current->connections){
 		ofSetColor(119);
 		ofSetLineWidth(2);
-		ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
+		// ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
+		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
@@ -515,16 +513,14 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 		case AppEvent::TYPE_SCALE_BEGIN:
 			break;
 
-
 		case AppEvent::TYPE_SCALE:
 			#ifdef TARGET_ANDROID
-			_scale *= aAppEvent.value;
+			_current->scale *= aAppEvent.value;
 			#else
-			_scale += aAppEvent.value;
+			_current->scale += aAppEvent.value;
 			#endif
-			_viewPort.setSize(this->width / _scale, this->height / _scale);
+			_current->viewPort.setSize(this->width / _current->scale, this->height / _current->scale);
 			break;
-
 
 		default:
 			break;
@@ -576,7 +572,7 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 	// auto focusLoc  = this->transformToPdCoordinates(aX, aY);
 	// auto offsetLoc = this->transformToPdCoordinates(this->width * .5f, this->height * .5f);
 
-	// _viewPort.setPosition(focusLoc - offsetLoc);
+	// _current->viewPort.setPosition(focusLoc - offsetLoc);
 
 	// // this->clipOffset();
 // }
@@ -603,8 +599,8 @@ ofPoint Canvas::transformToPdCoordinates(float aX, float aY){
 
 	ofPoint result;
 
-	result.x = (aX - this->x) / _scale - _viewPort.x; // Globals::Settings.scale;
-	result.y = (aY - this->y) / _scale - _viewPort.y; // Globals::Settings.scale;
+	result.x = (aX - this->x) / _current->scale - _current->viewPort.x; // Globals::Settings.scale;
+	result.y = (aY - this->y) / _current->scale - _current->viewPort.y; // Globals::Settings.scale;
 
 	return result;
 }
