@@ -2,7 +2,7 @@ var gulp  = require("gulp");
 var spawn = require("child_process").spawn;
 var exec  = require("child_process").exec;
 
-
+var run  = process.argv.indexOf("-run") + 1;
 var opts = {
 	stdio : "inherit",
 	cwd   : process.cwd()
@@ -24,7 +24,7 @@ gulp.task('default', function(){
 
 		make.on('close', function(err) {
 
-			if (!err){
+			if (!err && run){
 				make = spawn("make", ["RunRelease"], opts);
 			}
 		});
