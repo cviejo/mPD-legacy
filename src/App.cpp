@@ -18,6 +18,8 @@ void App::setup(){
 	this->initEventListeners();
 
 	_guiElements.push_back(new Canvas());
+
+	((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[0]);
 }
 
 
@@ -38,6 +40,7 @@ void App::initAudio(){
 
 	PdGui::instance().startAudio();
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	
 }
 
 
@@ -96,7 +99,10 @@ void App::draw(){
 void App::keyPressed(int key){
 
 	// debugging
-	if      (key == 'a'){ }
+	if      (key == 'a'){
+		auto cmd = PdGui::instance().getCanvases()[0]->id + " selectall";
+		PdGui::instance().evaluateBuffer(cmd);
+	}
 	else if (key == 'c'){ PdGui::instance().canvasCopy(NULL); }
 	else if (key == 'e'){ PdGui::instance().canvasCopy(NULL); }
 	else if (key == 'p'){ PdGui::instance().canvasPaste(NULL); }
