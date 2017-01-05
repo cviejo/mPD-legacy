@@ -98,15 +98,22 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
+	auto canvases = PdGui::instance().getCanvases();
+
+	if (!canvases.size()){ return; }
+
+	string cmd = "";
+
 	// debugging
-	if      (key == 'a'){
-		auto cmd = PdGui::instance().getCanvases()[0]->id + " selectall";
-		PdGui::instance().evaluateBuffer(cmd);
+	if      (key == 'a'){ cmd = canvases[0]->id + " selectall"; }
+	else if (key == 'c'){ cmd = canvases[0]->id + " copy"; }
+	else if (key == 'e'){ cmd = canvases[0]->id + " selectall"; }
+	else if (key == 'p'){ cmd = canvases[0]->id + " paste"; }
+	else if (key == 'u'){ cmd = canvases[0]->id + " undo"; }
+
+	if (cmd != ""){
+		PdGui::instance().pdsend(cmd);
 	}
-	else if (key == 'c'){ PdGui::instance().canvasCopy(NULL); }
-	else if (key == 'e'){ PdGui::instance().canvasCopy(NULL); }
-	else if (key == 'p'){ PdGui::instance().canvasPaste(NULL); }
-	else if (key == 'u'){ PdGui::instance().canvasUndo(NULL); }
 }
 
 

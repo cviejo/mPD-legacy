@@ -29,14 +29,6 @@ class PdNode : public ofRectangle
 {
 	public:
 
-		// enum NodeType {
-			// TYPE_TEXT = 0,
-			// TYPE_CONTROL,
-			// TYPE_GRAPH,
-			// TYPE_COMMENT,
-			// TYPE_INVALID,
-		// };
-
 		int          backgroundColor = 255;
 		bool         selected        = false;
 		string       id;
@@ -75,9 +67,10 @@ class PdCanvas : public PdNode {
 			MODE_REGION
 		};
 
-		float                 scale = 1.0f;
+		float                 scale    = 1.0f;
+		bool                  editMode = true;
+		// bool                  active   = false;
 		CanvasMode            mode;
-		bool                  editMode;
 		Patch                 patch;
 		vector<PdNode*>       nodes;
 		vector<PdConnection*> connections;
@@ -86,6 +79,14 @@ class PdCanvas : public PdNode {
 
 		PdCanvas(string aId) : PdNode(aId) {}
 };
+
+		// enum NodeType {
+			// TYPE_TEXT = 0,
+			// TYPE_CONTROL,
+			// TYPE_GRAPH,
+			// TYPE_COMMENT,
+			// TYPE_INVALID,
+		// };
 
 
 		// bool           selected         = false;

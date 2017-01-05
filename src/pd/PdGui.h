@@ -22,13 +22,15 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		void              stopAudio();
 		PdCanvas*         openPatch(const string& aPath); // naming/types are a bit off on these two
 		void              closePatch(PdCanvas& aPatch);
+		void              pdsend(string& cmd);
+		// void              pdsend(string n, ...);
 		void              canvasPressed (PdCanvas* canvas, int x, int y);
 		void              canvasDragged (PdCanvas* canvas, int x, int y);
 		void              canvasReleased(PdCanvas* canvas, int x, int y);
-		void              canvasDelete  (PdCanvas* canvas);
-		void              canvasCopy    (PdCanvas* canvas);
-		void              canvasPaste   (PdCanvas* canvas);
-		void              canvasUndo    (PdCanvas* canvas);
+		// void              canvasDelete  (PdCanvas* canvas);
+		// void              canvasCopy    (PdCanvas* canvas);
+		// void              canvasPaste   (PdCanvas* canvas);
+		// void              canvasUndo    (PdCanvas* canvas);
 		void              guiMessage(string aMessage);
 		vector<PdCanvas*> getCanvases();
 		PdCanvas*         getCanvas(string aId);
@@ -37,7 +39,6 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		virtual void      audioIn (float * input,  int bufferSize, int channelCount);
 		virtual void      audioOut(float * output, int bufferSize, int channelCount);
 
-		void              evaluateBuffer(string& str);
 
 	private:
 

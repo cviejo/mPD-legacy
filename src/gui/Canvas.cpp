@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "PdBase.hpp"
 
 
 //--------------------------------------------------------------
@@ -107,7 +108,7 @@ void Canvas::draw(){
 
 	ofSetColor(255);
 
-	for (auto node : _current->nodes){
+	for (auto& node : _current->nodes){
 
 		if (_current->viewPort.intersects(*node)){
 
@@ -127,8 +128,11 @@ void Canvas::draw(){
 	for (auto conn : _current->connections){
 		ofSetColor(119);
 		ofSetLineWidth(2);
+		if (conn->id != ""){
+			ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
+		}
 		// ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
-		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
+//		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
@@ -427,9 +431,11 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	ofPoint p  = this->transformToPdCoordinates(aX, aY);
+	string cmd = _current->id + " mouse " + ofToString(p.x) + " " + ofToString(p.y) + " 0 0";
 
-	PdGui::instance().canvasPressed(_current, p.x, p.y);
+	PdGui::instance().pdsend(cmd);
+	// PdGui::instance().canvasPressed(_current, p.x, p.y);
 
 	// if (!scaling){
 
@@ -445,8 +451,10 @@ void Canvas::onPressed(int aX, int aY, int aId){
 void Canvas::onDragged(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	string cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
-	PdGui::instance().canvasDragged(_current, p.x, p.y);
+	PdGui::instance().pdsend(cmd);
+	// PdGui::instance().canvasDragged(_current, p.x, p.y);
 
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
@@ -473,9 +481,13 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	ofPoint p  = this->transformToPdCoordinates(aX, aY);
+	string cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
-	PdGui::instance().canvasReleased(_current, p.x, p.y);
+	PdGui::instance().pdsend(cmd);
+	// PdGui::instance().canvasReleased(_current, p.x, p.y);
+
+	// PdGui::instance().canvasReleased(_current, p.x, p.y);
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
 	// _offsetLoc.x += _draggedLoc.x;

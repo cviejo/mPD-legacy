@@ -33,7 +33,11 @@ extern "C" {
 
 
 //--------------------------------------------------------------
-void gui_msg_hook(char* msg){ PdGui::instance().guiMessage(msg); }
+void gui_msg_hook(char* msg){
+	// PdGui::instance().lock();
+	PdGui::instance().guiMessage(msg);
+	// PdGui::instance().unlock();
+}
 
 
 //----------------------------------------------------------
@@ -88,7 +92,7 @@ PdCanvas* PdGui::openPatch(const string& aPath) {
 	}
 
 	Patch  patch   = PdBase::openPatch(file.c_str(), folder.c_str());
-	string patchId = getPatchId(patch);
+	// string patchId = getPatchId(patch);
 
 	if (!patch.isValid()){
 		ofLogError("Pd") << "opening patch: " + aPath;
@@ -230,25 +234,25 @@ void PdGui::canvasDragged(PdCanvas* canvas, int x, int y){ canvas_motion((t_canv
 void PdGui::canvasReleased(PdCanvas* canvas, int x, int y){ canvas_mouseup((t_canvas*)pd_getcanvaslist(), x, y, 0); }
 
 
-//--------------------------------------------------------------
-void PdGui::canvasDelete(PdCanvas* canvas){ canvas_doclear(pd_getcanvaslist()); }
+// //--------------------------------------------------------------
+// void PdGui::canvasDelete(PdCanvas* canvas){ canvas_doclear(pd_getcanvaslist()); }
 
 
-                    // else binbuf_eval(inbinbuf, 0, 0, 0);
-//--------------------------------------------------------------
-// void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
-void PdGui::canvasUndo(PdCanvas* canvas){
-	auto cmd = (_canvases[0])->id + " undo";
-	this->evaluateBuffer(cmd);
-}
+                    // // else binbuf_eval(inbinbuf, 0, 0, 0);
+// //--------------------------------------------------------------
+// // void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
+// void PdGui::canvasUndo(PdCanvas* canvas){
+	// auto cmd = (_canvases[0])->id + " undo";
+	// this->evaluateBuffer(cmd);
+// }
 
 
-//--------------------------------------------------------------
-void PdGui::canvasCopy(PdCanvas* canvas){ canvas_copy(pd_getcanvaslist()); }
+// //--------------------------------------------------------------
+// void PdGui::canvasCopy(PdCanvas* canvas){ canvas_copy(pd_getcanvaslist()); }
 
 
-//--------------------------------------------------------------
-void PdGui::canvasPaste(PdCanvas* canvas){ canvas_paste(pd_getcanvaslist()); }
+// //--------------------------------------------------------------
+// void PdGui::canvasPaste(PdCanvas* canvas){ canvas_paste(pd_getcanvaslist()); }
 
 // move to some utils class / module
 //--------------------------------------------------------------
@@ -273,11 +277,11 @@ string PdGui::unquote(string& str){
 
 
 //--------------------------------------------------------------
-void PdGui::evaluateBuffer(string& aBuffer){
+void PdGui::pdsend(string& aCmd){
 
 	t_binbuf* buffer = binbuf_new();
 
-	binbuf_text(buffer, (char*)aBuffer.c_str(), aBuffer.length());
+	binbuf_text(buffer, (char*)aCmd.c_str(), aCmd.length());
 	binbuf_eval(buffer, 0, 0, 0);
 	binbuf_free(buffer);
 }
@@ -298,7 +302,7 @@ void PdGui::guiMessage(string aMsg){
 
 			_canvases.push_back(new PdCanvas(guiMsg.canvasId));
 
-			this->evaluateBuffer(mapCommand);
+			this->pdsend(mapCommand);
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_set_editmode"){
@@ -319,6 +323,23 @@ void PdGui::guiMessage(string aMsg){
 			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
 
 			canvas->nodes.push_back(node);
+		}
+	}
+	else if (guiMsg.command == "gui_gobj_erase"){
+		// gui_gobj_erase "x7fbe328f2400","x7fbe32a10400"
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
+
+			for (auto& node : canvas->nodes){
+				if (node->id == guiMsg.nodeId){
+					  delete node;
+					  node = NULL;
+				}
+			}
+
+			canvas->nodes.erase(
+				remove(canvas->nodes.begin(), canvas->nodes.end(), static_cast<PdNode*>(NULL)),
+				end(canvas->nodes)
+			);
 		}
 	}
 	else if (guiMsg.command == "gui_numbox_new"){
@@ -425,16 +446,17 @@ void PdGui::guiMessage(string aMsg){
 		// gui_canvas_delete_line "x7fcd78914400","newcord"
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
-			auto conns = canvas->connections;
-
-			for (auto& conn : conns){
-
+			for (auto& conn : canvas->connections){
 				if (conn->id == guiMsg.nodeId){
 					  delete conn;
 					  conn = NULL;
 				}
 			}
-			conns.erase(remove(conns.begin(), conns.end(), static_cast<PdConnection*>(NULL)), end(conns));
+			canvas->connections.erase(
+					remove(canvas->connections.begin(), canvas->connections.end(), static_cast<PdConnection*>(NULL)),
+					end(canvas->connections)
+			);
+			// this->unlock();
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_select" || guiMsg.command == "gui_gobj_deselect"){
