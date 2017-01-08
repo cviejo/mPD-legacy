@@ -54,7 +54,8 @@ void App::initSearchPaths(){
 	for(int i = 0; i < extrasFolder.size(); i++){
 
 		if (extrasFolder.getFile(i).isDirectory()){
-			PdGui::instance().addToSearchPath(extrasFolder.getPath(i));
+			string path = ofFilePath::getAbsolutePath(ofToDataPath(extrasFolder.getPath(i)));
+			PdGui::instance().addToSearchPath(path);
 		}
 	}
 }
@@ -107,6 +108,7 @@ void App::keyPressed(int key){
 	else if (key == 'e'){ PdGui::instance().canvasCopy(NULL); }
 	else if (key == 'p'){ PdGui::instance().canvasPaste(NULL); }
 	else if (key == 'u'){ PdGui::instance().canvasUndo(NULL); }
+	else if (key == 'Q'){ ofExit(); }
 }
 
 
@@ -262,8 +264,8 @@ bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 //--------------------------------------------------------------
 void App::mouseScrolled(ofMouseEventArgs& mouse){
 
-	ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
-	ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
+	// ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
+	// ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
 
 	AppEvent event(AppEvent::TYPE_SCALE, "", mouse.x, mouse.y);
 
