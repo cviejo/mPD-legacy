@@ -21,6 +21,10 @@ class PdIo : public ofRectangle
 //--------------------------------------------------------------
 class PdConnection : public PdIo
 {
+	public:
+
+		int x2;
+		int y2;
 };
 
 

@@ -390,16 +390,13 @@ void PdGui::guiMessage(string aMsg){
 
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
-			guiMsg.parseRect(7);
-
 			PdConnection* conn = new PdConnection();
 
 			conn->id = guiMsg.nodeId;
-			conn->set(guiMsg);
-			// conn->x1 = ofToInt(guiMsg.args[7]);
-			// conn->y1 = ofToInt(guiMsg.args[8]);
-			// conn->x2 = ofToInt(guiMsg.args[10]);
-			// conn->y2 = ofToInt(guiMsg.args[11]);
+			conn->x  = ofToInt(guiMsg.args[7]);
+			conn->y  = ofToInt(guiMsg.args[8]);
+			conn->x2 = ofToInt(guiMsg.args[10]);
+			conn->y2 = ofToInt(guiMsg.args[11]);
 
 			canvas->connections.push_back(conn);
 		}
@@ -411,12 +408,10 @@ void PdGui::guiMessage(string aMsg){
 			for (auto conn : canvas->connections){
 
 				if(conn->id == guiMsg.nodeId){
-					guiMsg.parseRect(2);
-					conn->set(guiMsg);
-					// conn->x1 = ofToInt(guiMsg.args[2]);
-					// conn->y1 = ofToInt(guiMsg.args[3]);
-					// conn->x2 = ofToInt(guiMsg.args[4]);
-					// conn->y2 = ofToInt(guiMsg.args[5]);
+					conn->x  = ofToInt(guiMsg.args[2]);
+					conn->y  = ofToInt(guiMsg.args[3]);
+					conn->x2 = ofToInt(guiMsg.args[4]);
+					conn->y2 = ofToInt(guiMsg.args[5]);
 				}
 			}
 		}

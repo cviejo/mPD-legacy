@@ -127,8 +127,8 @@ void Canvas::draw(){
 	for (auto conn : _current->connections){
 		ofSetColor(119);
 		ofSetLineWidth(2);
-		// ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
-		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
+		ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
+		// ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
