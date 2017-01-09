@@ -57,6 +57,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 		string            unquote(string& str);
 		string            getPatchId(Patch& patch);
+		// PdNode*           getNewNode(PdGuiMessage& aGuiMsg);
 
 		t_canvas*         getPdCanvas(string aId);
 };

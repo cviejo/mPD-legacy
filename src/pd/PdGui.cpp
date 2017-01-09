@@ -283,6 +283,19 @@ void PdGui::evaluateBuffer(string& aBuffer){
 }
 
 
+// //--------------------------------------------------------------
+// PdNode* PdGui::getNewNode(PdGuiMessage& aGuiMsg){
+
+	// // PdNode* node = new PdNode(guiMsg.nodeId);
+
+	// // node->patchId = guiMsg.canvasId;
+
+	// // canvas->nodes.push_back(node);
+
+	// // return node;
+// }
+
+
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
@@ -312,13 +325,21 @@ void PdGui::guiMessage(string aMsg){
 
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
-			PdNode* node = new PdNode(guiMsg.nodeId);
+			string  type = this->unquote(guiMsg.args[2]);
+			PdNode* node;
+
+			if (type == "iemgui"){
+				node = new PdIemGui(guiMsg.nodeId);
+			}
+			else {
+				node = new PdNode(guiMsg.nodeId);
+			}
 
 			node->patchId = guiMsg.canvasId;
-			node->type    = this->unquote(guiMsg.args[2]);
-			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
-
 			canvas->nodes.push_back(node);
+
+			node->type = type;
+			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
 		}
 	}
 	else if (guiMsg.command == "gui_numbox_new"){
@@ -326,19 +347,38 @@ void PdGui::guiMessage(string aMsg){
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdNode* node = new PdNode(guiMsg.nodeId);
-
 			node->patchId = guiMsg.canvasId;
-			node->type    = "numbox";
+			canvas->nodes.push_back(node);
 
+			node->type = "numbox";
 			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
 			node->setSize    (ofToInt(guiMsg.args[5]), ofToInt(guiMsg.args[6]));
 
-			canvas->nodes.push_back(node);
+		}
+	}
+	else if (guiMsg.command == "gui_mycanvas_new"){
+		// gui_mycanvas_new "x2fec990","x3022eb0","xdcdcdc",0,499,550,502,3,502
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+
+			guiMsg.parseColor(2);
+			guiMsg.parseRect(3);
+
+			node->setSize(ofToInt(guiMsg.args[7]) - node->x,
+			              ofToInt(guiMsg.args[8]) - node->y);
+
+			node->backgroundColor = guiMsg.color;
+
+			node->canvas = new PdNode();
+			node->canvas->type = "mycanvas";
+			node->canvas->set(guiMsg);
+			node->canvas->backgroundColor = guiMsg.color;
+			
+			ofLogVerbose() << node->canvas->getWidth();
+			ofLogVerbose() << node->canvas->getHeight();
 		}
 	}
 	else if (guiMsg.command == "gui_text_new"){
 		// gui_text_new "x7fbe1412a600",".x7fbe1412a600.t7fbe13deb990","atom",0,2,10,"0",5
-
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			node->text = this->unquote(guiMsg.args[6]);
 			node->textPosition.set(ofToInt(guiMsg.args[4]), ofToInt(guiMsg.args[5]));
@@ -450,6 +490,14 @@ void PdGui::guiMessage(string aMsg){
 
 					node->translate(offset);
 
+					if (node->type == "iemgui" && ((PdIemGui*)node)->canvas){
+						((PdIemGui*)node)->canvas->translate(offset);
+					}
+
+					if (node->type == "iemgui" && ((PdIemGui*)node)->label){
+						((PdIemGui*)node)->label->translate(offset);
+					}
+
 					for (auto& inlet : node->inlets){
 						inlet.translate(offset);
 					}
@@ -478,6 +526,13 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_iemgui_label_new"){
 		// "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+
+			node->label = new PdNode();
+			node->text  = this->unquote(guiMsg.args[5]);
+			node->label->setPosition(node->x + ofToInt(guiMsg.args[2]),node->y +  ofToInt(guiMsg.args[3]));
+			node->label->backgroundColor = guiMsg.color;
+		}
 	}
 	else {
 		// ofLogVerbose("pd") << aMsg;

@@ -62,7 +62,7 @@ void Canvas::initGrid(){
 	// ofSetColor(Globals::Theme.canvas.color.background);
 	// ofSetColor(0);
 	// ofBackground(0,0,255);
-	ofSetColor(0);
+	ofSetColor(255);
 	ofDrawRectangle(0, 0, gridWidth, gridHeight);
 	// ofSetColor(Globals::Theme.grid.color.front);
 
@@ -91,7 +91,7 @@ void Canvas::set(PdCanvas* aCanvas){
 //--------------------------------------------------------------
 void Canvas::draw(){
 
-	ofSetColor(0);
+	ofSetColor(255);
 	ofDrawRectangle(*this);
 
 	if (_current == NULL){ return; }
@@ -102,7 +102,7 @@ void Canvas::draw(){
 
 	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
 	//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
-	ofSetColor(200);
+	ofSetColor(255);
 	_grid.draw(0, 0);
 
 	ofSetColor(255);
@@ -113,6 +113,20 @@ void Canvas::draw(){
 
 			this->drawNodeBackground(node);
 			this->drawNodeText(node);
+
+			if (node->type == "iemgui"){
+
+				PdIemGui* guiNode = (PdIemGui*)node;
+
+				if (guiNode->canvas){
+					ofFill();
+					ofSetHexColor(guiNode->backgroundColor);
+					ofDrawRectangle(*(guiNode->canvas));
+				}
+				if (guiNode->label){
+					this->drawNodeText(guiNode->label);
+				}
+			}
 
 			for (auto inlet : node->inlets){
 				this->drawNodeIo(inlet);
@@ -180,7 +194,13 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofDrawRectangle(aNode->x - 2, aNode->y - 2, aNode->width + 4, aNode->height + 4);
 	}
 
-	if (aNode->type == "msg"){
+	if (aNode->type == "iemgui"){
+
+		ofNoFill();
+		ofSetHexColor(aNode->backgroundColor);
+		ofDrawRectangle(*aNode);
+	}
+	else if (aNode->type == "msg"){
 		// ofSetColor(Globals::Theme.node.color.border);
 		ofSetColor(borderCol);
 		ofBeginShape();
@@ -217,11 +237,11 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofSetColor(backCol);
 		// ofSetColor(248, 248, 246);
 		ofBeginShape();
-			ofVertex(left + 1,  top + 1);
+			ofVertex(left  + 1, top + 1);
 			ofVertex(right - 4, top + 1);
 			ofVertex(right - 1, top + 4);
 			ofVertex(right - 1, bottom - 1);
-			ofVertex(left + 1,  bottom - 1);
+			ofVertex(left  + 1, bottom - 1);
 		ofEndShape();
 
 		if (aNode->type == "numbox") {
@@ -392,7 +412,12 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 //--------------------------------------------------------------
 void Canvas::drawNodeText(PdNode* aNode){
 
-	ofSetColor(0);
+	// if (aNode->type == "comment"){
+		// ofSetColor(220);
+	// }
+	// else {
+		ofSetColor(0);
+	// }
 
 	ofScale(0.10f, 0.10f);
 	_font.drawString(aNode->text, (aNode->x + aNode->textPosition.x) * 10.0f, (aNode->y + aNode->textPosition.y) * 10.0f);

@@ -41,6 +41,7 @@ class PdNode : public ofRectangle
 			// TYPE_INVALID,
 		// };
 
+		int          borderColor     = 0;
 		int          backgroundColor = 255;
 		bool         selected        = false;
 		string       id;
@@ -51,7 +52,7 @@ class PdNode : public ofRectangle
 		string       text;
 		ofPoint      textPosition;
 
-		PdNode(string aId){
+		PdNode(string aId = ""){
 			this->id = aId;
 		}
 };
@@ -62,8 +63,16 @@ class PdIemGui : public PdNode
 {
 	public:
 
-		int    value = 0;
-		PdNode label;
+		int     value  = 0;
+		PdNode* label  = NULL;
+		PdNode* canvas = NULL; 
+	
+		PdIemGui(string aId = "") : PdNode(aId) { }
+
+		~PdIemGui(){
+			if (label  != NULL){ delete label; }
+			if (canvas != NULL){ delete canvas; }
+		}
 };
 
 

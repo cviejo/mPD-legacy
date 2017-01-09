@@ -51,7 +51,10 @@ void PdGuiMessage::parseColor(int startIndex){
 	auto colorString = this->unquote(this->args[startIndex]);
 
 	ofStringReplace(colorString, "none", "#FFFFFF");
+	
+	// TODO: only if first char
 	ofStringReplace(colorString, "#",    "");
+	ofStringReplace(colorString, "x",    "");
 
 	this->color = ofHexToInt(colorString);
 }
@@ -60,8 +63,8 @@ void PdGuiMessage::parseColor(int startIndex){
 //--------------------------------------------------------------
 string PdGuiMessage::unquote(string& str){
 
-	int front   = str.front() == '"';
-	int back    = str.back()  == '"';
+	int front = str.front() == '"';
+	int back  = str.back()  == '"';
 
 	return str.substr(front, str.length() - front - back);
 }

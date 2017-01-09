@@ -13,9 +13,12 @@ void App::setup(){
 	ofSetFrameRate(21);
 	ofSetWindowPosition(152,1094);
 
-	this->initAudio();
 	this->initSearchPaths();
+	this->initAudio();
 	this->initEventListeners();
+
+	// PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	_guiElements.push_back(new Canvas());
 
@@ -39,8 +42,6 @@ void App::initAudio(){
 	}
 
 	PdGui::instance().startAudio();
-	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	
 }
 
 
