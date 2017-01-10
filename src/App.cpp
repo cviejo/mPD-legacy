@@ -149,7 +149,7 @@ void App::audioRequested(float * output, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void App::touchDown(int aX, int aY, int aId){
 
-	if (aId){ return; } // pd can't handle multitouch anyway
+	if (_scaling || aId){ return; } // pd can't handle multitouch anyway
 
 	for (auto& elem : _guiElements){
 
@@ -167,7 +167,7 @@ void App::touchDown(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void App::touchMoved(int aX, int aY, int aId){
 
-	if (aId){ return; }
+	if (_scaling || aId){ return; }
 
 	for (auto& elem : _guiElements){
 
@@ -181,7 +181,7 @@ void App::touchMoved(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void App::touchUp(int aX, int aY, int aId){
 
-	if (aId){ return; }
+	if (_scaling || aId){ return; }
 
 	for (auto& elem : _guiElements){
 
@@ -241,7 +241,10 @@ void App::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
 //--------------------------------------------------------------
 bool App::onScaleBegin(ofxAndroidScaleEventArgs& aArgs) {
 
+	_scaling = true;
+
 	AppEvent event(AppEvent::TYPE_SCALE_BEGIN);
+
 	ofNotifyEvent(AppEvent::events, event);
 
 	return true;
@@ -264,7 +267,10 @@ bool App::onScale(ofxAndroidScaleEventArgs& aArgs) {
 //--------------------------------------------------------------
 bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
+	_scaling = false;
+
 	AppEvent event(AppEvent::TYPE_SCALE_END);
+
 	ofNotifyEvent(AppEvent::events, event);
 
 	return true;

@@ -554,13 +554,6 @@ void PdGui::guiMessage(string aMsg){
 							guiNode->label->translate(offset);
 						}
 					}
-					// if (node->type == "iemgui" && ((PdIemGui*)node)->canvas){
-						// ((PdIemGui*)node)->canvas->translate(offset);
-					// }
-
-					// if (node->type == "iemgui" && ((PdIemGui*)node)->label){
-						// ((PdIemGui*)node)->label->translate(offset);
-					// }
 
 					for (auto& inlet : node->inlets){
 						inlet.translate(offset);

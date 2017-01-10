@@ -54,6 +54,7 @@ class App : public ofBaseApp {
 
 	private:
 
+		bool                _scaling = false;
 		vector<GuiElement*> _guiElements;
 
 		void initAudio();
