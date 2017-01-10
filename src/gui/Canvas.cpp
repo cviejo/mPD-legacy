@@ -126,6 +126,10 @@ void Canvas::draw(){
 				if (guiNode->label){
 					this->drawNodeText(guiNode->label);
 				}
+
+				if (guiNode->iemType == "slider"){
+					ofDrawRectangle(guiNode->slider);
+				}
 			}
 
 			for (auto inlet : node->inlets){
@@ -218,7 +222,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	}
 	else if (aNode->type == "atom" || aNode->type == "numbox"){
 
-		ofSetColor(borderCol);
+		ofSetColor(aNode->borderColor);
 		ofBeginShape();
 			ofVertex(left,      top);
 			ofVertex(right - 4, top);
@@ -227,19 +231,20 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofVertex(left,      bottom);
 		ofEndShape();
 
-		ofSetColor(backCol);
+		ofSetColor(aNode->backgroundColor);
 		// ofSetColor(248, 248, 246);
 		ofBeginShape();
-			ofVertex(left + 1,  top + 1);
+			ofVertex(left  + 1, top + 1);
 			ofVertex(right - 4, top + 1);
 			ofVertex(right - 1, top + 4);
 			ofVertex(right - 1, bottom - 1);
-			ofVertex(left + 1,  bottom - 1);
+			ofVertex(left  + 1, bottom - 1);
 		ofEndShape();
 
 		if (aNode->type == "numbox") {
 
-			ofSetColor(numboxBorderCol);
+			// ofSetColor(numboxBorderCol);
+			ofSetColor(aNode->borderColor);
 			ofDrawTriangle(left + 0, top + 0,
 			               left + 0, bottom - 0,
 			               left + 7, top + aNode->height / 2);
@@ -282,7 +287,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		// }
 		// ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 
-		ofSetColor(borderCol);
+		ofSetColor(aNode->borderColor);
 		ofDrawRectangle(*aNode);
 
 		ofSetHexColor(aNode->backgroundColor);
@@ -418,7 +423,7 @@ void Canvas::drawNodeIo(PdIo& aIo){
 
 	ofFill();
 
-	if (aIo.height == 1){
+	if (aIo.height == 2){
 
 		// ofSetColor(0);
 		ofSetColor(119);
@@ -440,14 +445,10 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	// ofPoint p = this->transformToPdCoordinates(aX, aY);
+	ofPoint p   = this->transformToPdCoordinates(aX, aY);
+	string  cmd = _current->id + " mouse " + ofToString(p.x) + " " + ofToString(p.y) + " 0 0 0";
 
-	// PdGui::instance().canvasPressed(_current, p.x, p.y);
-
-	ofPoint point = this->transformToPdCoordinates(aX, aY);
-	string command = _current->id + " mouse " + ofToString(point.x) + " " + ofToString(point.y) + " 0 0 0";
-
-	PdGui::instance().pdsend(command);
+	PdGui::instance().pdsend(cmd);
 	// if (!scaling){
 
 		// _pressLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
@@ -462,9 +463,8 @@ void Canvas::onPressed(int aX, int aY, int aId){
 void Canvas::onDragged(int aX, int aY, int aId){
 
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
-	string cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
-	ofLogVerbose() << cmd;
+	ofPoint p   = this->transformToPdCoordinates(aX, aY);
+	string  cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
 	PdGui::instance().pdsend(cmd);
 	// PdGui::instance().canvasDragged(_current, p.x, p.y);
@@ -494,8 +494,8 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
-	ofPoint p  = this->transformToPdCoordinates(aX, aY);
-	string cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+	ofPoint p   = this->transformToPdCoordinates(aX, aY);
+	string  cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
 	PdGui::instance().pdsend(cmd);
 	// PdGui::instance().canvasReleased(_current, p.x, p.y);

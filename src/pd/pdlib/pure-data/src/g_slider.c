@@ -32,12 +32,12 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
     if (x->x_orient) {
         r=y2-3 - (x->x_val+50)/100;
         gui_vmess("gui_slider_update", "xxiiiiii",
-            canvas, x, x1+2, r, x2-2, r,
+            canvas, x, x1+2, r-1, x2-2, r+1, // mPD
             x1, y1);
     } else {
         r=x1+3 + (x->x_val+50)/100;
         gui_vmess("gui_slider_update", "xxiiiiii",
-            canvas, x, r, y1+2, r, y2-2,
+            canvas, x, r-1, y1+2, r+1, y2-2, // mPD
             x1, y1);
     }
     int t = x->x_thick;
@@ -65,11 +65,11 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     if (x->x_orient) {
         gui_vmess("gui_slider_new", "xxxiiiiii",
             canvas, x,
-            x->x_gui.x_fcol, x1+2, r, x2-2, r, x1, y1);
+            x->x_gui.x_fcol, x1+2, r-1, x2-2, r+1, x1, y1); // mPD
     } else {
         gui_vmess("gui_slider_new", "xxxiiiiii",
             canvas, x,
-            x->x_gui.x_fcol, r, y1+2, r, y2-2, x1, y1);
+            x->x_gui.x_fcol, r-1, y1+2, r+1, y2-2, x1, y1); // mPD
     }
 }
 
@@ -88,13 +88,13 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
     {
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x,
-            x1+2, r, x2-2, r, x1, y1);
+            x1+2, r-1, x2-2, r+1, x1, y1); // mPD
     }
     else
     {
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x,
-            r, y1+2, r, y2-2, x1, y1);
+            r-1, y1+2, r+1, y2-2, x1, y1); // mPD
     }
 }
 

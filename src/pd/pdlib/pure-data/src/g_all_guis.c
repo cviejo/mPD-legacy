@@ -1089,7 +1089,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
             sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
             gui_vmess("gui_gobj_draw_io", "xxsiiiiiisiii", canvas,
                 x, tagbuf,
-                x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1, "o", i,
+                x1+i*k, y2-2, x1+i*k + IOWIDTH, y2, x1, y1, "o", i,
                 0, 1);
         }
     }
@@ -1114,7 +1114,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
             sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
             gui_vmess("gui_gobj_draw_io", "xxsiiiiiisiii", canvas,
                 x, tagbuf,
-                x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1, "i", i,
+                x1+i*k, y1, x1+i*k + IOWIDTH, y1+2, x1, y1, "i", i,
                 0, 1);
         }
     }

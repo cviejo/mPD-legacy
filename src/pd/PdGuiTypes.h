@@ -41,8 +41,9 @@ class PdNode : public ofRectangle
 			// TYPE_INVALID,
 		// };
 
-		int          borderColor     = 0;
 		int          backgroundColor = 255;
+		int          foregroundColor = 0;
+		int          borderColor     = 0;
 		bool         selected        = false;
 		string       id;
 		string       type;
@@ -63,9 +64,11 @@ class PdIemGui : public PdNode
 {
 	public:
 
-		int     value  = 0;
-		PdNode* label  = NULL;
-		PdNode* canvas = NULL; 
+		string      iemType = "";
+		int         value   = 0;
+		PdNode*     label   = NULL;
+		PdNode*     canvas  = NULL;
+		ofRectangle slider;
 	
 		PdIemGui(string aId = "") : PdNode(aId) { }
 

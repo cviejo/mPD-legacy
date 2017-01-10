@@ -17,10 +17,11 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
-
 	_guiElements.push_back(new Canvas());
+
+	// debugging
+	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[0]);
 }
@@ -105,14 +106,17 @@ void App::keyPressed(int key){
 	if (!canvases.size()){ return; }
 
 	string cmd = "";
+	auto   cnv = canvases[0];
 
 	// debugging
-	if      (key == 'a'){ cmd = canvases[0]->id + " selectall"; }
-	else if (key == 'c'){ cmd = canvases[0]->id + " copy"; }
-	else if (key == 'e'){ cmd = canvases[0]->id + " selectall"; }
-	else if (key == 'p'){ cmd = canvases[0]->id + " paste"; }
-	else if (key == 'u'){ cmd = canvases[0]->id + " undo"; }
+	if      (key == 'a'){ cmd = cnv->id + " selectall"; }
+	else if (key == 'c'){ cmd = cnv->id + " copy"; }
+	else if (key == 'e'){ cmd = cnv->id + " editmode " + (cnv->editMode ? "0" : "1"); }
+	else if (key == 'p'){ cmd = cnv->id + " paste"; }
+	else if (key == 'u'){ cmd = cnv->id + " undo"; }
 	else if (key == 'q'){ ofExit(); }
+	else if (key == '1'){ ((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[0]); }
+	else if (key == '2'){ ((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[1]); }
 
 	PdGui::instance().pdsend(cmd);
 }
