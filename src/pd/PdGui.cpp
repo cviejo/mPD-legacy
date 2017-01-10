@@ -303,7 +303,7 @@ void PdGui::pdsend(string& aCmd){
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
-	ofLogVerbose("pd") << aMsg;
+	// ofLogVerbose("pd") << aMsg;
 
 	PdGuiMessage guiMsg(aMsg);
 
@@ -552,7 +552,7 @@ void PdGui::guiMessage(string aMsg){
 
 			node->label = new PdNode();
 			node->text  = this->unquote(guiMsg.args[5]);
-			node->label->setPosition(node->x + ofToInt(guiMsg.args[2]),node->y +  ofToInt(guiMsg.args[3]));
+			node->textPosition.set(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
 			node->label->backgroundColor = guiMsg.color;
 		}
 	}

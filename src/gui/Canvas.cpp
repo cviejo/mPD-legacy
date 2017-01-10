@@ -141,8 +141,7 @@ void Canvas::draw(){
 	for (auto conn : _current->connections){
 		ofSetColor(119);
 		ofSetLineWidth(2);
-		// ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
-		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
+		ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
@@ -441,10 +440,14 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	// ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	PdGui::instance().canvasPressed(_current, p.x, p.y);
+	// PdGui::instance().canvasPressed(_current, p.x, p.y);
 
+	ofPoint point = this->transformToPdCoordinates(aX, aY);
+	string command = _current->id + " mouse " + ofToString(point.x) + " " + ofToString(point.y) + " 0 0 0";
+
+	PdGui::instance().pdsend(command);
 	// if (!scaling){
 
 		// _pressLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
@@ -458,8 +461,10 @@ void Canvas::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onDragged(int aX, int aY, int aId){
 
+
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 	string cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+	ofLogVerbose() << cmd;
 
 	PdGui::instance().pdsend(cmd);
 	// PdGui::instance().canvasDragged(_current, p.x, p.y);
@@ -619,8 +624,9 @@ ofPoint Canvas::transformToPdCoordinates(float aX, float aY){
 
 	ofPoint result;
 
-	result.x = (aX - this->x) / _current->scale - _current->viewPort.x; // Globals::Settings.scale;
-	result.y = (aY - this->y) / _current->scale - _current->viewPort.y; // Globals::Settings.scale;
+	// has to be rounded otherwise pd behaves weirdly when dragging up or left
+	result.x = (int)((aX - this->x) / _current->scale - _current->viewPort.x); // Globals::Settings.scale;
+	result.y = (int)((aY - this->y) / _current->scale - _current->viewPort.y); // Globals::Settings.scale;
 
 	return result;
 }

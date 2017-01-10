@@ -13,12 +13,12 @@ void App::setup(){
 	ofSetFrameRate(21);
 	ofSetWindowPosition(152,1094);
 
-	this->initAudio();
 	this->initSearchPaths();
+	this->initAudio();
 	this->initEventListeners();
 
-	// PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
+	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	_guiElements.push_back(new Canvas());
 
@@ -42,8 +42,6 @@ void App::initAudio(){
 	}
 
 	PdGui::instance().startAudio();
-	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	
 }
 
 
@@ -102,16 +100,21 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
+	auto canvases = PdGui::instance().getCanvases();
+
+	if (!canvases.size()){ return; }
+
+	string cmd = "";
+
 	// debugging
-	if      (key == 'a'){
-		auto cmd = PdGui::instance().getCanvases()[0]->id + " selectall";
-		PdGui::instance().evaluateBuffer(cmd);
-	}
-	else if (key == 'c'){ PdGui::instance().canvasCopy(NULL); }
-	else if (key == 'e'){ PdGui::instance().canvasCopy(NULL); }
-	else if (key == 'p'){ PdGui::instance().canvasPaste(NULL); }
-	else if (key == 'u'){ PdGui::instance().canvasUndo(NULL); }
-	else if (key == 'Q'){ ofExit(); }
+	if      (key == 'a'){ cmd = canvases[0]->id + " selectall"; }
+	else if (key == 'c'){ cmd = canvases[0]->id + " copy"; }
+	else if (key == 'e'){ cmd = canvases[0]->id + " selectall"; }
+	else if (key == 'p'){ cmd = canvases[0]->id + " paste"; }
+	else if (key == 'u'){ cmd = canvases[0]->id + " undo"; }
+	else if (key == 'q'){ ofExit(); }
+
+	PdGui::instance().pdsend(cmd);
 }
 
 
