@@ -13,8 +13,8 @@ void App::setup(){
 	ofSetFrameRate(21);
 	ofSetWindowPosition(152,1094);
 
-	this->initSearchPaths();
 	this->initAudio();
+	this->initSearchPaths();
 	this->initEventListeners();
 
 	// PdGui::instance().openPatch(ofToDataPath("main.pd"));
@@ -42,6 +42,8 @@ void App::initAudio(){
 	}
 
 	PdGui::instance().startAudio();
+	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	
 }
 
 

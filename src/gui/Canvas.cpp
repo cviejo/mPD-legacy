@@ -141,8 +141,8 @@ void Canvas::draw(){
 	for (auto conn : _current->connections){
 		ofSetColor(119);
 		ofSetLineWidth(2);
-		ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
-		// ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
+		// ofDrawLine(conn->x1, conn->y1, conn->x2, conn->y2);
+		ofDrawLine(conn->getTopLeft(), conn->getBottomRight());
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
@@ -194,13 +194,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofDrawRectangle(aNode->x - 2, aNode->y - 2, aNode->width + 4, aNode->height + 4);
 	}
 
-	if (aNode->type == "iemgui"){
-
-		ofNoFill();
-		ofSetHexColor(aNode->backgroundColor);
-		ofDrawRectangle(*aNode);
-	}
-	else if (aNode->type == "msg"){
+	if (aNode->type == "msg"){
 		// ofSetColor(Globals::Theme.node.color.border);
 		ofSetColor(borderCol);
 		ofBeginShape();
@@ -237,11 +231,11 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofSetColor(backCol);
 		// ofSetColor(248, 248, 246);
 		ofBeginShape();
-			ofVertex(left  + 1, top + 1);
+			ofVertex(left + 1,  top + 1);
 			ofVertex(right - 4, top + 1);
 			ofVertex(right - 1, top + 4);
 			ofVertex(right - 1, bottom - 1);
-			ofVertex(left  + 1, bottom - 1);
+			ofVertex(left + 1,  bottom - 1);
 		ofEndShape();
 
 		if (aNode->type == "numbox") {
@@ -412,12 +406,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 //--------------------------------------------------------------
 void Canvas::drawNodeText(PdNode* aNode){
 
-	// if (aNode->type == "comment"){
-		// ofSetColor(220);
-	// }
-	// else {
-		ofSetColor(0);
-	// }
+	ofSetColor(0);
 
 	ofScale(0.10f, 0.10f);
 	_font.drawString(aNode->text, (aNode->x + aNode->textPosition.x) * 10.0f, (aNode->y + aNode->textPosition.y) * 10.0f);
@@ -470,8 +459,10 @@ void Canvas::onPressed(int aX, int aY, int aId){
 void Canvas::onDragged(int aX, int aY, int aId){
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	string cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
-	PdGui::instance().canvasDragged(_current, p.x, p.y);
+	PdGui::instance().pdsend(cmd);
+	// PdGui::instance().canvasDragged(_current, p.x, p.y);
 
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
@@ -498,9 +489,13 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	ofPoint p  = this->transformToPdCoordinates(aX, aY);
+	string cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
-	PdGui::instance().canvasReleased(_current, p.x, p.y);
+	PdGui::instance().pdsend(cmd);
+	// PdGui::instance().canvasReleased(_current, p.x, p.y);
+
+	// PdGui::instance().canvasReleased(_current, p.x, p.y);
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
 	// _offsetLoc.x += _draggedLoc.x;

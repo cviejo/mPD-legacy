@@ -100,6 +100,14 @@ class PdCanvas : public PdNode {
 		PdCanvas(string aId) : PdNode(aId) {}
 };
 
+		// enum NodeType {
+			// TYPE_TEXT = 0,
+			// TYPE_CONTROL,
+			// TYPE_GRAPH,
+			// TYPE_COMMENT,
+			// TYPE_INVALID,
+		// };
+
 
 		// bool           selected         = false;
 		// // bool           control          = false;
