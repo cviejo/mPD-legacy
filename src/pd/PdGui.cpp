@@ -541,13 +541,26 @@ void PdGui::guiMessage(string aMsg){
 
 					node->translate(offset);
 
-					if (node->type == "iemgui" && ((PdIemGui*)node)->canvas){
-						((PdIemGui*)node)->canvas->translate(offset);
-					}
+					if (node->type == "iemgui"){
 
-					if (node->type == "iemgui" && ((PdIemGui*)node)->label){
-						((PdIemGui*)node)->label->translate(offset);
+						PdIemGui* guiNode = (PdIemGui*)node;
+
+						guiNode->slider.translate(offset);
+
+						if (guiNode->canvas){
+							guiNode->canvas->translate(offset);
+						}
+						if (guiNode->label){
+							guiNode->label->translate(offset);
+						}
 					}
+					// if (node->type == "iemgui" && ((PdIemGui*)node)->canvas){
+						// ((PdIemGui*)node)->canvas->translate(offset);
+					// }
+
+					// if (node->type == "iemgui" && ((PdIemGui*)node)->label){
+						// ((PdIemGui*)node)->label->translate(offset);
+					// }
 
 					for (auto& inlet : node->inlets){
 						inlet.translate(offset);
