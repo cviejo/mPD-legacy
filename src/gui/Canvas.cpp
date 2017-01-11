@@ -162,9 +162,12 @@ void Canvas::draw(){
 	}
 
 	for (auto conn : _current->connections){
-		ofSetColor(119);
-		ofSetLineWidth(2);
-		ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
+
+		if (_current->viewPort.inside(conn->getPosition()) || _current->viewPort.inside(conn->x2, conn->y2)){
+			ofSetColor(119);
+			ofSetLineWidth(2);
+			ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
+		}
 	}
 
 	if (_current->mode == PdCanvas::MODE_REGION){
@@ -447,7 +450,7 @@ void Canvas::drawNodeIo(PdIo& aIo){
 	ofFill();
 
 	if (aIo.height == 2){
-	// bad put this in the PdGui and node color
+		// bad put this in the PdGui and node color
 
 		ofSetColor(0);
 		ofDrawRectangle(aIo);
