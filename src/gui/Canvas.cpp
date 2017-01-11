@@ -7,10 +7,10 @@ Canvas::Canvas(){
 	// _current->viewPort.setPosition(0, 0);
 	// _current->scale = 1.f;
 
-	this->x      = 0;
-	this->y      = 0;
-	this->width  = ofGetWidth();
-	this->height = ofGetHeight();
+	this->x      = 70;
+	this->y      = 70;
+	this->width  = 600;//ofGetWidth();
+	this->height = 500;//ofGetHeight();
 	// this->width  = 400;
 	// this->height = 400;
 
@@ -100,12 +100,31 @@ void Canvas::draw(){
 	ofTranslate(this->x, this->y);
 	ofScale(_current->scale, _current->scale);
 
-	// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
-	//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
-	ofSetColor(255);
-	_grid.draw(0, 0);
+	if (_current->scale >= 1){
+		// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
+		//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
+		ofSetColor(255);
+		_grid.draw(0, 0);
+	}
 
 	ofSetColor(255);
+
+	// ofLogVerbose() << _current->viewPort.x << " " << _current->viewPort.y;
+
+	// ofPoint offset = (_current->viewPort.getPosition() + _current->mouse) * -1;
+
+	// ofRectangle viewPort(_current->viewPort);
+	
+	// viewPort->setPosition(viewPort->x + _current->)
+	
+	// ofRectangle viewPort(_current.viewPort);
+
+	// ofPoint offset = _current->viewPort.getPosition() + _current->pressPoint - _current->mousePoint;
+
+	// offset *= -1;
+	// ofLogVerbose() << _current->viewPort.x << " " << _current->viewPort.y;
+
+	// ofTranslate(_current->viewPort.getPosition());
 
 	for (auto node : _current->nodes){
 
@@ -159,6 +178,10 @@ void Canvas::draw(){
 	}
 
 	ofPopMatrix();
+
+	ofNoFill();
+	ofSetColor(0);
+	ofDrawRectangle(*this);
 }
 
 
@@ -424,9 +447,9 @@ void Canvas::drawNodeIo(PdIo& aIo){
 	ofFill();
 
 	if (aIo.height == 2){
+	// bad put this in the PdGui and node color
 
-		// ofSetColor(0);
-		ofSetColor(119);
+		ofSetColor(0);
 		ofDrawRectangle(aIo);
 	}
 	else {
@@ -445,8 +468,14 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	ofPoint p   = this->transformToPdCoordinates(aX, aY);
-	string  cmd = _current->id + " mouse " + ofToString(p.x) + " " + ofToString(p.y) + " 0 0 0";
+	// _current->pressPoint.set(this->transformToPdCoordinates(aX, aY));
+	// _current->mousePoint.set(_current->pressPoint);
+
+	// string cmd = _current->id + " mouse " + ofToString(_current->pressPoint.x) + " " + ofToString(_current->pressPoint.y) + " 0 0 0";
+
+	ofPoint p = this->transformToPdCoordinates(aX, aY);
+
+	string cmd = _current->id + " mouse " + ofToString(p.x) + " " + ofToString(p.y) + " 0 0 0";
 
 	PdGui::instance().pdsend(cmd);
 	// if (!scaling){
@@ -462,11 +491,40 @@ void Canvas::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onDragged(int aX, int aY, int aId){
 
+	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	ofPoint p   = this->transformToPdCoordinates(aX, aY);
-	string  cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+	if (!_current->editMode){
 
-	PdGui::instance().pdsend(cmd);
+		// ofPoint offset = _current->viewPort.getPosition() +  p - _current->mousePoint;
+
+		// _current->viewPort.setPosition(offset);
+
+		// _current->mousePoint.set(p);
+		// _current->dragged.set(p.x - _pressPoint.x, p.y - _pressPoint.y);
+		// _current->dragged.set(_current->pressPoint.x - p.x, _current->pressPoint.y - p.y);
+		// _current->viewPort.setPosition(_current->viewPort.x + _current->mouse.x - p.x,
+												 // _current->viewPort.y + _current->mouse.y - p.y);
+		// _current->viewPort.setPosition(_current->viewPort.x + p.x - _current->mouse.x,
+												 // _current->viewPort.y + p.y - _current->mouse.y);
+		// _current->viewPort.setPosition(_current->viewPort.x + p.x,
+												 // _current->viewPort.y + p.y);
+
+		// _current->mouse.set(p);
+
+		// if (_current->viewPort.x < 0){
+			// _current->viewPort.x = 0;
+		// }
+		// if (_current->viewPort.y < 0){
+			// _current->viewPort.y = 0;
+		// }
+	}
+	else {
+
+		string  cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+
+		PdGui::instance().pdsend(cmd);
+	}
+
 	// PdGui::instance().canvasDragged(_current, p.x, p.y);
 
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
@@ -498,11 +556,23 @@ void Canvas::onReleased(int aX, int aY, int aId){
 	string  cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
 	PdGui::instance().pdsend(cmd);
+
 	// PdGui::instance().canvasReleased(_current, p.x, p.y);
 
 	// PdGui::instance().canvasReleased(_current, p.x, p.y);
 	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
+	//
+	// _current->viewPort.x += _current->dragged.x;
+	// _current->viewPort.y += _current->dragged.y;
+	
+	// _current->viewPort.x += _current->pressPoint.x - _current->mousePoint.x;
+	// _current->viewPort.y += _current->pressPoint.y - _current->mousePoint.y;
 
+	// _current->pressPoint.set(0, 0);
+	// _current->mousePoint.set(0, 0);
+
+	// _current->dragged.set(0, 0);
+	// _current->dragged.y;
 	// _offsetLoc.x += _draggedLoc.x;
 	// _offsetLoc.y += _draggedLoc.y;
 
@@ -517,6 +587,18 @@ void Canvas::onReleased(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void Canvas::onDoubleClick(int aX, int aY){
+
+	ofPoint p = this->transformToPdCoordinates(aX, aY);
+
+	for (auto node : _current->nodes){
+		if (node->inside(p)){
+			return;
+		}
+	}
+
+	string  cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1");
+
+	PdGui::instance().pdsend(cmd);
 
 	// if (!Globals::Pd.getNodePressed()){
 		// auto editMode = Globals::Pd.getCanvasEditMode();

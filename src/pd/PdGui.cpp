@@ -303,7 +303,7 @@ void PdGui::pdsend(string& aCmd){
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
-	ofLogVerbose("pd") << aMsg;
+	// ofLogVerbose("pd") << aMsg;
 
 	PdGuiMessage guiMsg(aMsg);
 

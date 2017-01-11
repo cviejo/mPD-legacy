@@ -111,6 +111,7 @@ void App::keyPressed(int key){
 	// debugging
 	if      (key == 'a'){ cmd = cnv->id + " selectall"; }
 	else if (key == 'c'){ cmd = cnv->id + " copy"; }
+	else if (key == 'd'){ this->touchDoubleTap(1, 1, 0); }
 	else if (key == 'e'){ cmd = cnv->id + " editmode " + (cnv->editMode ? "0" : "1"); }
 	else if (key == 'p'){ cmd = cnv->id + " paste"; }
 	else if (key == 'u'){ cmd = cnv->id + " undo"; }
@@ -149,7 +150,7 @@ void App::audioRequested(float * output, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void App::touchDown(int aX, int aY, int aId){
 
-	if (_scaling || aId){ return; } // pd can't handle multitouch anyway
+	if (_scaling || aId){ return; } // pd can't handle multitouch anyway, afaik
 
 	for (auto& elem : _guiElements){
 
@@ -199,7 +200,18 @@ void App::touchUp(int aX, int aY, int aId){
 
 
 //--------------------------------------------------------------
-void App::touchDoubleTap(int aX, int aY, int aId){ }
+void App::touchDoubleTap(int aX, int aY, int aId){
+
+	if (_scaling || aId){ return; }
+
+	for (auto& elem : _guiElements){
+
+		if (elem->visible && elem->clickable && elem->inside(aX, aY)){
+			elem->onDoubleClick(aX, aY);
+			break;
+		}
+	}
+}
 
 
 //--------------------------------------------------------------
