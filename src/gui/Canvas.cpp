@@ -7,10 +7,10 @@ Canvas::Canvas(){
 	// _current->viewPort.setPosition(0, 0);
 	// _current->scale = 1.f;
 
-	this->x      = 70;
-	this->y      = 70;
-	this->width  = 600;//ofGetWidth();
-	this->height = 500;//ofGetHeight();
+	this->x      = 0;
+	this->y      = 0;
+	this->width  = ofGetWidth();
+	this->height = ofGetHeight();
 	// this->width  = 400;
 	// this->height = 400;
 
@@ -101,30 +101,12 @@ void Canvas::draw(){
 	ofScale(_current->scale, _current->scale);
 
 	if (_current->scale >= 1){
-		// _grid.draw((int)(_offsetLoc.x + _draggedLoc.x) % Globals::Theme.grid.cell.width,
-		//            (int)(_offsetLoc.y + _draggedLoc.y) % Globals::Theme.grid.cell.height);
 		ofSetColor(255);
-		_grid.draw(0, 0);
+		_grid.draw((int)(-_current->viewPort.x) % 20, // TODO: substitute this with cell width setting
+		           (int)(-_current->viewPort.y) % 20);
 	}
 
-	ofSetColor(255);
-
-	// ofLogVerbose() << _current->viewPort.x << " " << _current->viewPort.y;
-
-	// ofPoint offset = (_current->viewPort.getPosition() + _current->mouse) * -1;
-
-	// ofRectangle viewPort(_current->viewPort);
-	
-	// viewPort->setPosition(viewPort->x + _current->)
-	
-	// ofRectangle viewPort(_current.viewPort);
-
-	// ofPoint offset = _current->viewPort.getPosition() + _current->pressPoint - _current->mousePoint;
-
-	// offset *= -1;
-	// ofLogVerbose() << _current->viewPort.x << " " << _current->viewPort.y;
-
-	// ofTranslate(_current->viewPort.getPosition());
+	ofTranslate(_current->viewPort.getPosition() * -1);
 
 	for (auto node : _current->nodes){
 
@@ -175,16 +157,19 @@ void Canvas::draw(){
 		ofDrawRectangle(_current->region);
 	}
 
-	if (_current->editMode){
-		ofSetColor(255,  0, 0);
-		ofDrawCircle(50, ofGetHeight() - 50, 10, 10);
-	}
-
 	ofPopMatrix();
 
 	ofNoFill();
 	ofSetColor(0);
 	ofDrawRectangle(*this);
+
+	if (_current->editMode){
+		ofFill();
+		ofSetColor(255,  0, 0);
+		ofDrawCircle(10, 10, 10, 10);
+	}
+
+	ofDrawBitmapString("x:   " + ofToString(ofGetPreviousMouseX()), 30, 30);
 }
 
 
@@ -471,10 +456,8 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	// _current->pressPoint.set(this->transformToPdCoordinates(aX, aY));
-	// _current->mousePoint.set(_current->pressPoint);
-
-	// string cmd = _current->id + " mouse " + ofToString(_current->pressPoint.x) + " " + ofToString(_current->pressPoint.y) + " 0 0 0";
+	// TODO: set mode_drag if no node pressed and !editMode
+	_previousMouse.set(aX, aY);
 
 	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
@@ -494,43 +477,30 @@ void Canvas::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onDragged(int aX, int aY, int aId){
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
 
-	if (!_current->editMode){
+	if (!_current->editMode){ // TODO: only if mode_drag
 
-		// ofPoint offset = _current->viewPort.getPosition() +  p - _current->mousePoint;
+		ofPoint p(aX - _previousMouse.x,aY - _previousMouse.y);
 
-		// _current->viewPort.setPosition(offset);
+		_current->viewPort.setPosition(_current->viewPort.getPosition() - p / _current->scale);
 
-		// _current->mousePoint.set(p);
-		// _current->dragged.set(p.x - _pressPoint.x, p.y - _pressPoint.y);
-		// _current->dragged.set(_current->pressPoint.x - p.x, _current->pressPoint.y - p.y);
-		// _current->viewPort.setPosition(_current->viewPort.x + _current->mouse.x - p.x,
-												 // _current->viewPort.y + _current->mouse.y - p.y);
-		// _current->viewPort.setPosition(_current->viewPort.x + p.x - _current->mouse.x,
-												 // _current->viewPort.y + p.y - _current->mouse.y);
-		// _current->viewPort.setPosition(_current->viewPort.x + p.x,
-												 // _current->viewPort.y + p.y);
+		_previousMouse.set(aX, aY);
 
-		// _current->mouse.set(p);
-
-		// if (_current->viewPort.x < 0){
-			// _current->viewPort.x = 0;
-		// }
-		// if (_current->viewPort.y < 0){
-			// _current->viewPort.y = 0;
-		// }
+		if (_current->viewPort.x < 0){
+			_current->viewPort.x = 0;
+		}
+		if (_current->viewPort.y < 0){
+			_current->viewPort.y = 0;
+		}
 	}
 	else {
+
+		ofPoint p = this->transformToPdCoordinates(aX, aY);
 
 		string  cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
 
 		PdGui::instance().pdsend(cmd);
 	}
-
-	// PdGui::instance().canvasDragged(_current, p.x, p.y);
-
-	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
 
 	// CanvasMode mode = Globals::Pd.getCanvasMode();
 
@@ -560,28 +530,6 @@ void Canvas::onReleased(int aX, int aY, int aId){
 
 	PdGui::instance().pdsend(cmd);
 
-	// PdGui::instance().canvasReleased(_current, p.x, p.y);
-
-	// PdGui::instance().canvasReleased(_current, p.x, p.y);
-	// _mouseLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
-	//
-	// _current->viewPort.x += _current->dragged.x;
-	// _current->viewPort.y += _current->dragged.y;
-	
-	// _current->viewPort.x += _current->pressPoint.x - _current->mousePoint.x;
-	// _current->viewPort.y += _current->pressPoint.y - _current->mousePoint.y;
-
-	// _current->pressPoint.set(0, 0);
-	// _current->mousePoint.set(0, 0);
-
-	// _current->dragged.set(0, 0);
-	// _current->dragged.y;
-	// _offsetLoc.x += _draggedLoc.x;
-	// _offsetLoc.y += _draggedLoc.y;
-
-	// _pressLoc  .set(-1, -1);
-	// _draggedLoc.set(0, 0);
-
 	// if (!scaling){
 		// Globals::Pd.canvasReleased(_mouseLoc.x, _mouseLoc.y);
 	// }
@@ -602,11 +550,6 @@ void Canvas::onDoubleClick(int aX, int aY){
 	string  cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1");
 
 	PdGui::instance().pdsend(cmd);
-
-	// if (!Globals::Pd.getNodePressed()){
-		// auto editMode = Globals::Pd.getCanvasEditMode();
-		// Globals::Pd.setCanvasEditMode(!editMode);
-	// }
 }
 
 
@@ -710,8 +653,8 @@ ofPoint Canvas::transformToPdCoordinates(float aX, float aY){
 	ofPoint result;
 
 	// has to be rounded otherwise pd behaves weirdly when dragging up or left
-	result.x = (int)((aX - this->x) / _current->scale - _current->viewPort.x); // Globals::Settings.scale;
-	result.y = (int)((aY - this->y) / _current->scale - _current->viewPort.y); // Globals::Settings.scale;
+	result.x = (int)((aX - this->x) / _current->scale + _current->viewPort.x); // Globals::Settings.scale;
+	result.y = (int)((aY - this->y) / _current->scale + _current->viewPort.y); // Globals::Settings.scale;
 
 	return result;
 }

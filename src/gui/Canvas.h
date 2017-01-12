@@ -35,7 +35,7 @@ class Canvas : public GuiElement {
 		PdCanvas*      _current = NULL;
 		ofFbo          _grid;
 		ofTrueTypeFont _font;
-		ofPoint        _pressPoint;
+		ofPoint        _previousMouse;
 		// float          _scale;
 		// ofRectangle    _viewPort; // in PD coordinates
 

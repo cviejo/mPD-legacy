@@ -100,9 +100,6 @@ class PdCanvas : public PdNode {
 		ofRectangle           region;
 		ofRectangle           viewPort;
 
-		ofPoint               pressPoint;
-		ofPoint               mousePoint;
-
 		PdCanvas(string aId) : PdNode(aId) {}
 };
 
