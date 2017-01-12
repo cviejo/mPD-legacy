@@ -1,6 +1,7 @@
 #include "App.h"
 #include "PdGui.h"
 #include "Canvas.h"
+#include "Button.h"
 
 
 //--------------------------------------------------------------
@@ -17,13 +18,17 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-	_guiElements.push_back(new Canvas());
 
+	Button* btn = new Button("copy");
+	btn->setPosition(0, 0);
+	_guiElements.push_back(btn);
+
+	_guiElements.push_back(new Canvas());
 	// debugging
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
 	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
-	((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[0]);
+	((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]);
 }
 
 
@@ -83,9 +88,11 @@ void App::draw(){
 
 	ofEnableAlphaBlending();
 
-	for (auto& elem : _guiElements){
+	for (auto i = _guiElements.rbegin(); i != _guiElements.rend(); ++i){
 
-		if(elem->visible){
+		GuiElement* elem = *i;
+
+		if (elem->visible){
 			elem->draw();
 		}
 	}

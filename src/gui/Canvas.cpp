@@ -86,10 +86,7 @@ void Canvas::set(PdCanvas* aCanvas){
 //--------------------------------------------------------------
 void Canvas::draw(){
 
-	ofSetColor(255);
-	ofDrawRectangle(*this);
-
-	if (_current == NULL){ return; }
+	if (!_current){ return; }
 
 	ofPushMatrix();
 
@@ -105,8 +102,6 @@ void Canvas::draw(){
 	this->drawRegion();
 
 	ofPopMatrix();
-
-	ofDrawBitmapString("x:   " + ofToString(ofGetPreviousMouseX()), 30, 30);
 }
 
 
@@ -148,6 +143,21 @@ void Canvas::drawNodes(){
 
 				if (guiNode->iemType == "slider"){
 					ofDrawRectangle(guiNode->slider);
+				}
+
+				if (guiNode->iemType == "toggle" && guiNode->value){
+
+					ofSetColor(0);
+					ofSetLineWidth(_current->scale);
+
+					auto pad    = 2;
+					auto top    = guiNode->y + pad;
+					auto left   = guiNode->x + pad;
+					auto bottom = guiNode->getBottom() - pad;
+					auto right  = guiNode->getRight()  - pad;
+
+					ofDrawLine(left, top,    right, bottom);
+					ofDrawLine(left, bottom, right, top);
 				}
 			}
 
@@ -439,7 +449,7 @@ void Canvas::drawNodeIo(PdIo& aIo){
 	ofFill();
 
 	if (aIo.height == 2){
-		// bad put this in the PdGui and node color
+		// == 2 bad way of detecting this, put it in the PdGui and node color
 
 		ofSetColor(0);
 		ofDrawRectangle(aIo);
@@ -464,18 +474,15 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 	ofPoint loc = this->transformToPdCoordinates(aX, aY);
 
-	if (_current->editMode){ // TODO: only if mode_drag
+	if (!_current->editMode && !this->getNodeAtPosition(loc.x, loc.y)){
+
+		_current->mode = PdCanvas::MODE_DRAG;
+	}
+	else {
 
 		string cmd = _current->id + " mouse " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0 0 0";
 
 		PdGui::instance().pdsend(cmd);
-	}
-	else if (auto node = this->getNodeAtPosition(aX, aY)){
-
-	}
-	else {
-
-		// TODO: set mode_drag if no node pressed and !editMode
 	}
 
 	// if (!scaling){
@@ -491,8 +498,7 @@ void Canvas::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onDragged(int aX, int aY, int aId){
 
-
-	if (!_current->editMode){ // TODO: only if mode_drag
+	if (_current->mode == PdCanvas::MODE_DRAG){ // TODO: only if mode_drag
 
 		ofPoint p(aX - _previousMouse.x,aY - _previousMouse.y);
 
@@ -538,6 +544,8 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
+	_current->mode = PdCanvas::MODE_NONE;
+
 	ofPoint loc = this->transformToPdCoordinates(aX, aY);
 	string  cmd = _current->id + " mouseup " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
 
@@ -566,8 +574,7 @@ void Canvas::onDoubleClick(int aX, int aY){
 
 
 //--------------------------------------------------------------
-void Canvas::onPressCancel(){
-}
+void Canvas::onPressCancel(){ }
 
 
 //--------------------------------------------------------------
@@ -629,34 +636,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 	// }
 }
 
-
-//--------------------------------------------------------------
-
-// void Canvas::setFocus(int aX, int aY){
-
-	// auto focusLoc  = this->transformToPdCoordinates(aX, aY);
-	// auto offsetLoc = this->transformToPdCoordinates(this->width * .5f, this->height * .5f);
-
-	// _current->viewPort.setPosition(focusLoc - offsetLoc);
-
-	// // this->clipOffset();
-// }
-
-
-//--------------------------------------------------------------
-
-// void Canvas::clipOffset(){
-
-	// if(_draggedLoc.x + _offsetLoc.x > 0){
-		// _offsetLoc .x = 0;
-		// _draggedLoc.x = 0;
-	// }
-
-	// if(_draggedLoc.y + _offsetLoc.y > 0){
-		// _offsetLoc .y = 0;
-		// _draggedLoc.y = 0;
-	// }
-// }
 
 //--------------------------------------------------------------
 PdNode* Canvas::getNodeAtPosition(int aX, int aY){
