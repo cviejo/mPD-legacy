@@ -567,6 +567,8 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_canvas_move_selection"){
 
+		ofLogVerbose() << aMsg;
+
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			guiMsg.parseRect(1);

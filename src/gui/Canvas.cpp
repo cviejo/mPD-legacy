@@ -1,19 +1,16 @@
 #include "Canvas.h"
 
 
+int gridStepSize = 20; // Globals::Theme.grid.cell.width 
+
+
 //--------------------------------------------------------------
 Canvas::Canvas(){
-
-	// _current->viewPort.setPosition(0, 0);
-	// _current->scale = 1.f;
 
 	this->x      = 0;
 	this->y      = 0;
 	this->width  = ofGetWidth();
 	this->height = ofGetHeight();
-	// this->width  = 400;
-	// this->height = 400;
-
 
 	_font.load("fonts/UbuntuMono-R.ttf", 70, true, true);
 	_font.setLineHeight(100.0f);
@@ -49,10 +46,8 @@ Canvas::Canvas(){
 //--------------------------------------------------------------
 void Canvas::initGrid(){
 
-	int stepWidth  = 20;//Globals::Theme.grid.cell.width  + 0.5f;
-	int stepHeight = 20;//Globals::Theme.grid.cell.height + 0.5f;
-	int gridWidth  = this->width  + stepWidth * 3;
-	int gridHeight = this->height + stepWidth * 3;
+	int gridWidth  = this->width  + gridStepSize * 3;
+	int gridHeight = this->height + gridStepSize * 3;
 
 	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
 	_grid.begin();
@@ -67,8 +62,8 @@ void Canvas::initGrid(){
 	// ofSetColor(Globals::Theme.grid.color.front);
 
 	ofSetColor(200);
-	for(int i = 0; i < gridWidth; i += stepWidth){
-		for(int j = 0; j < gridHeight; j += stepHeight){
+	for(int i = 0; i < gridWidth; i += gridStepSize){
+		for(int j = 0; j < gridHeight; j += gridStepSize){
 			ofDrawCircle(i, j, 1);
 		}
 	}
@@ -97,16 +92,39 @@ void Canvas::draw(){
 	if (_current == NULL){ return; }
 
 	ofPushMatrix();
+
 	ofTranslate(this->x, this->y);
 	ofScale(_current->scale, _current->scale);
 
-	if (_current->scale >= 1){
-		ofSetColor(255);
-		_grid.draw((int)(-_current->viewPort.x) % 20, // TODO: substitute this with cell width setting
-		           (int)(-_current->viewPort.y) % 20);
-	}
+	this->drawGrid();
 
 	ofTranslate(_current->viewPort.getPosition() * -1);
+
+	this->drawNodes();
+	this->drawConnections();
+	this->drawRegion();
+
+	ofPopMatrix();
+
+	ofDrawBitmapString("x:   " + ofToString(ofGetPreviousMouseX()), 30, 30);
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawGrid(){
+
+	if (_current->scale >= 1){ // TODO: && grid active
+
+		ofSetColor(255);
+
+		_grid.draw((int)(-_current->viewPort.x) % gridStepSize,
+		           (int)(-_current->viewPort.y) % gridStepSize);
+	}
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawNodes(){
 
 	for (auto node : _current->nodes){
 
@@ -142,6 +160,11 @@ void Canvas::draw(){
 			}
 		}
 	}
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawConnections(){
 
 	for (auto conn : _current->connections){
 
@@ -151,40 +174,21 @@ void Canvas::draw(){
 			ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
 		}
 	}
-
-	if (_current->mode == PdCanvas::MODE_REGION){
-		ofSetColor(0, 120);
-		ofDrawRectangle(_current->region);
-	}
-
-	ofPopMatrix();
-
-	ofNoFill();
-	ofSetColor(0);
-	ofDrawRectangle(*this);
-
-	if (_current->editMode){
-		ofFill();
-		ofSetColor(255,  0, 0);
-		ofDrawCircle(10, 10, 10, 10);
-	}
-
-	ofDrawBitmapString("x:   " + ofToString(ofGetPreviousMouseX()), 30, 30);
 }
 
 
 //--------------------------------------------------------------
-void Canvas::drawRegion(PdCanvas* aCanvas){
+void Canvas::drawRegion(){
 
-	if (aCanvas->mode == PdCanvas::MODE_REGION){
+	if (_current->mode == PdCanvas::MODE_REGION){
 
 		ofSetColor(100);
 		ofNoFill();
-		ofDrawRectangle(aCanvas->region);
+		ofDrawRectangle(_current->region);
 
 		ofSetColor(100, 100);
 		ofFill();
-		ofDrawRectangle(aCanvas->region);
+		ofDrawRectangle(_current->region);
 	}
 }
 
@@ -456,14 +460,24 @@ void Canvas::drawNodeIo(PdIo& aIo){
 //--------------------------------------------------------------
 void Canvas::onPressed(int aX, int aY, int aId){
 
-	// TODO: set mode_drag if no node pressed and !editMode
 	_previousMouse.set(aX, aY);
 
-	ofPoint p = this->transformToPdCoordinates(aX, aY);
+	ofPoint loc = this->transformToPdCoordinates(aX, aY);
 
-	string cmd = _current->id + " mouse " + ofToString(p.x) + " " + ofToString(p.y) + " 0 0 0";
+	if (_current->editMode){ // TODO: only if mode_drag
 
-	PdGui::instance().pdsend(cmd);
+		string cmd = _current->id + " mouse " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0 0 0";
+
+		PdGui::instance().pdsend(cmd);
+	}
+	else if (auto node = this->getNodeAtPosition(aX, aY)){
+
+	}
+	else {
+
+		// TODO: set mode_drag if no node pressed and !editMode
+	}
+
 	// if (!scaling){
 
 		// _pressLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
@@ -495,9 +509,8 @@ void Canvas::onDragged(int aX, int aY, int aId){
 	}
 	else {
 
-		ofPoint p = this->transformToPdCoordinates(aX, aY);
-
-		string  cmd = _current->id + " motion " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+		ofPoint loc = this->transformToPdCoordinates(aX, aY);
+		string  cmd = _current->id + " motion " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
 
 		PdGui::instance().pdsend(cmd);
 	}
@@ -525,11 +538,10 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
-	ofPoint p   = this->transformToPdCoordinates(aX, aY);
-	string  cmd = _current->id + " mouseup " + ofToString(p.x) + " " + ofToString(p.y) + " 0";
+	ofPoint loc = this->transformToPdCoordinates(aX, aY);
+	string  cmd = _current->id + " mouseup " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
 
 	PdGui::instance().pdsend(cmd);
-
 	// if (!scaling){
 		// Globals::Pd.canvasReleased(_mouseLoc.x, _mouseLoc.y);
 	// }
@@ -645,6 +657,21 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 		// _draggedLoc.y = 0;
 	// }
 // }
+
+//--------------------------------------------------------------
+PdNode* Canvas::getNodeAtPosition(int aX, int aY){
+
+	if (_current){
+
+		for (auto node : _current->nodes){
+			if (node->inside(aX, aY)){
+				return node;
+			}
+		}
+	}
+
+	return NULL;
+}
 
 
 //--------------------------------------------------------------

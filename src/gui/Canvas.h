@@ -49,10 +49,11 @@ class Canvas : public GuiElement {
 
 		void    initGrid();
 		// void    clipOffset();
-		// void    drawGrid();
-		void    drawCanvas(PdNode* aCanvas);
-		void    drawConnections(PdNode* aCanvas);
-		void    drawRegion(PdCanvas* aCanvas);
+		void    drawGrid();
+		// void    drawCanvas(PdNode* aCanvas);
+		void    drawNodes();
+		void    drawConnections();
+		void    drawRegion();
 		void    drawNodeBackground(PdNode* aNode);
 		void    drawNodeText(PdNode* aNode);
 		void    drawNodeIo(PdIo& aIo);
@@ -67,6 +68,7 @@ class Canvas : public GuiElement {
 
 		// void    drawMessage(PdNode& aNode);
 		// void    drawAtom(PdNode& aNode);
+		PdNode* getNodeAtPosition(int aX, int aY);
 		ofPoint transformToPdCoordinates(float aX, float aY);
 };
 

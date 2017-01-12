@@ -1,6 +1,7 @@
 #pragma once
 
 
+
 #include "ofMain.h"
 #include "PdTypes.hpp"
 
@@ -86,7 +87,7 @@ class PdCanvas : public PdNode {
 
 		enum CanvasMode {
 			MODE_NONE = 0,
-			MODE_MOVE,
+			MODE_DRAG,
 			MODE_CONNECT,
 			MODE_REGION
 		};
@@ -102,6 +103,7 @@ class PdCanvas : public PdNode {
 
 		PdCanvas(string aId) : PdNode(aId) {}
 };
+// MODE_DRAG, kinda wrong here
 
 		// enum NodeType {
 			// TYPE_TEXT = 0,
