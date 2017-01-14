@@ -69,6 +69,7 @@ class Canvas : public GuiElement {
 
 		// void    drawMessage(PdNode& aNode);
 		// void    drawAtom(PdNode& aNode);
+		void    sendMouseEvent(string aEventType, ofPoint aLoc);
 		PdNode* getNodeAtPosition(int aX, int aY);
 		ofPoint transformToPdCoordinates(float aX, float aY);
 };

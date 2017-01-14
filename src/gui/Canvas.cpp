@@ -503,16 +503,14 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 		_current->mode = PdCanvas::MODE_DRAG;
 	}
-	else if (_current->editMode && node && !node->selected){
+	else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
 		_current->mode = PdCanvas::MODE_CONNECT;
 		_connectionStart = node->outlets[0];
 	}
 	else {
 
-		string cmd = _current->id + " mouse " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0 0 0";
-
-		PdGui::instance().pdsend(cmd);
+		this->sendMouseEvent("mouse", loc);
 	}
 
 	// if (!scaling){
@@ -543,15 +541,9 @@ void Canvas::onDragged(int aX, int aY, int aId){
 			_current->viewPort.y = 0;
 		}
 	}
-	else if (_current->mode == PdCanvas::MODE_CONNECT){
+	else if (_current->mode != PdCanvas::MODE_CONNECT){
 
-	}
-	else {
-
-		ofPoint loc = this->transformToPdCoordinates(aX, aY);
-		string  cmd = _current->id + " motion " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
-
-		PdGui::instance().pdsend(cmd);
+		this->sendMouseEvent("motion", this->transformToPdCoordinates(aX, aY));
 	}
 
 	// CanvasMode mode = Globals::Pd.getCanvasMode();
@@ -580,31 +572,21 @@ void Canvas::onReleased(int aX, int aY, int aId){
 	ofPoint loc = this->transformToPdCoordinates(aX, aY);
 
 	if (_current->mode == PdCanvas::MODE_CONNECT){
+
 		if (auto node = this->getNodeAtPosition(loc.x, loc.y)){
 
-			string  cmd = _current->id + " mouse " + ofToString(_connectionStart->x + 1) + " " + ofToString(_connectionStart->y + 1) + " 0 0 0";
+			if ( !node->inlets.size() ){ return; }
 
-			PdGui::instance().pdsend(cmd);
-
-			PdIo* in = node->inlets[0];//
-
-			cmd = _current->id + " mouseup " + ofToString(in->x) + " " + ofToString(in->y) + " 0";
-			PdGui::instance().pdsend(cmd);
+			this->sendMouseEvent("mouse", _connectionStart->getCenter());
+			this->sendMouseEvent("mouseup", node->inlets[0]->getCenter());
 		}
 	}
 	else {
 
-		string  cmd = _current->id + " mouseup " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
-
-		PdGui::instance().pdsend(cmd);
+		this->sendMouseEvent("mouseup", loc);
 	}
 
 	_current->mode = PdCanvas::MODE_NONE;
-
-
-	// if (!scaling){
-		// Globals::Pd.canvasReleased(_mouseLoc.x, _mouseLoc.y);
-	// }
 }
 
 
@@ -702,6 +684,15 @@ PdNode* Canvas::getNodeAtPosition(int aX, int aY){
 	}
 
 	return NULL;
+}
+
+
+//--------------------------------------------------------------
+void Canvas::sendMouseEvent(string aEventType, ofPoint aLoc){
+
+	string cmd = _current->id + " " + aEventType + " " + ofToString(aLoc.x) + " " + ofToString(aLoc.y) + " 0 0 0";
+
+	PdGui::instance().pdsend(cmd);
 }
 
 
