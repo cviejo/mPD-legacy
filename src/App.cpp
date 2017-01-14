@@ -123,8 +123,8 @@ void App::keyPressed(int key){
 	else if (key == 'p'){ cmd = cnv->id + " paste"; }
 	else if (key == 'u'){ cmd = cnv->id + " undo"; }
 	else if (key == 'q'){ ofExit(); }
-	else if (key == '1'){ ((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[0]); }
-	else if (key == '2'){ ((Canvas*)_guiElements[0])->set(PdGui::instance().getCanvases()[1]); }
+	else if (key == '1'){ ((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]); }
+	else if (key == '2'){ ((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[1]); }
 
 	PdGui::instance().pdsend(cmd);
 }

@@ -36,6 +36,7 @@ class Canvas : public GuiElement {
 		ofFbo          _grid;
 		ofTrueTypeFont _font;
 		ofPoint        _previousMouse;
+		PdIo*          _connectionStart;
 		// float          _scale;
 		// ofRectangle    _viewPort; // in PD coordinates
 
@@ -56,7 +57,7 @@ class Canvas : public GuiElement {
 		void    drawRegion();
 		void    drawNodeBackground(PdNode* aNode);
 		void    drawNodeText(PdNode* aNode);
-		void    drawNodeIo(PdIo& aIo);
+		void    drawNodeIo(PdIo* aIo);
 		// void    drawConsole();
 		// void    drawConnecting();
 		// void    drawControl(PdNode& aNode);

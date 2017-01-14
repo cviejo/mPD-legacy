@@ -42,20 +42,29 @@ class PdNode : public ofRectangle
 			// TYPE_INVALID,
 		// };
 
-		int          backgroundColor = 255;
-		int          foregroundColor = 0;
-		int          borderColor     = 0;
-		bool         selected        = false;
-		string       id;
-		string       type;
-		string       patchId;
-		vector<PdIo> inlets;
-		vector<PdIo> outlets;
-		string       text;
-		ofPoint      textPosition;
+		int           backgroundColor = 255;
+		int           foregroundColor = 0;
+		int           borderColor     = 0;
+		bool          selected        = false;
+		string        id;
+		string        type;
+		string        patchId;
+		vector<PdIo*> inlets;
+		vector<PdIo*> outlets;
+		string        text;
+		ofPoint       textPosition;
 
 		PdNode(string aId = ""){
 			this->id = aId;
+		}
+
+		~PdNode(){
+			for (auto it = inlets.begin(); it != inlets.end(); ++it){
+				 delete *it;
+			}
+			for (auto it = outlets.begin(); it != outlets.end(); ++it){
+				 delete *it;
+			}
 		}
 };
 

@@ -396,10 +396,22 @@ void PdGui::guiMessage(string aMsg){
 			node->canvas->backgroundColor = guiMsg.color;
 		}
 	}
+	else if (guiMsg.command == "gui_bng_new"){
+		// gui_bng_new "x2a31760","x2a79320",7.5,7.5,6.5
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			node->iemType = "bng";
+		}
+	}
+	else if (guiMsg.command == "gui_bng_button_color"){
+		// gui_bng_button_color "x1f6ba90","x1fb6ff0","xfcfcfc"
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			guiMsg.parseColor(2);
+			node->foregroundColor = guiMsg.color;
+		}
+	}
 	else if (guiMsg.command == "gui_toggle_new"){
 		// gui_toggle_new "x268b500","x26ae8c0","x000000",1,0,78,105,89,116,78,116,89,105,76,103
 		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-
 			node->iemType = "toggle";
 		}
 	}
@@ -409,6 +421,8 @@ void PdGui::guiMessage(string aMsg){
 
 			node->iemType = "toggle";
 			node->value   = ofToInt(guiMsg.args[2]);
+			guiMsg.parseColor(3);
+			node->foregroundColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_slider_new"){
@@ -476,12 +490,12 @@ void PdGui::guiMessage(string aMsg){
 
 			guiMsg.parseRect(3);
 
-			PdIo io;
+			PdIo* io = new PdIo();
 
-			io.set(guiMsg);
-			io.signal = guiMsg.args[11] != "0";
+			io->set(guiMsg);
+			io->signal = guiMsg.args[11] != "0";
 
-			if (guiMsg.args[9] == "i") {
+			if (guiMsg.args[9] == "\"i\"") {
 				node->inlets.push_back(io);
 			}
 			else {
@@ -568,11 +582,11 @@ void PdGui::guiMessage(string aMsg){
 						}
 					}
 
-					for (auto& inlet : node->inlets){
-						inlet.translate(offset);
+					for (auto inlet : node->inlets){
+						inlet->translate(offset);
 					}
-					for (auto& outlet : node->outlets){
-						outlet.translate(offset);
+					for (auto outlet : node->outlets){
+						outlet->translate(offset);
 					}
 				}
 			}

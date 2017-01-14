@@ -12,7 +12,11 @@ Canvas::Canvas(){
 	this->width  = ofGetWidth();
 	this->height = ofGetHeight();
 
-	_font.load("fonts/UbuntuMono-R.ttf", 70, true, true);
+	_font.load("fonts/DejaVuSansMono.ttf", 70, true, true);
+	// _font.load("fonts/VeraMono.ttf",       70, true, true);
+	// _font.load("fonts/DroidSansMono.ttf",  70, true, true);
+	// _font.load("fonts/Inconsolata.otf",    70, true, true);
+	// _font.load("fonts/UbuntuMono-R.ttf",   70, true, true);
 	_font.setLineHeight(100.0f);
 	// _renderer = new CanvasRenderer();
 	// // _renderer.font = _font;
@@ -46,8 +50,8 @@ Canvas::Canvas(){
 //--------------------------------------------------------------
 void Canvas::initGrid(){
 
-	int gridWidth  = this->width  + gridStepSize * 3;
-	int gridHeight = this->height + gridStepSize * 3;
+	int gridWidth  = this->width  + gridStepSize;// * 3;
+	int gridHeight = this->height + gridStepSize;// * 3;
 
 	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
 	_grid.begin();
@@ -101,6 +105,15 @@ void Canvas::draw(){
 	this->drawConnections();
 	this->drawRegion();
 
+	if (_current->mode == PdCanvas::MODE_CONNECT){
+
+		// ofPoint p2(ofGetMouseX(), ofGetMouseY());
+		ofPoint p2 = this->transformToPdCoordinates(ofGetMouseX(), ofGetMouseY());
+
+		ofDrawLine(_connectionStart->getCenter(), p2);
+	}
+	
+
 	ofPopMatrix();
 }
 
@@ -145,9 +158,20 @@ void Canvas::drawNodes(){
 					ofDrawRectangle(guiNode->slider);
 				}
 
-				if (guiNode->iemType == "toggle" && guiNode->value){
+				if (guiNode->iemType == "bng"){
 
-					ofSetColor(0);
+					ofSetHexColor(guiNode->foregroundColor);
+					ofFill();
+					ofDrawCircle(guiNode->getCenter(), (guiNode->width - 2) / 2);
+
+					ofSetColor(0); // TODO: borderColor
+					ofSetLineWidth(_current->scale);
+					ofNoFill();
+					ofDrawCircle(guiNode->getCenter(), (guiNode->width - 2) / 2);
+				}
+				else if (guiNode->iemType == "toggle" && guiNode->value){
+
+					ofSetHexColor(guiNode->foregroundColor);
 					ofSetLineWidth(_current->scale);
 
 					auto pad    = 2;
@@ -180,7 +204,7 @@ void Canvas::drawConnections(){
 
 		if (_current->viewPort.inside(conn->getPosition()) || _current->viewPort.inside(conn->x2, conn->y2)){
 			ofSetColor(119);
-			ofSetLineWidth(2);
+			ofSetLineWidth(_current->scale);
 			ofDrawLine(conn->x, conn->y, conn->x2, conn->y2);
 		}
 	}
@@ -444,24 +468,24 @@ void Canvas::drawNodeText(PdNode* aNode){
 
 
 //--------------------------------------------------------------
-void Canvas::drawNodeIo(PdIo& aIo){
+void Canvas::drawNodeIo(PdIo* aIo){
 
 	ofFill();
 
-	if (aIo.height == 2){
+	if (aIo->height == 2){
 		// == 2 bad way of detecting this, put it in the PdGui and node color
 
 		ofSetColor(0);
-		ofDrawRectangle(aIo);
+		ofDrawRectangle(*aIo);
 	}
 	else {
 
 		ofSetColor(119);
-		ofDrawRectangle(aIo);
+		ofDrawRectangle(*aIo);
 
-		if (!aIo.signal){
+		if (!aIo->signal){
 			ofSetColor(255);
-			ofDrawRectangle(aIo.x + 1, aIo.y + 1, aIo.width - 2, aIo.height - 2);
+			ofDrawRectangle(aIo->x + 1, aIo->y + 1, aIo->width - 2, aIo->height - 2);
 		}
 	}
 }
@@ -472,11 +496,17 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 	_previousMouse.set(aX, aY);
 
-	ofPoint loc = this->transformToPdCoordinates(aX, aY);
+	ofPoint loc  = this->transformToPdCoordinates(aX, aY);
+	PdNode* node = this->getNodeAtPosition(loc.x, loc.y);
 
-	if (!_current->editMode && !this->getNodeAtPosition(loc.x, loc.y)){
+	if (!_current->editMode && !node){
 
 		_current->mode = PdCanvas::MODE_DRAG;
+	}
+	else if (_current->editMode && node && !node->selected){
+
+		_current->mode = PdCanvas::MODE_CONNECT;
+		_connectionStart = node->outlets[0];
 	}
 	else {
 
@@ -500,7 +530,7 @@ void Canvas::onDragged(int aX, int aY, int aId){
 
 	if (_current->mode == PdCanvas::MODE_DRAG){ // TODO: only if mode_drag
 
-		ofPoint p(aX - _previousMouse.x,aY - _previousMouse.y);
+		ofPoint p(aX - _previousMouse.x, aY - _previousMouse.y);
 
 		_current->viewPort.setPosition(_current->viewPort.getPosition() - p / _current->scale);
 
@@ -512,6 +542,9 @@ void Canvas::onDragged(int aX, int aY, int aId){
 		if (_current->viewPort.y < 0){
 			_current->viewPort.y = 0;
 		}
+	}
+	else if (_current->mode == PdCanvas::MODE_CONNECT){
+
 	}
 	else {
 
@@ -544,12 +577,31 @@ void Canvas::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onReleased(int aX, int aY, int aId){
 
+	ofPoint loc = this->transformToPdCoordinates(aX, aY);
+
+	if (_current->mode == PdCanvas::MODE_CONNECT){
+		if (auto node = this->getNodeAtPosition(loc.x, loc.y)){
+
+			string  cmd = _current->id + " mouse " + ofToString(_connectionStart->x + 1) + " " + ofToString(_connectionStart->y + 1) + " 0 0 0";
+
+			PdGui::instance().pdsend(cmd);
+
+			PdIo* in = node->inlets[0];//
+
+			cmd = _current->id + " mouseup " + ofToString(in->x) + " " + ofToString(in->y) + " 0";
+			PdGui::instance().pdsend(cmd);
+		}
+	}
+	else {
+
+		string  cmd = _current->id + " mouseup " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
+
+		PdGui::instance().pdsend(cmd);
+	}
+
 	_current->mode = PdCanvas::MODE_NONE;
 
-	ofPoint loc = this->transformToPdCoordinates(aX, aY);
-	string  cmd = _current->id + " mouseup " + ofToString(loc.x) + " " + ofToString(loc.y) + " 0";
 
-	PdGui::instance().pdsend(cmd);
 	// if (!scaling){
 		// Globals::Pd.canvasReleased(_mouseLoc.x, _mouseLoc.y);
 	// }

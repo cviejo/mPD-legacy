@@ -3967,6 +3967,9 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
 
     if (canvas_isconnected (x, ob1, closest1, ob2, closest2))
     {
+        // mPD
+        canvas_disconnect(x, glist_getindex(x, ob1), closest1, glist_getindex(x, ob2), closest2);
+
         if(x->gl_editor && x->gl_editor->gl_magic_glass)
         {                
             magicGlass_unbind(x->gl_editor->gl_magic_glass);
