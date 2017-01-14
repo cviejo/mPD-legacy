@@ -58,8 +58,8 @@ class Canvas : public GuiElement {
 		void    drawNodeBackground(PdNode* aNode);
 		void    drawNodeText(PdNode* aNode);
 		void    drawNodeIo(PdIo* aIo);
+		void    drawConnecting();
 		// void    drawConsole();
-		// void    drawConnecting();
 		// void    drawControl(PdNode& aNode);
 		// void    drawControlBackground(PdNode& aNode);
 		// void    drawNodeText(PdNode& aNode);
@@ -71,6 +71,7 @@ class Canvas : public GuiElement {
 		// void    drawAtom(PdNode& aNode);
 		void    sendMouseEvent(string aEventType, ofPoint aLoc);
 		PdNode* getNodeAtPosition(int aX, int aY);
+		PdIo*   getClosestIo(vector<PdIo*> aIoArray, ofPoint aLoc);
 		ofPoint transformToPdCoordinates(float aX, float aY);
 };
 

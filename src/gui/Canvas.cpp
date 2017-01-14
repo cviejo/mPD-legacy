@@ -101,18 +101,10 @@ void Canvas::draw(){
 
 	ofTranslate(_current->viewPort.getPosition() * -1);
 
+	this->drawConnecting();
 	this->drawNodes();
 	this->drawConnections();
 	this->drawRegion();
-
-	if (_current->mode == PdCanvas::MODE_CONNECT){
-
-		// ofPoint p2(ofGetMouseX(), ofGetMouseY());
-		ofPoint p2 = this->transformToPdCoordinates(ofGetMouseX(), ofGetMouseY());
-
-		ofDrawLine(_connectionStart->getCenter(), p2);
-	}
-	
 
 	ofPopMatrix();
 }
@@ -223,6 +215,26 @@ void Canvas::drawRegion(){
 		ofSetColor(100, 100);
 		ofFill();
 		ofDrawRectangle(_current->region);
+	}
+}
+
+
+//--------------------------------------------------------------
+void Canvas::drawConnecting(){
+
+	if (_current->mode == PdCanvas::MODE_CONNECT){
+
+		ofPoint loc = this->transformToPdCoordinates(ofGetMouseX(), ofGetMouseY());
+
+		if (auto node = this->getNodeAtPosition(loc.x, loc.y)){
+			if (node->inlets.size()){
+				loc = this->getClosestIo(node->inlets, loc)->getCenter();
+			}
+		}
+
+		ofSetColor(119);
+		ofSetLineWidth(_current->scale);
+		ofDrawLine(_connectionStart->getCenter(), loc);
 	}
 }
 
@@ -505,8 +517,8 @@ void Canvas::onPressed(int aX, int aY, int aId){
 	}
 	else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
-		_current->mode = PdCanvas::MODE_CONNECT;
-		_connectionStart = node->outlets[0];
+		_current->mode   = PdCanvas::MODE_CONNECT;
+		_connectionStart = this->getClosestIo(node->outlets, loc);
 	}
 	else {
 
@@ -684,6 +696,22 @@ PdNode* Canvas::getNodeAtPosition(int aX, int aY){
 	}
 
 	return NULL;
+}
+
+
+
+//--------------------------------------------------------------
+PdIo* Canvas::getClosestIo(vector<PdIo*> aIoArray, ofPoint aLoc){
+
+	PdIo* result = aIoArray[0];
+
+	for (auto io : aIoArray){
+		if (io->getCenter().squareDistance(aLoc) < result->getCenter().squareDistance(aLoc)){
+			result = io;
+		}
+	}
+
+	return result;
 }
 
 
