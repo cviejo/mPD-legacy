@@ -4,7 +4,8 @@
 #include "ofMain.h"
 
 
-class PdGuiMessage : public ofRectangle {
+// class PdGuiMessage : public ofRectangle {
+class PdGuiMessage {
 
 	public:
 
@@ -17,9 +18,9 @@ class PdGuiMessage : public ofRectangle {
 
 		PdGuiMessage(string aMsg);
 
-		void   parseIds();
-		void   parseRect(int index);
-		void   parseColor(int index);
-		string unquote(string& str);
+		void        parseIds();
+		ofRectangle parseRect(int index);
+		int         parseColor(int index);
+		string      unquote(string& str);
 };
 

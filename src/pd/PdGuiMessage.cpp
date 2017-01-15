@@ -35,18 +35,22 @@ void PdGuiMessage::parseIds(){
 
 
 //--------------------------------------------------------------
-void PdGuiMessage::parseRect(int index){
+ofRectangle PdGuiMessage::parseRect(int index){
 
-	this->x = ofToInt(this->args[index]);
-	this->y = ofToInt(this->args[index + 1]);
+	ofRectangle rect;
 
-	this->setSize(ofToInt(this->args[index + 2]) - this->x,
-	              ofToInt(this->args[index + 3]) - this->y);
+	rect.x = ofToInt(this->args[index]);
+	rect.y = ofToInt(this->args[index + 1]);
+
+	rect.setSize(ofToInt(this->args[index + 2]) - rect.x,
+	              ofToInt(this->args[index + 3]) - rect.y);
+
+	return rect;
 }
 
 
 //--------------------------------------------------------------
-void PdGuiMessage::parseColor(int startIndex){
+int PdGuiMessage::parseColor(int startIndex){
 
 	auto colorString = this->unquote(this->args[startIndex]);
 
@@ -56,7 +60,7 @@ void PdGuiMessage::parseColor(int startIndex){
 	ofStringReplace(colorString, "#",    "");
 	ofStringReplace(colorString, "x",    "");
 
-	this->color = ofHexToInt(colorString);
+	return ofHexToInt(colorString);
 }
 
 
