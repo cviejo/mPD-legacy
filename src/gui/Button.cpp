@@ -5,8 +5,8 @@
 //--------------------------------------------------------------
 Button::Button(string aId, ButtonType aType, bool* aTogglePointer){
 
-	this->width         = 50;
-	this->height        = 50;
+	this->width         = 99;
+	this->height        = 99;
 	// this->width         = Globals::Theme.button.width;
 	// this->height        = Globals::Theme.button.width;
 	this->type          = aType;

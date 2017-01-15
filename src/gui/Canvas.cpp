@@ -590,8 +590,8 @@ void Canvas::onReleased(int aX, int aY, int aId){
 
 			if ( !node->inlets.size() ){ return; }
 
-			this->sendMouseEvent("mouse", _connectionStart->getCenter());
-			this->sendMouseEvent("mouseup", node->inlets[0]->getCenter());
+			this->sendMouseEvent("mouse",   _connectionStart->getCenter());
+			this->sendMouseEvent("mouseup", this->getClosestIo(node->inlets, loc)->getCenter());
 		}
 	}
 	else {
@@ -641,33 +641,73 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 			_current->viewPort.setSize(this->width / _current->scale, this->height / _current->scale);
 			break;
 
+		// debugging
+		case AppEvent::TYPE_KEY_PRESSED:
+
+			if (_current){
+
+				string cmd = "";
+				int    key = (int)aAppEvent.value;
+
+				if      (key == 'a'){ cmd = _current->id + " selectall"; }
+				else if (key == 'c'){ cmd = _current->id + " copy"; }
+				// else if (key == 'd'){ this->touchDoubleTap(1, 1, 0); }
+				else if (key == 'e'){ cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1"); }
+				else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
+				else if (key == 'p'){ cmd = _current->id + " paste"; }
+				else if (key == 'u'){ cmd = _current->id + " undo"; }
+				else if (key == 'q'){ ofExit(); }
+				else if (key == '1'){ this->set(PdGui::instance().getCanvases()[0]); }
+				else if (key == '2'){ this->set(PdGui::instance().getCanvases()[1]); }
+
+				PdGui::instance().pdsend(cmd);
+			}
+			break;
+
+		case AppEvent::TYPE_BUTTON_PRESSED:
+			if (_current){
+
+				string cmd = "";
+
+				if (aAppEvent.message == "edit-button"){
+					cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1");
+				}
+				// else if (aAppEvent.message == "grid-button"){
+					// Globals::Settings.gridActive = aAppEvent.value;
+					// Globals::Pd.setCanvasGridMode(aAppEvent.value);
+				// }
+				// else if (aAppEvent.message == "settings-button"){
+				// }
+				// else if (aAppEvent.message == "trash-button"){
+					// Globals::Pd.canvasDelete();
+				// }
+				// else if (aAppEvent.message == "copy-button"){
+					// Globals::Pd.canvasCopy();
+				// }
+				// else if (aAppEvent.message == "paste-button"){
+					// Globals::Pd.canvasPaste();
+				// }
+				else if (aAppEvent.message == "copy-button"){
+					cmd = _current->id + " copy";
+				}
+				else if (aAppEvent.message == "paste-button"){
+					cmd = _current->id + " paste";
+				}
+				else if (aAppEvent.message == "undo-button"){
+					cmd = _current->id + " undo";
+				}
+				PdGui::instance().pdsend(cmd);
+			}
+			break;
+			break;
+
+
 		default:
 			break;
 	}
 
 	// if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED){
 
-		// if (aAppEvent.message == "edit-button"){
-			// Globals::Pd.setCanvasEditMode(aAppEvent.value);
-		// }
-		// else if (aAppEvent.message == "grid-button"){
-			// Globals::Settings.gridActive = aAppEvent.value;
-			// Globals::Pd.setCanvasGridMode(aAppEvent.value);
-		// }
-		// else if (aAppEvent.message == "settings-button"){
-		// }
-		// else if (aAppEvent.message == "trash-button"){
-			// Globals::Pd.canvasDelete();
-		// }
-		// else if (aAppEvent.message == "copy-button"){
-			// Globals::Pd.canvasCopy();
-		// }
-		// else if (aAppEvent.message == "paste-button"){
-			// Globals::Pd.canvasPaste();
-		// }
-		// else if (aAppEvent.message == "undo-button"){
-			// Globals::Pd.canvasUndo();
-		// }
 	// }
 	// else if(aAppEvent.type == AppEvent::TYPE_CREATE_OBJECT){
 

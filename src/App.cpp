@@ -20,18 +20,34 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-	Button* btn = new Button("copy");
-	btn->setPosition(500, 0);
-	_guiElements.push_back(btn);
+	// Button* btn;
 
-	_guiElements.push_back(new Canvas());
+	// btn = new Button("edit");
+	// btn->setPosition(0, 0);
+	// _guiElements.push_back(btn);
+
+	// btn = new Button("copy");
+	// btn->setPosition(0, 100);
+	// _guiElements.push_back(btn);
+
+	// btn = new Button("paste");
+	// btn->setPosition(0, 200);
+	// _guiElements.push_back(btn);
+
+	// btn = new Button("undo");
+	// btn->setPosition(0, 300);
+	// _guiElements.push_back(btn);
+
+	Canvas* cnv = new Canvas();
+
+	_guiElements.push_back(cnv);
 
 	// debugging
 	// PdGui::instance().openPatch(ofToDataPath("basic.pd"));
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
 	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
-	((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]);
+	cnv->set(PdGui::instance().getCanvases()[0]);
 }
 
 
@@ -90,7 +106,6 @@ void App::draw(){
 	// if (Globals::AppState == APP_STATE_START){ return; }
 
 	ofEnableAlphaBlending();
-	ofEnableSmoothing();
 
 	for (auto i = _guiElements.rbegin(); i != _guiElements.rend(); ++i){
 
@@ -102,7 +117,6 @@ void App::draw(){
 	}
 
 	ofDisableAlphaBlending();
-	ofDisableSmoothing();
 
 	// ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
 	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
@@ -113,27 +127,11 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	auto canvases = PdGui::instance().getCanvases();
+	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 
-	if (!canvases.size()){ return; }
-
-	string cmd = "";
-	auto   cnv = canvases[0];
-
-	// debugging
-	if      (key == 'a'){ cmd = cnv->id + " selectall"; }
-	else if (key == 'c'){ cmd = cnv->id + " copy"; }
-	else if (key == 'd'){ this->touchDoubleTap(1, 1, 0); }
-	else if (key == 'e'){ cmd = cnv->id + " editmode " + (cnv->editMode ? "0" : "1"); }
-	else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
-	else if (key == 'p'){ cmd = cnv->id + " paste"; }
-	else if (key == 'u'){ cmd = cnv->id + " undo"; }
-	else if (key == 'q'){ ofExit(); }
-	else if (key == '1'){ ((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]); }
-	else if (key == '2'){ ((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[1]); }
-
-	PdGui::instance().pdsend(cmd);
+	ofNotifyEvent(AppEvent::events, event);
 }
+
 
 
 //--------------------------------------------------------------
