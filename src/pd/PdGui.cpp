@@ -282,13 +282,22 @@ string PdGui::unquote(string& str){
 
 
 //--------------------------------------------------------------
-void PdGui::pdsend(string& aCmd){
+void PdGui::pdsend(string& aCmd, bool aLock){
+
+	if (aLock){
+		this->lock();
+	}
 
 	t_binbuf* buffer = binbuf_new();
 
 	binbuf_text(buffer, (char*)aCmd.c_str(), aCmd.length());
 	binbuf_eval(buffer, 0, 0, 0);
 	binbuf_free(buffer);
+
+	if (aLock){
+		this->unlock();
+	}
+	// this->hh(aCmd.c_str(), aCmd.length());
 }
 
 
@@ -318,7 +327,7 @@ void PdGui::guiMessage(string aMsg){
 
 			_canvases.push_back(new PdCanvas(guiMsg.canvasId));
 
-			this->pdsend(mapCommand);
+			this->pdsend(mapCommand, false);
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_set_editmode"){

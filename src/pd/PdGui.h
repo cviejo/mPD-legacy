@@ -22,7 +22,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		void              stopAudio();
 		PdCanvas*         openPatch(const string& aPath); // naming/types are a bit off on these two
 		void              closePatch(PdCanvas& aPatch);
-		void              pdsend(string& cmd);
+		void              pdsend(string& cmd, bool aLock = true);
 		// void              pdsend(string n, ...);
 		void              canvasPressed (PdCanvas* canvas, int x, int y);
 		void              canvasDragged (PdCanvas* canvas, int x, int y);

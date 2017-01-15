@@ -4,6 +4,8 @@
 #include "Button.h"
 
 
+bool computing = true;
+
 //--------------------------------------------------------------
 void App::setup(){
 
@@ -23,10 +25,11 @@ void App::setup(){
 	_guiElements.push_back(btn);
 
 	_guiElements.push_back(new Canvas());
+
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("basic.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("basic.pd"));
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
+	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]);
 }
@@ -87,6 +90,7 @@ void App::draw(){
 	// if (Globals::AppState == APP_STATE_START){ return; }
 
 	ofEnableAlphaBlending();
+	ofEnableSmoothing();
 
 	for (auto i = _guiElements.rbegin(); i != _guiElements.rend(); ++i){
 
@@ -98,6 +102,7 @@ void App::draw(){
 	}
 
 	ofDisableAlphaBlending();
+	ofDisableSmoothing();
 
 	// ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
 	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
@@ -142,6 +147,8 @@ void App::gotMessage(ofMessage msg){ }
 //--------------------------------------------------------------
 void App::audioReceived(float * input, int bufferSize, int nChannels) {
 
+	if (!computing){ return; }
+
 	// TODO: if computing
 	PdGui::instance().audioIn(input, bufferSize, nChannels);
 }
@@ -149,6 +156,8 @@ void App::audioReceived(float * input, int bufferSize, int nChannels) {
 
 //--------------------------------------------------------------
 void App::audioRequested(float * output, int bufferSize, int nChannels) {
+
+	if (!computing){ return; }
 
 	// TODO: if computing
 	PdGui::instance().audioOut(output, bufferSize, nChannels);
@@ -227,15 +236,21 @@ void App::touchCancelled(int x, int y, int id){ }
 
 
 //--------------------------------------------------------------
-void App::pause(){ }
+void App::pause(){
+	computing = false;
+}
 
 
 //--------------------------------------------------------------
-void App::stop(){ }
+void App::stop(){
+	computing = false;
+}
 
 
 //--------------------------------------------------------------
-void App::resume(){ }
+void App::resume(){
+	computing = true;
+}
 
 
 //--------------------------------------------------------------
