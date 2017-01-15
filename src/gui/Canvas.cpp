@@ -56,11 +56,11 @@ void Canvas::initGrid(){
 	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
 	_grid.begin();
 
-	ofClear(255, 0);
 	// ofBackground(Globals::Theme.canvas.color.background);
 	// ofSetColor(Globals::Theme.canvas.color.background);
 	// ofSetColor(0);
 	// ofBackground(0,0,255);
+	ofClear(255, 0);
 	ofSetColor(255);
 	ofDrawRectangle(0, 0, gridWidth, gridHeight);
 	// ofSetColor(Globals::Theme.grid.color.front);
@@ -139,7 +139,7 @@ void Canvas::drawNodes(){
 
 				if (guiNode->canvas){
 					ofFill();
-					ofSetHexColor(guiNode->backgroundColor);
+					ofSetHexColor(guiNode->backColor);
 					ofDrawRectangle(*(guiNode->canvas));
 				}
 				if (guiNode->label){
@@ -149,10 +149,21 @@ void Canvas::drawNodes(){
 				if (guiNode->iemType == "slider"){
 					ofDrawRectangle(guiNode->slider);
 				}
+				else if (guiNode->iemType == "radio"){
+					for (auto& radio : guiNode->radios){
+						ofNoFill();
+						ofSetColor(0);
+						ofDrawRectangle(radio);
+					}
+					// for (auto& button : guiNode->radioButtons){
+						ofFill();
+						ofSetHexColor(guiNode->frontColor);
+						ofDrawRectangle(guiNode->radioButtons[guiNode->value]);
+					// }
+				}
+				else if (guiNode->iemType == "bng"){
 
-				if (guiNode->iemType == "bng"){
-
-					ofSetHexColor(guiNode->foregroundColor);
+					ofSetHexColor(guiNode->frontColor);
 					ofFill();
 					ofDrawCircle(guiNode->getCenter(), (guiNode->width - 2) / 2);
 
@@ -163,7 +174,7 @@ void Canvas::drawNodes(){
 				}
 				else if (guiNode->iemType == "toggle" && guiNode->value){
 
-					ofSetHexColor(guiNode->foregroundColor);
+					ofSetHexColor(guiNode->frontColor);
 					ofSetLineWidth(_current->scale);
 
 					auto pad    = 2;
@@ -293,7 +304,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofVertex(left,      bottom);
 		ofEndShape();
 
-		ofSetColor(aNode->backgroundColor);
+		ofSetColor(aNode->backColor);
 		// ofSetColor(248, 248, 246);
 		ofBeginShape();
 			ofVertex(left  + 1, top + 1);
@@ -345,14 +356,14 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 //		if (aNode->className == "tgl"){
 //		if (aNode->control){
 		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetHexColor(aNode->backgroundColor);
+			// ofSetHexColor(aNode->backColor);
 		// }
 		// ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 
 		ofSetColor(aNode->borderColor);
 		ofDrawRectangle(*aNode);
 
-		ofSetHexColor(aNode->backgroundColor);
+		ofSetHexColor(aNode->backColor);
 		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 	}
 
@@ -462,7 +473,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 // //		if (aNode->className == "tgl"){
 // //		if (aNode->control){
 		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetHexColor(aNode->backgroundColor);
+			// ofSetHexColor(aNode->backColor);
 		// }
 		// ofDrawRectangle(left + 1, top + 1, aNode->width - 2, aNode->height - 2);
 	// }

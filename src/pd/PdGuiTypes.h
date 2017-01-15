@@ -42,10 +42,10 @@ class PdNode : public ofRectangle
 			// TYPE_INVALID,
 		// };
 
-		int           backgroundColor = 255;
-		int           foregroundColor = 0;
-		int           borderColor     = 0;
-		bool          selected        = false;
+		int           backColor   = 255;
+		int           frontColor  = 0;
+		int           borderColor = 0;
+		bool          selected    = false;
 		string        id;
 		string        type;
 		string        patchId;
@@ -74,11 +74,13 @@ class PdIemGui : public PdNode
 {
 	public:
 
-		string      iemType = "";
-		int         value   = 0;
-		PdNode*     label   = NULL;
-		PdNode*     canvas  = NULL;
-		ofRectangle slider;
+		string              iemType = "";
+		int                 value   = 0;
+		PdNode*             label   = NULL;
+		PdNode*             canvas  = NULL;
+		ofRectangle         slider;
+		vector<ofRectangle> radios;
+		vector<ofRectangle> radioButtons;
 	
 		PdIemGui(string aId = "") : PdNode(aId) { }
 

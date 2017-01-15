@@ -338,7 +338,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
-
+		// gui_gobj_new "x24078d0","x23fa810","iemgui",55,316,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			string  type = this->unquote(guiMsg.args[2]);
@@ -402,12 +402,12 @@ void PdGui::guiMessage(string aMsg){
 			node->setSize(ofToInt(guiMsg.args[7]) - node->x,
 			              ofToInt(guiMsg.args[8]) - node->y);
 
-			node->backgroundColor = guiMsg.color;
+			node->backColor = guiMsg.color;
 
 			node->canvas = new PdNode();
 			node->canvas->type = "mycanvas";
 			node->canvas->set(guiMsg);
-			node->canvas->backgroundColor = guiMsg.color;
+			node->canvas->backColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_bng_new"){
@@ -420,7 +420,7 @@ void PdGui::guiMessage(string aMsg){
 		// gui_bng_button_color "x1f6ba90","x1fb6ff0","xfcfcfc"
 		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			guiMsg.parseColor(2);
-			node->foregroundColor = guiMsg.color;
+			node->frontColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_toggle_new"){
@@ -436,7 +436,7 @@ void PdGui::guiMessage(string aMsg){
 			node->iemType = "toggle";
 			node->value   = ofToInt(guiMsg.args[2]);
 			guiMsg.parseColor(3);
-			node->foregroundColor = guiMsg.color;
+			node->frontColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_slider_new"){
@@ -459,13 +459,13 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_iemgui_label_new"){
-		// "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
+		// gui_iemgui_label_new "x102162000","x102181e00",17,7,"#000000","some label","Monaco","normal",10
 		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			node->label = new PdNode();
 			node->text  = this->unquote(guiMsg.args[5]);
 			node->textPosition.set(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
-			node->label->backgroundColor = guiMsg.color;
+			node->label->backColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_text_new"){
@@ -475,6 +475,36 @@ void PdGui::guiMessage(string aMsg){
 			node->textPosition.set(ofToInt(guiMsg.args[4]), ofToInt(guiMsg.args[5]));
 		}
 	}
+	else if (guiMsg.command == "gui_radio_create_buttons"){
+		// gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,334,67,343,55,316,1,0
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			guiMsg.parseRect(3);
+			if(ofToInt(guiMsg.args[10])){
+				node->value = ofToInt(guiMsg.args[9]);
+				guiMsg.parseColor(2);
+				node->frontColor = guiMsg.color;
+			}
+			ofRectangle radioButton(guiMsg);
+			node->radioButtons.push_back(radioButton);
+		}
+	}
+	else if (guiMsg.command == "gui_radio_update"){
+		// gui_radio_update "x13c0de0","x140ec00","xf8fc00",6,4
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			node->value = ofToInt(guiMsg.args[4]);
+			guiMsg.parseColor(2);
+			node->frontColor = guiMsg.color;
+		}
+	}
+	else if (guiMsg.command == "gui_radio_new"){
+		// gui_radio_new "x24078d0","x23fa810",55,346,70,346,2,55,316
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			node->iemType = "radio";
+			guiMsg.parseRect(2);
+			ofRectangle radio(guiMsg);
+			node->radios.push_back(radio);
+		}
+	}
 	else if (guiMsg.command == "gui_text_set"){
 
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
@@ -482,14 +512,14 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_text_draw_border"){
-
+		// gui_text_draw_border "x24078d0","x23fa810","#fcfcfc",0,55,316,70,436
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			guiMsg.parseColor(2);
 			guiMsg.parseRect(4);
 
 			node->set(guiMsg);
-			node->backgroundColor = guiMsg.color;
+			node->backColor = guiMsg.color;
 		}
 	}
 	else if (guiMsg.command == "gui_message_draw_border" || guiMsg.command == "gui_atom_draw_border"){
@@ -499,7 +529,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_draw_io"){
-		// "x7fd63490ce00",".x7fd63490ce00.t7fd633ccaa50",".x7fd63490ce00.t7fd633ccaa50",36,37,43,40,36,16,"o",0,0,0
+		// gui_gobj_draw_io "x7fd63490ce00",".x7fd63490ce00.t7fd633ccaa50",".x7fd63490ce00.t7fd633ccaa50",36,37,43,40,36,16,"o",0,0,0
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 
 			guiMsg.parseRect(3);
@@ -631,3 +661,19 @@ void PdGui::guiMessage(string aMsg){
 	ofLogVerbose() << aMsg;
 }
 
+/*
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,349,67,358,55,316,2,0
+gui_radio_new "x24078d0","x23fa810",55,361,70,361,3,55,316
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,364,67,373,55,316,3,0
+gui_radio_new "x24078d0","x23fa810",55,376,70,376,4,55,316
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,379,67,388,55,316,4,0
+gui_radio_new "x24078d0","x23fa810",55,391,70,391,5,55,316
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,394,67,403,55,316,5,0
+gui_radio_new "x24078d0","x23fa810",55,406,70,406,6,55,316
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,409,67,418,55,316,6,0
+gui_radio_new "x24078d0","x23fa810",55,421,70,421,7,55,316
+gui_radio_create_buttons "x24078d0","x23fa810","x000000",58,424,67,433,55,316,7,0
+gui_iemgui_label_new "x24078d0","x23fa810",0,-8,"#000000","","DejaVu Sans Mono","normal",10
+gui_gobj_draw_io "x24078d0","x23fa810",".x24078d0.t2404e40o0",55,434,62,436,55,316,"o",0,0,1
+gui_gobj_draw_io "x24078d0","x23fa810",".x24078d0.t2404e40i0",55,316,62,318,55,316,"i",0,0,1
+*/
