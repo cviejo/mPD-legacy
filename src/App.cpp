@@ -18,15 +18,15 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-
 	Button* btn = new Button("copy");
-	btn->setPosition(0, 0);
+	btn->setPosition(500, 0);
 	_guiElements.push_back(btn);
 
 	_guiElements.push_back(new Canvas());
 	// debugging
+	PdGui::instance().openPatch(ofToDataPath("basic.pd"));
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	((Canvas*)_guiElements[1])->set(PdGui::instance().getCanvases()[0]);
 }
@@ -120,6 +120,7 @@ void App::keyPressed(int key){
 	else if (key == 'c'){ cmd = cnv->id + " copy"; }
 	else if (key == 'd'){ this->touchDoubleTap(1, 1, 0); }
 	else if (key == 'e'){ cmd = cnv->id + " editmode " + (cnv->editMode ? "0" : "1"); }
+	else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
 	else if (key == 'p'){ cmd = cnv->id + " paste"; }
 	else if (key == 'u'){ cmd = cnv->id + " undo"; }
 	else if (key == 'q'){ ofExit(); }

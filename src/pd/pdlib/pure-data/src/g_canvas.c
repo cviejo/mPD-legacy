@@ -284,7 +284,8 @@ t_outconnect *linetraverser_next(t_linetraverser *t)
             t->tr_ob = ob;
             t->tr_nout = obj_noutlets(ob);
             outno = 0;
-            if (glist_isvisible(t->tr_x))
+            /* if (glist_isvisible(t->tr_x)) */
+            if (1) //mPD
                 gobj_getrect(y, t->tr_x,
                     &t->tr_x11, &t->tr_y11, &t->tr_x12, &t->tr_y12);
             else t->tr_x11 = t->tr_y11 = t->tr_x12 = t->tr_y12 = 0;
@@ -297,7 +298,7 @@ t_outconnect *linetraverser_next(t_linetraverser *t)
         &t->tr_inlet, &t->tr_inno);
     t->tr_nin = obj_ninlets(t->tr_ob2);
     if (!t->tr_nin) bug("drawline");
-    //if (glist_isvisible(t->tr_x))
+    /* if (glist_isvisible(t->tr_x)) */
     if (1) //mPD
     {
         int inplus = (t->tr_nin == 1 ? 1 : t->tr_nin - 1);
@@ -2562,3 +2563,5 @@ void canvas_add_for_class(t_class *c)
     canvas_readwrite_for_class(c);
     /* g_graph_setup_class(c); */
 }
+
+

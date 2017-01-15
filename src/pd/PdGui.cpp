@@ -29,6 +29,8 @@ extern "C" {
 	void canvas_menusaveas(t_canvas *x);
 	void canvas_gridmode  (t_canvas *x, int aState);
 	void canvas_gridsize  (t_canvas *x, int cellWidth, int cellHeight);
+	// void canvas_updatelines(t_canvas *x);
+	// void canvas_updateconnections(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
 }
 
 
@@ -48,7 +50,10 @@ PdGui& PdGui::instance() {
 
 
 //--------------------------------------------------------------------
-PdGui::PdGui() : PdBase() { this->clear(); }
+PdGui::PdGui() : PdBase() {
+
+	this->clear();
+}
 
 
 //--------------------------------------------------------------------
@@ -504,16 +509,16 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_line"){
-
+		// gui_canvas_line "x18df640","l18abc90","signal",3,0,3,10,15,30,27,50,27,60
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdConnection* conn = new PdConnection();
 
 			conn->id = guiMsg.nodeId;
-			conn->x  = ofToInt(guiMsg.args[7]);
-			conn->y  = ofToInt(guiMsg.args[8]);
-			conn->x2 = ofToInt(guiMsg.args[10]);
-			conn->y2 = ofToInt(guiMsg.args[11]);
+			conn->x  = ofToInt(guiMsg.args[3]);
+			conn->y  = ofToInt(guiMsg.args[4]);
+			conn->x2 = ofToInt(guiMsg.args[11]);
+			conn->y2 = ofToInt(guiMsg.args[12]);
 
 			canvas->connections.push_back(conn);
 		}

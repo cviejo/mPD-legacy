@@ -110,7 +110,9 @@ class PdCanvas : public PdNode {
 		ofRectangle           region;
 		ofRectangle           viewPort;
 
-		PdCanvas(string aId) : PdNode(aId) {}
+		PdCanvas(string aId) : PdNode(aId) {
+			this->viewPort.setSize(ofGetWidth(), ofGetHeight());
+		}
 };
 // MODE_DRAG, kinda wrong here
 

@@ -97,7 +97,7 @@ void Canvas::draw(){
 	ofTranslate(this->x, this->y);
 	ofScale(_current->scale, _current->scale);
 
-	this->drawGrid();
+	// this->drawGrid();
 
 	ofTranslate(_current->viewPort.getPosition() * -1);
 
@@ -227,6 +227,7 @@ void Canvas::drawConnecting(){
 		ofPoint loc = this->transformToPdCoordinates(ofGetMouseX(), ofGetMouseY());
 
 		if (auto node = this->getNodeAtPosition(loc.x, loc.y)){
+
 			if (node->inlets.size()){
 				loc = this->getClosestIo(node->inlets, loc)->getCenter();
 			}
