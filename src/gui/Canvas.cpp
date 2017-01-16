@@ -56,11 +56,11 @@ void Canvas::initGrid(){
 	_grid.allocate(gridWidth, gridHeight, GL_RGBA);
 	_grid.begin();
 
+	ofClear(255, 0);
 	// ofBackground(Globals::Theme.canvas.color.background);
 	// ofSetColor(Globals::Theme.canvas.color.background);
 	// ofSetColor(0);
 	// ofBackground(0,0,255);
-	ofClear(255, 0);
 	ofSetColor(255);
 	ofDrawRectangle(0, 0, gridWidth, gridHeight);
 	// ofSetColor(Globals::Theme.grid.color.front);
@@ -97,7 +97,7 @@ void Canvas::draw(){
 	ofTranslate(this->x, this->y);
 	ofScale(_current->scale, _current->scale);
 
-	// this->drawGrid();
+	this->drawGrid();
 
 	ofTranslate(_current->viewPort.getPosition() * -1);
 
@@ -527,11 +527,11 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 		_current->mode = PdCanvas::MODE_DRAG;
 	}
-	else if (_current->editMode && node && !node->selected && node->outlets.size()){
+	// else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
-		_current->mode   = PdCanvas::MODE_CONNECT;
-		_connectionStart = this->getClosestIo(node->outlets, loc);
-	}
+		// _current->mode   = PdCanvas::MODE_CONNECT;
+		// _connectionStart = this->getClosestIo(node->outlets, loc);
+	// }
 	else {
 
 		this->sendMouseEvent("mouse", loc);

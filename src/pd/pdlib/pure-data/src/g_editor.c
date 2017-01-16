@@ -3221,8 +3221,11 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         return;
     }
 
-    x->gl_editor->e_xwas = xpos;
-    x->gl_editor->e_ywas = ypos;
+    /* x->gl_editor->e_xwas = xpos; */
+    /* x->gl_editor->e_ywas = ypos; */
+    // mPD grid support
+    x->gl_editor->e_xwas = x->gl_editor->e_xpress = xpos;
+    x->gl_editor->e_ywas = x->gl_editor->e_ypress = ypos;
     //fprintf(stderr,"mouse %d %d\n", xpos, ypos);
 
     // if we are in runmode and it is not middle- or right-click
@@ -3548,7 +3551,28 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     }
                     else
                     {
-                        canvas_check_nlet_highlights(x);
+                        // mPD
+                        if (x->gl_editor->e_gridactive){
+
+                            t_selection *sel;
+
+                            for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                            {
+                                /* canvas_displaceselection(x, xpos, ypos); */
+                                /* int x1, y1, x2, y2; */
+                                /* gobj_getrect(sel->sel_what, x, &x1, &y1, &x2, &y2); */
+                                /* int nearestCellX = (float)x1 / (float)x->gl_editor->e_gridsize + 0.5f; */
+                                /* int nearestCellY = (float)y1 / (float)x->gl_editor->e_gridsize + 0.5f; */
+                                /* int cellX = nearestCellX * x->gl_editor->e_gridsize; */
+                                /* int cellY = nearestCellY * x->gl_editor->e_gridsize; */
+                                /* if (x1 - cellX < x->gl_editor->e_gridsize && y1 - cellY < x->gl_editor->e_gridsize){ */
+                                    /* gobj_displace(sel->sel_what, x, cellX - x1, cellY - y1); */
+                                /* } */
+                            }
+                        }
+
+                        x->gl_editor->e_onmotion = MA_MOVE;
+                        /* canvas_check_nlet_highlights(x); */
                     }
                     //toggle_moving = 1;
                     //sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n",
@@ -4828,6 +4852,21 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
         canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 1));
         canvas_undo_already_set_move = 1;
     }
+
+    // mPD grid support
+    if (x->gl_editor->e_gridactive){
+
+        int cellX = (float)(x->gl_editor->e_xnew - x->gl_editor->e_xpress) / x->gl_editor->e_gridsize;
+        int cellY = (float)(x->gl_editor->e_ywas - x->gl_editor->e_ypress) / x->gl_editor->e_gridsize;
+
+        dx = cellX * x->gl_editor->e_gridsize;
+        dy = cellY * x->gl_editor->e_gridsize;
+
+        x->gl_editor->e_xpress += dx;
+        x->gl_editor->e_ypress += dy;
+    }
+    // mPD grid support
+
     for (y = x->gl_editor->e_selection; y; y = y->sel_next)
     {
         /* for the time being let's discern from vanilla objects
@@ -7533,6 +7572,26 @@ static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_clear(newobjbuf);
 }
 
+// mPD
+void canvas_gridactive(t_canvas *x, t_floatarg state)
+{
+    if (x->gl_editor){
+        x->gl_editor->e_gridactive = state;
+        gui_vmess("gui_grid_active", "xi", x, state);
+    }
+}
+
+
+void canvas_gridsize(t_canvas *x, t_floatarg size)
+{
+    if (x->gl_editor){
+        x->gl_editor->e_gridsize = size;
+        gui_vmess("gui_grid_size", "xi", x, size);
+    }
+}
+// mPD
+
+
 void g_editor_setup(void)
 {
 /* ------------------------ events ---------------------------------- */
@@ -7621,6 +7680,13 @@ void g_editor_setup(void)
         gensym("disconnect"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
 /* -------------- copy buffer ------------------ */
     copy_binbuf = binbuf_new();
+
+/* ------------------------ grid support ---------------------------- */
+    class_addmethod(canvas_class, (t_method)canvas_gridactive,
+        gensym("gridactive"), A_DEFFLOAT, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_gridsize,
+        gensym("gridsize"), A_DEFFLOAT, A_NULL);
+// mPD
 }
 
 void canvas_editor_for_class(t_class *c)

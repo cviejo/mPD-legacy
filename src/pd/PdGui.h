@@ -56,6 +56,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		int               _outputChannels;
 		int               _inputChannels;
 
+		void              displaceObject(PdNode* aNode, ofPoint aOffset);
 		string            unquote(string& str);
 		string            getPatchId(Patch& patch);
 		// PdNode*           getNewNode(PdGuiMessage& aGuiMsg);

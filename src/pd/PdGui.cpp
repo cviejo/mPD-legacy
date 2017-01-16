@@ -301,6 +301,41 @@ void PdGui::pdsend(string& aCmd, bool aLock){
 }
 
 
+//--------------------------------------------------------------
+void PdGui::displaceObject(PdNode* aNode, ofPoint aOffset){
+
+	aNode->translate(aOffset);
+
+	if (aNode->type == "iemgui"){
+
+		PdIemGui* guiNode = (PdIemGui*)aNode;
+
+		guiNode->slider.translate(aOffset);
+
+		if (guiNode->canvas){
+			guiNode->canvas->translate(aOffset);
+		}
+		if (guiNode->label){
+			guiNode->label->translate(aOffset);
+		}
+
+		for (auto& rect : guiNode->radioButtons){
+			rect.translate(aOffset);
+		}
+		for (auto& rect : guiNode->radios){
+			rect.translate(aOffset);
+		}
+	}
+
+	for (auto inlet : aNode->inlets){
+		inlet->translate(aOffset);
+	}
+	for (auto outlet : aNode->outlets){
+		outlet->translate(aOffset);
+	}
+}
+
+
 // //--------------------------------------------------------------
 // PdNode* PdGui::getNewNode(PdGuiMessage& aGuiMsg){
 
@@ -428,7 +463,6 @@ void PdGui::guiMessage(string aMsg){
 	else if (guiMsg.command == "gui_toggle_update"){
 		// gui_toggle_update "x2b80f80","x2b3d020",0,"x00fc04"
 		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
-
 			node->iemType    = "toggle";
 			node->value      = ofToInt(guiMsg.args[2]);
 			node->frontColor = guiMsg.parseColor(3);
@@ -587,28 +621,8 @@ void PdGui::guiMessage(string aMsg){
 
 				if (node->selected){
 
-					node->translate(offset);
+					this->displaceObject(node, offset);
 
-					if (node->type == "iemgui"){
-
-						PdIemGui* guiNode = (PdIemGui*)node;
-
-						guiNode->slider.translate(offset);
-
-						if (guiNode->canvas){
-							guiNode->canvas->translate(offset);
-						}
-						if (guiNode->label){
-							guiNode->label->translate(offset);
-						}
-					}
-
-					for (auto inlet : node->inlets){
-						inlet->translate(offset);
-					}
-					for (auto outlet : node->outlets){
-						outlet->translate(offset);
-					}
 				}
 			}
 		}

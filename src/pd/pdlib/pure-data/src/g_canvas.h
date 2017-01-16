@@ -130,6 +130,11 @@ typedef struct _editor
     t_clock *e_clock;               /* clock to filter GUI move messages */
     int e_xnew;                     /* xpos for next move event */
     int e_ynew;                     /* ypos, similarly */
+    // mPD
+    int e_xpress;                   /* mPD, grid support */
+    int e_ypress;
+    int e_gridactive;
+    int e_gridsize;
 } t_editor;
 
 #define MA_NONE    0    /* e_onmotion: do nothing on mouse motion */
