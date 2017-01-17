@@ -3558,18 +3558,21 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
                             for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
                             {
-                                /* canvas_displaceselection(x, xpos, ypos); */
-                                /* int x1, y1, x2, y2; */
-                                /* gobj_getrect(sel->sel_what, x, &x1, &y1, &x2, &y2); */
-                                /* int nearestCellX = (float)x1 / (float)x->gl_editor->e_gridsize + 0.5f; */
-                                /* int nearestCellY = (float)y1 / (float)x->gl_editor->e_gridsize + 0.5f; */
-                                /* int cellX = nearestCellX * x->gl_editor->e_gridsize; */
-                                /* int cellY = nearestCellY * x->gl_editor->e_gridsize; */
+                                int x1, y1, x2, y2;
+                                gobj_getrect(sel->sel_what, x, &x1, &y1, &x2, &y2);
+                                int nearestCellX = (float)x1 / (float)x->gl_editor->e_gridsize + 0.5f;
+                                int nearestCellY = (float)y1 / (float)x->gl_editor->e_gridsize + 0.5f;
+                                int cellX = nearestCellX * x->gl_editor->e_gridsize;
+                                int cellY = nearestCellY * x->gl_editor->e_gridsize;
                                 /* if (x1 - cellX < x->gl_editor->e_gridsize && y1 - cellY < x->gl_editor->e_gridsize){ */
-                                    /* gobj_displace(sel->sel_what, x, cellX - x1, cellY - y1); */
+                                    int dx = cellX - x1;
+                                    int dy = cellY - y1;
+                                    gobj_displace(sel->sel_what, x, dx, dy);
+                                    /* gui_vmess("gui_gobj_displace", "xxii", x, sel->sel_what, dx, dy); */
                                 /* } */
                             }
                         }
+                        // mPD
 
                         x->gl_editor->e_onmotion = MA_MOVE;
                         /* canvas_check_nlet_highlights(x); */
@@ -7577,7 +7580,7 @@ void canvas_gridactive(t_canvas *x, t_floatarg state)
 {
     if (x->gl_editor){
         x->gl_editor->e_gridactive = state;
-        gui_vmess("gui_grid_active", "xi", x, state);
+        gui_vmess("gui_grid_active", "xf", x, state);
     }
 }
 
@@ -7586,7 +7589,7 @@ void canvas_gridsize(t_canvas *x, t_floatarg size)
 {
     if (x->gl_editor){
         x->gl_editor->e_gridsize = size;
-        gui_vmess("gui_grid_size", "xi", x, size);
+        gui_vmess("gui_grid_size", "xf", x, size);
     }
 }
 // mPD

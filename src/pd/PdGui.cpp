@@ -373,6 +373,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
+		ofLogVerbose() << aMsg;
 		// gui_gobj_new "x24078d0","x23fa810","iemgui",55,316,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
@@ -611,6 +612,21 @@ void PdGui::guiMessage(string aMsg){
 			node->selected = guiMsg.command == "gui_gobj_select";
 		}
 	}
+	else if (guiMsg.command == "gui_gobj_displace" || guiMsg.command == "gui_text_displace"){
+		// gui_text_displace "x7f7fa9137200",".x7f7fa9137200.t7f7fa84c4960",-1,2
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			ofPoint offset(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
+			this->displaceObject(node, offset);
+		}
+	}
+	else if (guiMsg.command == "gui_iemgui_move_and_resize"){
+		// gui_iemgui_move_and_resize "x7ff236121800","x7ff236124a00",100,40,154,54
+		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+			ofRectangle rect = guiMsg.parseRect(2);
+			this->displaceObject(node,  rect.getTopLeft() - node->getTopLeft());
+			node->setSize(rect.width, rect.height);
+		}
+	}
 	else if (guiMsg.command == "gui_canvas_displace_withtag"){
 
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
@@ -620,9 +636,7 @@ void PdGui::guiMessage(string aMsg){
 			for (auto& node : canvas->nodes){
 
 				if (node->selected){
-
 					this->displaceObject(node, offset);
-
 				}
 			}
 		}
@@ -643,9 +657,9 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else {
-		ofLogVerbose() << "todo:";
+		// ofLogVerbose() << "todo:";
 	}
 
-	ofLogVerbose() << aMsg;
+	// ofLogVerbose() << aMsg;
 }
 

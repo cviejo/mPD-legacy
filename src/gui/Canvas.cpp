@@ -304,8 +304,13 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofVertex(left,      bottom);
 		ofEndShape();
 
-		ofSetColor(aNode->backColor);
-		// ofSetColor(248, 248, 246);
+		if (aNode->type == "atom"){
+			ofSetColor(248, 248, 246);
+		}
+		else {
+			ofSetColor(aNode->backColor);
+		}
+
 		ofBeginShape();
 			ofVertex(left  + 1, top + 1);
 			ofVertex(right - 4, top + 1);
@@ -326,157 +331,18 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			ofDrawTriangle(left + 1, top + 2,
 			               left + 1, bottom - 2,
 			               left + 6, top + aNode->height / 2);
-
-			// ofSetColor(0);
-			// this->drawNodeText(aNode->content,
-									 // left + 8,
-									 // bottom - 3,
-									 // // top + Globals::Theme.node.font.height,
-									 // // node.bottom - Globals::Theme.node.io.height - 1,
-									 // Globals::Theme.node.font.height);
 		}
 	}
 	else {
-		
-		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetColor(0);
-		// }
-		// else{
-			// ofSetColor(192);
-		// }
-
-		// ofSetColor(aNode->control ? 0 : 192);
-		// ofSetColor(aNode->valid ? Globals::Theme.node.color.border :
-		//                          Globals::Theme.node.color.invalid);
-		
-		// ofDrawRectangle(*node);
-
-		// ofSetColor(Globals::Theme.node.color.background);
-		// ofSetColor(246, 248, 248);
-//		if (aNode->className == "tgl"){
-//		if (aNode->control){
-		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetHexColor(aNode->backColor);
-		// }
-		// ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 
 		ofSetColor(aNode->borderColor);
 		ofDrawRectangle(*aNode);
 
-		ofSetHexColor(aNode->backColor);
+		// ofSetColor(249, 249, 248);
+		ofSetColor(248, 248, 246);
+		// ofSetHexColor(aNode->backColor);
 		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 	}
-
-	// if (aNode->className == "gatom"){
-
-		// // ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-		// // ofSetColor(Globals::Theme.node.color.border);
-		// ofSetColor(192);
-		// ofBeginShape();
-			// ofVertex(left, top);
-			// ofVertex(right - 4, top);
-			// ofVertex(right, top + 4);
-			// ofVertex(right, bottom);
-			// ofVertex(left, bottom);
-		// ofEndShape();
-
-		// ofSetColor(224);
-		// ofBeginShape();
-			// ofVertex(left + 1, top + 1);
-			// ofVertex(right - 4, top + 1);
-			// ofVertex(right - 1, top + 4);
-			// ofVertex(right - 1, bottom - 1);
-			// ofVertex(left + 1, bottom - 1);
-		// ofEndShape();
-	// }
-	// else if (aNode->className == "nbx"){
-
-		// // ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-		// // ofSetColor(Globals::Theme.node.color.border);
-		// ofSetColor(0);
-		// ofBeginShape();
-			// ofVertex(left, top);
-			// ofVertex(right - 4, top);
-			// ofVertex(right, top + 4);
-			// ofVertex(right, bottom);
-			// ofVertex(left, bottom);
-		// ofEndShape();
-
-		// ofSetColor(252);
-		// ofBeginShape();
-			// ofVertex(left + 1, top + 1);
-			// ofVertex(right - 4, top + 1);
-			// ofVertex(right - 1, top + 4);
-			// ofVertex(right - 1, bottom - 1);
-			// ofVertex(left + 1, bottom - 1);
-		// ofEndShape();
-
-		// ofSetColor(0);
-		// ofDrawTriangle(left + 0, top + 0,
-							// left + 0, bottom - 0,
-							// left + 7, top + aNode->height / 2);
-
-		// ofSetColor(252);
-		// ofDrawTriangle(left + 1, top + 2,
-							// left + 1, bottom - 2,
-							// left + 6, top + aNode->height / 2);
-
-		// ofSetColor(0);
-		// this->drawNodeText(aNode->content,
-								 // left + 8,
-								 // bottom - 3,
-								 // // top + Globals::Theme.node.font.height,
-								 // // node.bottom - Globals::Theme.node.io.height - 1,
-								 // Globals::Theme.node.font.height);
-	// }
-	// else if (aNode->className == "message"){
-
-		// // ofSetColor(Globals::Theme.node.color.border);
-		// ofSetColor(192);
-		// ofBeginShape();
-			// ofVertex(left, top);
-			// ofVertex(right + 4, top);
-			// ofVertex(right, top + 4);
-			// ofVertex(right, bottom - 4);
-			// ofVertex(right + 4, bottom);
-			// ofVertex(left, bottom);
-		// ofEndShape();
-
-		// // ofSetColor(255);
-		// ofSetColor(248, 248, 246);
-		// ofBeginShape();
-			// ofVertex(left + 1, top + 1);
-			// ofVertex(right + 2, top + 1);
-			// ofVertex(right - 1, top + 4);
-			// ofVertex(right - 1, bottom - 4);
-			// ofVertex(right + 2, bottom - 1);
-			// ofVertex(left + 1, bottom - 1);
-		// ofEndShape();
-	// }
-	// else {
-		
-		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetColor(0);
-		// }
-		// else{
-			// ofSetColor(192);
-		// }
-
-// //		ofSetColor(aNode->control ? 0 : 192);
-		// // ofSetColor(aNode->valid ? Globals::Theme.node.color.border :
-		// //                          Globals::Theme.node.color.invalid);
-		
-		// ofDrawRectangle(left, top, aNode->width, aNode->height);
-
-		// // ofSetColor(Globals::Theme.node.color.background);
-		// ofSetColor(246, 248, 248);
-// //		if (aNode->className == "tgl"){
-// //		if (aNode->control){
-		// if (aNode->type == PdNode::TYPE_CONTROL){
-			// ofSetHexColor(aNode->backColor);
-		// }
-		// ofDrawRectangle(left + 1, top + 1, aNode->width - 2, aNode->height - 2);
-	// }
 }
 
 
@@ -527,11 +393,11 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 		_current->mode = PdCanvas::MODE_DRAG;
 	}
-	// else if (_current->editMode && node && !node->selected && node->outlets.size()){
+	else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
-		// _current->mode   = PdCanvas::MODE_CONNECT;
-		// _connectionStart = this->getClosestIo(node->outlets, loc);
-	// }
+		_current->mode   = PdCanvas::MODE_CONNECT;
+		_connectionStart = this->getClosestIo(node->outlets, loc);
+	}
 	else {
 
 		this->sendMouseEvent("mouse", loc);
@@ -667,6 +533,9 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
 				else if (key == 'p'){ cmd = _current->id + " paste"; }
 				else if (key == 'u'){ cmd = _current->id + " undo"; }
+				else if (key == 'g'){ cmd = _current->id + " gridactive 1"; }
+				else if (key == 't'){ cmd = _current->id + " gridactive 0"; }
+				else if (key == 's'){ cmd = _current->id + " gridsize 20"; }
 				else if (key == 'q'){ ofExit(); }
 				else if (key == '1'){ this->set(PdGui::instance().getCanvases()[0]); }
 				else if (key == '2'){ this->set(PdGui::instance().getCanvases()[1]); }
@@ -710,8 +579,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				PdGui::instance().pdsend(cmd);
 			}
 			break;
-			break;
-
 
 		default:
 			break;
