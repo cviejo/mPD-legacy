@@ -623,7 +623,7 @@ void PdGui::guiMessage(string aMsg){
 		// gui_iemgui_move_and_resize "x7ff236121800","x7ff236124a00",100,40,154,54
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			ofRectangle rect = guiMsg.parseRect(2);
-			this->displaceObject(node,  rect.getTopLeft() - node->getTopLeft());
+			this->displaceObject(node, rect.getTopLeft() - node->getTopLeft());
 			node->setSize(rect.width, rect.height);
 		}
 	}
@@ -643,17 +643,28 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else if (guiMsg.command == "gui_canvas_move_selection"){
 
-		ofLogVerbose() << aMsg;
-
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 			canvas->region.set(guiMsg.parseRect(1));
-			canvas->mode = PdCanvas::MODE_REGION;
+			canvas->moveMode = PdCanvas::MODE_REGION;
 		}
 	}
 	else if (guiMsg.command == "gui_canvas_hide_selection"){
 
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
-			canvas->mode = PdCanvas::MODE_NONE;
+			canvas->moveMode = PdCanvas::MODE_NONE;
+		}
+	}
+	else if (guiMsg.command == "gui_grid_active"){
+
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
+			canvas->gridMode = ofToBool(guiMsg.args[1]);
+		}
+	}
+	else if (guiMsg.command == "gui_grid_size"){
+
+		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
+			// canvas->gridMode = ofToBool(guiMsg.args[1]);
+			// canvas->moveMode = PdCanvas::MODE_NONE;
 		}
 	}
 	else {

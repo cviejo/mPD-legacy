@@ -113,7 +113,7 @@ void Canvas::draw(){
 //--------------------------------------------------------------
 void Canvas::drawGrid(){
 
-	if (_current->scale >= 1){ // TODO: && grid active
+	if (_current->gridMode && _current->scale >= 1){ // TODO: && grid active
 
 		ofSetColor(255);
 
@@ -217,7 +217,7 @@ void Canvas::drawConnections(){
 //--------------------------------------------------------------
 void Canvas::drawRegion(){
 
-	if (_current->mode == PdCanvas::MODE_REGION){
+	if (_current->moveMode == PdCanvas::MODE_REGION){
 
 		ofSetColor(100);
 		ofNoFill();
@@ -233,7 +233,7 @@ void Canvas::drawRegion(){
 //--------------------------------------------------------------
 void Canvas::drawConnecting(){
 
-	if (_current->mode == PdCanvas::MODE_CONNECT){
+	if (_current->moveMode == PdCanvas::MODE_CONNECT){
 
 		ofPoint loc = this->transformToPdCoordinates(ofGetMouseX(), ofGetMouseY());
 
@@ -391,11 +391,11 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 	if (!_current->editMode && !node){
 
-		_current->mode = PdCanvas::MODE_DRAG;
+		_current->moveMode = PdCanvas::MODE_DRAG;
 	}
 	else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
-		_current->mode   = PdCanvas::MODE_CONNECT;
+		_current->moveMode   = PdCanvas::MODE_CONNECT;
 		_connectionStart = this->getClosestIo(node->outlets, loc);
 	}
 	else {
@@ -416,7 +416,7 @@ void Canvas::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void Canvas::onDragged(int aX, int aY, int aId){
 
-	if (_current->mode == PdCanvas::MODE_DRAG){ // TODO: only if mode_drag
+	if (_current->moveMode == PdCanvas::MODE_DRAG){ // TODO: only if mode_drag
 
 		ofPoint p(aX - _previousMouse.x, aY - _previousMouse.y);
 
@@ -431,7 +431,7 @@ void Canvas::onDragged(int aX, int aY, int aId){
 			_current->viewPort.y = 0;
 		}
 	}
-	else if (_current->mode != PdCanvas::MODE_CONNECT){
+	else if (_current->moveMode != PdCanvas::MODE_CONNECT){
 
 		this->sendMouseEvent("motion", this->transformToPdCoordinates(aX, aY));
 	}
@@ -461,7 +461,7 @@ void Canvas::onReleased(int aX, int aY, int aId){
 
 	ofPoint loc = this->transformToPdCoordinates(aX, aY);
 
-	if (_current->mode == PdCanvas::MODE_CONNECT){
+	if (_current->moveMode == PdCanvas::MODE_CONNECT){
 
 		if (auto node = this->getNodeAtPosition(loc.x, loc.y)){
 
@@ -476,7 +476,7 @@ void Canvas::onReleased(int aX, int aY, int aId){
 		this->sendMouseEvent("mouseup", loc);
 	}
 
-	_current->mode = PdCanvas::MODE_NONE;
+	_current->moveMode = PdCanvas::MODE_NONE;
 }
 
 

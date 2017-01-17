@@ -96,16 +96,17 @@ class PdCanvas : public PdNode {
 
 	public:
 
-		enum CanvasMode {
+		enum CanvasMouseMode {
 			MODE_NONE = 0,
 			MODE_DRAG,
 			MODE_CONNECT,
 			MODE_REGION
 		};
 
-		float                 scale = 1.0f;
-		CanvasMode            mode;
-		bool                  editMode;
+		float                 scale    = 1.0f;
+		bool                  editMode = false;
+		bool                  gridMode = false;
+		CanvasMouseMode       moveMode;
 		Patch                 patch;
 		vector<PdNode*>       nodes;
 		vector<PdConnection*> connections;
