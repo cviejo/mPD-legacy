@@ -44,8 +44,9 @@ void App::setup(){
 
 	// debugging
 	// PdGui::instance().openPatch(ofToDataPath("basic.pd"));
-	PdGui::instance().openPatch(ofToDataPath("main-all.pd"));
-	PdGui::instance().openPatch(ofToDataPath("settings.pd"));
+	PdGui::instance().openPatch(ofToDataPath("main.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("main-all.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("settings.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	cnv->set(PdGui::instance().getCanvases()[0]);
