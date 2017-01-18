@@ -3564,12 +3564,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                 int nearestCellY = (float)y1 / (float)x->gl_editor->e_gridsize + 0.5f;
                                 int cellX = nearestCellX * x->gl_editor->e_gridsize;
                                 int cellY = nearestCellY * x->gl_editor->e_gridsize;
-                                /* if (x1 - cellX < x->gl_editor->e_gridsize && y1 - cellY < x->gl_editor->e_gridsize){ */
+                                if (x1 - cellX < x->gl_editor->e_gridsize && y1 - cellY < x->gl_editor->e_gridsize){
                                     int dx = cellX - x1;
                                     int dy = cellY - y1;
-                                    gobj_displace(sel->sel_what, x, dx, dy);
-                                    /* gui_vmess("gui_gobj_displace", "xxii", x, sel->sel_what, dx, dy); */
-                                /* } */
+                                    gobj_displace_withtag(sel->sel_what, x, dx, dy);
+                                    gui_vmess("gui_gobj_displace", "xsii", x, sel->sel_what, dx, dy);
+                                }
                             }
                         }
                         // mPD
@@ -4841,6 +4841,23 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     /* displace the selection by (dx, dy) pixels */
 void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
+    // mPD grid support
+    if (x->gl_editor->e_gridactive){
+
+        int cellX = (float)(x->gl_editor->e_xnew - x->gl_editor->e_xpress) / x->gl_editor->e_gridsize;
+        int cellY = (float)(x->gl_editor->e_ywas - x->gl_editor->e_ypress) / x->gl_editor->e_gridsize;
+
+        dx = cellX * x->gl_editor->e_gridsize;
+        dy = cellY * x->gl_editor->e_gridsize;
+
+        if (!dx && !dy){
+            return;
+        }
+
+        x->gl_editor->e_xpress += dx;
+        x->gl_editor->e_ypress += dy;
+    }
+    // mPD grid support
     //fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
     char *tag = NULL;
@@ -4856,19 +4873,6 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
         canvas_undo_already_set_move = 1;
     }
 
-    // mPD grid support
-    if (x->gl_editor->e_gridactive){
-
-        int cellX = (float)(x->gl_editor->e_xnew - x->gl_editor->e_xpress) / x->gl_editor->e_gridsize;
-        int cellY = (float)(x->gl_editor->e_ywas - x->gl_editor->e_ypress) / x->gl_editor->e_gridsize;
-
-        dx = cellX * x->gl_editor->e_gridsize;
-        dy = cellY * x->gl_editor->e_gridsize;
-
-        x->gl_editor->e_xpress += dx;
-        x->gl_editor->e_ypress += dy;
-    }
-    // mPD grid support
 
     for (y = x->gl_editor->e_selection; y; y = y->sel_next)
     {
