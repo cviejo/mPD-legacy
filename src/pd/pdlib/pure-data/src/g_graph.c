@@ -854,7 +854,7 @@ void glist_redraw(t_glist *x)
     }
     if (x->gl_owner && glist_isvisible(x->gl_owner))
     {
-        graph_vis(&x->gl_gobj, x->gl_owner, 0); 
+        graph_vis(&x->gl_gobj, x->gl_owner, 0);
         graph_vis(&x->gl_gobj, x->gl_owner, 1);
     }
 }
@@ -1332,7 +1332,7 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
             glist_getcanvas(x->gl_owner), tag, dx, dy);
         sys_vgui(".x%lx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
-        if (!do_not_redraw)
+		 if (!do_not_redraw)
         {
             //fprintf(stderr,"graph_displace redraw\n");
             glist_redraw(glist_getcanvas(glist));
