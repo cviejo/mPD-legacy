@@ -373,6 +373,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
+		ofLogVerbose() << aMsg;
 		// gui_gobj_new "x24078d0","x23fa810","iemgui",55,316,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
@@ -396,7 +397,6 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_erase"){
-		ofLogVerbose() << "wtf";
 		// gui_gobj_erase "x7fbe328f2400","x7fbe32a10400"
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
@@ -613,6 +613,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_displace" || guiMsg.command == "gui_text_displace"){
+		ofLogVerbose() << aMsg;
 		// gui_text_displace "x7f7fa9137200",".x7f7fa9137200.t7f7fa84c4960",-1,2
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			ofPoint offset(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
@@ -669,7 +670,7 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else {
 
-		ofLogVerbose() << guiMsg.command;
+		// ofLogVerbose() << guiMsg.command;
 		// ofLogVerbose() << "todo:";
 	}
 

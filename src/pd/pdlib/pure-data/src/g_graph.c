@@ -1316,6 +1316,8 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 
 static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+    //.mPD
+    return;
     //fprintf(stderr,"graph_displace %d %d\n", dx, dy);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
@@ -1332,7 +1334,7 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
             glist_getcanvas(x->gl_owner), tag, dx, dy);
         sys_vgui(".x%lx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
-		 if (!do_not_redraw)
+        if (!do_not_redraw)
         {
             //fprintf(stderr,"graph_displace redraw\n");
             glist_redraw(glist_getcanvas(glist));

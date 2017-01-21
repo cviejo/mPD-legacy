@@ -76,7 +76,7 @@ void Canvas::initGrid(){
 
 	// Globals::Pd.setCanvasGridMode(true);
 	// Globals::Pd.setCanvasGridSize(Globals::Theme.grid.cell.width, 
-											// Globals::Theme.grid.cell.height);
+	//                               Globals::Theme.grid.cell.height);
 }
 
 
