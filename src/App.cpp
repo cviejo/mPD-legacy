@@ -1,6 +1,7 @@
 #include "App.h"
 #include "PdGui.h"
 #include "Canvas.h"
+#include "MenuTab.h"
 #include "Button.h"
 
 
@@ -20,7 +21,7 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-	// Button* btn;
+	Button* btn;
 
 	// btn = new Button("edit");
 	// btn->setPosition(0, 0);
@@ -34,12 +35,13 @@ void App::setup(){
 	// btn->setPosition(0, 200);
 	// _guiElements.push_back(btn);
 
-	// btn = new Button("undo");
-	// btn->setPosition(0, 300);
+	// btn = new Button("menu-tab", Button::TYPE_TOGGLE);
+	// btn->setPosition(300, 0);
 	// _guiElements.push_back(btn);
 
 	Canvas* cnv = new Canvas();
 
+	_guiElements.push_back(new MenuTab());
 	_guiElements.push_back(cnv);
 
 	// debugging
@@ -129,9 +131,18 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
+	if (key == 'i'){
 
-	ofNotifyEvent(AppEvent::events, event);
+		AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
+
+		ofNotifyEvent(AppEvent::events, event);
+	}
+	else {
+
+		AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
+
+		ofNotifyEvent(AppEvent::events, event);
+	}
 }
 
 

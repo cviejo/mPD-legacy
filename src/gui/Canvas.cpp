@@ -533,10 +533,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
 				else if (key == 'p'){ cmd = _current->id + " paste"; }
 				else if (key == 'u'){ cmd = _current->id + " undo"; }
-				else if (key == 'k'){
-					ofLogVerbose() << "/*=======================================*/";
-					ofLogVerbose() << "/*=======================================*/";
-				}
 				else if (key == 'g'){ cmd = _current->id + " gridactive 1"; }
 				else if (key == 't'){ cmd = _current->id + " gridactive 0"; }
 				else if (key == 's'){ cmd = _current->id + " gridsize 20"; }
