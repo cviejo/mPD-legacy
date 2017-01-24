@@ -1,11 +1,10 @@
 #include "App.h"
 #include "PdGui.h"
-#include "Canvas.h"
-#include "MenuTab.h"
-#include "Button.h"
+#include "MainWindow.h"
 
 
 bool computing = true;
+
 
 //--------------------------------------------------------------
 void App::setup(){
@@ -21,28 +20,6 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-	Button* btn;
-
-	// btn = new Button("edit");
-	// btn->setPosition(0, 0);
-	// _guiElements.push_back(btn);
-
-	// btn = new Button("copy");
-	// btn->setPosition(0, 100);
-	// _guiElements.push_back(btn);
-
-	// btn = new Button("paste");
-	// btn->setPosition(0, 200);
-	// _guiElements.push_back(btn);
-
-	// btn = new Button("menu-tab", Button::TYPE_TOGGLE);
-	// btn->setPosition(300, 0);
-	// _guiElements.push_back(btn);
-
-	Canvas* cnv = new Canvas();
-
-	_guiElements.push_back(new MenuTab());
-	_guiElements.push_back(cnv);
 
 	// debugging
 	// PdGui::instance().openPatch(ofToDataPath("basic.pd"));
@@ -51,7 +28,7 @@ void App::setup(){
 	// PdGui::instance().openPatch(ofToDataPath("settings.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
-	cnv->set(PdGui::instance().getCanvases()[0]);
+	_mainWindow = (GuiElement*)new MainWindow();
 }
 
 
@@ -111,14 +88,7 @@ void App::draw(){
 
 	ofEnableAlphaBlending();
 
-	for (auto i = _guiElements.rbegin(); i != _guiElements.rend(); ++i){
-
-		GuiElement* elem = *i;
-
-		if (elem->visible){
-			elem->draw();
-		}
-	}
+	_mainWindow->draw();
 
 	ofDisableAlphaBlending();
 
@@ -131,18 +101,9 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	if (key == 'i'){
+	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 
-		AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
-
-		ofNotifyEvent(AppEvent::events, event);
-	}
-	else {
-
-		AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
-
-		ofNotifyEvent(AppEvent::events, event);
-	}
+	ofNotifyEvent(AppEvent::events, event);
 }
 
 
@@ -180,16 +141,9 @@ void App::touchDown(int aX, int aY, int aId){
 
 	if (_scaling || aId){ return; } // pd can't handle multitouch anyway, afaik
 
-	for (auto& elem : _guiElements){
+	ofPoint loc(aX, aY);
 
-		if (elem->visible && elem->clickable && elem->inside(aX, aY)){
-
-			elem->pressed = true;
-			elem->pressedPoint.set(aX, aY);
-			elem->onPressed(aX, aY, aId);
-			break;
-		}
-	}
+	_mainWindow->touchDown(loc);
 }
 
 
@@ -198,12 +152,9 @@ void App::touchMoved(int aX, int aY, int aId){
 
 	if (_scaling || aId){ return; }
 
-	for (auto& elem : _guiElements){
+	ofPoint loc(aX, aY);
 
-		if (elem->pressed){
-			elem->onDragged(aX, aY, aId);
-		}
-	}
+	_mainWindow->touchMoved(loc);
 }
 
 
@@ -212,18 +163,9 @@ void App::touchUp(int aX, int aY, int aId){
 
 	if (_scaling || aId){ return; }
 
-	for (auto& elem : _guiElements){
+	ofPoint loc(aX, aY);
 
-		if (elem->pressed){
-
-			if (elem->inside(aX, aY)){
-				elem->onClick();
-			}
-
-			elem->onReleased(aX, aY, aId);
-			elem->pressed = false;
-		}
-	}
+	_mainWindow->touchUp(loc);
 }
 
 
@@ -232,13 +174,15 @@ void App::touchDoubleTap(int aX, int aY, int aId){
 
 	if (_scaling || aId){ return; }
 
-	for (auto& elem : _guiElements){
+	ofPoint loc(aX, aY);
 
-		if (elem->visible && elem->clickable && elem->inside(aX, aY)){
-			elem->onDoubleClick(aX, aY);
-			break;
-		}
-	}
+	// for (auto& elem : _guiElements){
+
+		// if (elem->visible && elem->clickable && elem->inside(loc)){
+			// elem->onDoubleClick(loc);
+			// break;
+		// }
+	// }
 }
 
 
@@ -325,9 +269,6 @@ bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 //--------------------------------------------------------------
 void App::mouseScrolled(ofMouseEventArgs& mouse){
-
-	// ofLogVerbose("[scrollY] " + ofToString(mouse.scrollY));
-	// ofLogVerbose("[scrollX] " + ofToString(mouse.scrollX));
 
 	AppEvent event(AppEvent::TYPE_SCALE, "", mouse.x, mouse.y);
 

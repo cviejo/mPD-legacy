@@ -26,11 +26,12 @@ void Button::draw(){
 	}
 
 	if(this->pressed || this->on){
-		ofSetColor(100);
+		ofSetColor(54, 55, 58);
 		// ofSetColor(Globals::Theme.button.color.pressed);
 	}
 	else {
-		ofSetColor(180);
+		ofSetColor(0, 0);
+			// <pressed r="54" g="55" b="58"/>
 		// ofSetColor(Globals::Theme.button.color.background);
 	}
 

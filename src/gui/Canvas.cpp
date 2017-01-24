@@ -5,12 +5,14 @@ int gridStepSize = 20; // Globals::Theme.grid.cell.width
 
 
 //--------------------------------------------------------------
-Canvas::Canvas(){
+Canvas::Canvas(int aWidth, int aHeight){
 
-	this->x      = 0;
-	this->y      = 0;
-	this->width  = ofGetWidth();
-	this->height = ofGetHeight();
+	this->id = "canvas";
+
+	// this->x      = 0;
+	// this->y      = 0;
+	this->width  = aWidth;
+	this->height = aHeight;
 
 	_font.load("fonts/DejaVuSansMono.ttf", 70, true, true);
 	// _font.load("fonts/VeraMono.ttf",       70, true, true);
@@ -91,6 +93,9 @@ void Canvas::set(PdCanvas* aCanvas){
 void Canvas::draw(){
 
 	if (!_current){ return; }
+
+	ofSetColor(255);
+	ofDrawRectangle(*this);
 
 	ofPushMatrix();
 
@@ -651,6 +656,8 @@ ofPoint Canvas::transformToPdCoordinates(float aX, float aY){
 	// has to be rounded otherwise pd behaves weirdly when dragging up or left
 	result.x = (int)((aX - this->x) / _current->scale + _current->viewPort.x); // Globals::Settings.scale;
 	result.y = (int)((aY - this->y) / _current->scale + _current->viewPort.y); // Globals::Settings.scale;
+	// result.x = (int)((aX ) / _current->scale + _current->viewPort.x); // Globals::Settings.scale;
+	// result.y = (int)((aY ) / _current->scale + _current->viewPort.y); // Globals::Settings.scale;
 
 	return result;
 }

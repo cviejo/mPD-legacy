@@ -35,7 +35,7 @@ class SideTab : public GuiElement {
 
 		DockSide side;
 
-		SideTab(DockSide aDockingSide) : side(aDockingSide){}
+		SideTab(DockSide aDockingSide);
 
 		virtual void draw();
 		virtual void onAppEvent(AppEvent& AppEvent);

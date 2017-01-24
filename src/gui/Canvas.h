@@ -16,7 +16,7 @@ class Canvas : public GuiElement {
 
 		// bool scaling = false;
 
-		Canvas();
+		Canvas(int aWidth, int aHeight);
 
 		virtual void draw();
 		virtual void onPressed    (int aX, int aY, int aId);

@@ -5,13 +5,27 @@
 
 
 //--------------------------------------------------------------
+SideTab::SideTab(DockSide aDockingSide){
+
+	this->side = aDockingSide;
+
+	if(this->side == DOCK_SIDE_RIGHT){
+		_animationSpeed  = 30;
+	}
+	else {
+		_animationSpeed  = -15;
+	}
+}
+
+
+//--------------------------------------------------------------
 void SideTab::draw(){
 
 	this->updateState();
 	this->update();
 
 	// ofSetColor(Globals::Theme.tab.color.background);
-	ofSetColor(130);
+	ofSetColor(30, 30, 33);
 	ofDrawRectangle(this->x, this->y, this->width, this->height);
 }
 
@@ -59,8 +73,6 @@ void SideTab::updateState(){
 
 //--------------------------------------------------------------
 void SideTab::onAppEvent(AppEvent& aAppEvent){
-
-	ofLogVerbose() << "eve: " << aAppEvent.value;
 
 	if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED && ofIsStringInString(aAppEvent.message, this->id)) {
 		this->state = aAppEvent.value ? STATE_EXPANDING : STATE_COLLAPSING;

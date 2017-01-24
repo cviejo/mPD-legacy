@@ -54,8 +54,9 @@ class App : public ofBaseApp {
 
 	private:
 
-		bool                _scaling = false;
-		vector<GuiElement*> _guiElements;
+		bool        _scaling = false;
+		GuiElement* _mainWindow;
+		// vector<GuiElement*> _guiElements;
 
 		void initAudio();
 		void initSearchPaths();

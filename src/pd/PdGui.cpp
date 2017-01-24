@@ -96,7 +96,7 @@ PdCanvas* PdGui::openPatch(const string& aPath) {
 		folder.erase(folder.end() - 1);
 	}
 
-	Patch  patch   = PdBase::openPatch(file.c_str(), folder.c_str());
+	Patch patch = PdBase::openPatch(file.c_str(), folder.c_str());
 	// string patchId = getPatchId(patch);
 
 	if (!patch.isValid()){
@@ -355,7 +355,7 @@ void PdGui::guiMessage(string aMsg){
 	PdGuiMessage guiMsg(aMsg);
 
 	if (guiMsg.command == "gui_canvas_new"){
-
+		// gui_canvas_new "x2380d10",1138,688,"+0+52",0,"main.pd","/developer/OF/v0.9.7/apps/pd/mPD/bin/data",0,""
 		if (!this->getCanvas(guiMsg.canvasId)) {
 
 			auto mapCommand = guiMsg.canvasId + " map 1";
@@ -373,7 +373,6 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_new"){
-		ofLogVerbose() << aMsg;
 		// gui_gobj_new "x24078d0","x23fa810","iemgui",55,316,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
@@ -414,7 +413,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_numbox_new"){
-
+		// gui_numbox_new "x2380d10","x2345550","xfcfcfc",168,248,54,14,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 
 			PdNode* node = new PdNode(guiMsg.nodeId);
@@ -524,7 +523,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_text_set"){
-
+		// gui_text_set "x2380d10",".x2380d10.t234e170","symbol"
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			node->text = this->unquote(guiMsg.args[2]);
 		}
@@ -603,7 +602,6 @@ void PdGui::guiMessage(string aMsg){
 					remove(canvas->connections.begin(), canvas->connections.end(), static_cast<PdConnection*>(NULL)),
 					end(canvas->connections)
 			);
-			// this->unlock();
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_select" || guiMsg.command == "gui_gobj_deselect"){
@@ -613,7 +611,6 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_gobj_displace" || guiMsg.command == "gui_text_displace"){
-		ofLogVerbose() << aMsg;
 		// gui_text_displace "x7f7fa9137200",".x7f7fa9137200.t7f7fa84c4960",-1,2
 		if (auto node = this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
 			ofPoint offset(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
@@ -656,7 +653,7 @@ void PdGui::guiMessage(string aMsg){
 		}
 	}
 	else if (guiMsg.command == "gui_grid_active"){
-
+		// gui_grid_active "x28d7da0",1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
 			canvas->gridMode = ofToBool(guiMsg.args[1]);
 		}
@@ -674,6 +671,6 @@ void PdGui::guiMessage(string aMsg){
 		// ofLogVerbose() << "todo:";
 	}
 
-	// ofLogVerbose() << aMsg;
+	ofLogVerbose() << aMsg;
 }
 
