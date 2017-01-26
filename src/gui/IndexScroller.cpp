@@ -53,7 +53,7 @@ void IndexScroller::updateScroll(int aX, int aY) {
 		_scrollY = this->height - limit;
 	}
 
-	int   selectionIndex = (int)(count / this->height * _scrollY);
+	int selectionIndex = (int)(count / this->height * _scrollY);
 
 	if (selectionIndex > count - 1){
 		selectionIndex = count - 1;
@@ -72,6 +72,8 @@ void IndexScroller::updateScroll(int aX, int aY) {
 //--------------------------PRIVATE---------------------------//
 //--------------------------------------------------------------
 void IndexScroller::setContent(vector<string> aContent){
+
+	// TODO: delete previous content?
 
 	_itemHeight = (float)this->height / (float)aContent.size();
 
@@ -111,7 +113,9 @@ void IndexScroller::setContent(vector<string> aContent){
 	}
 
 	this->selection = _content.size() - 1;
-	this->onDragged(0, 0, 0);
+
+	this->onPressed (0, 0, 0);
+	this->onDragged (0, 0, 0);
 	this->onReleased(0, 0, 0);
 }
 
