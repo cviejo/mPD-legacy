@@ -665,12 +665,20 @@ void PdGui::guiMessage(string aMsg){
 			// canvas->moveMode = PdCanvas::MODE_NONE;
 		}
 	}
+	else if (guiMsg.command == "gui_class_new"){
+
+		string className = this->unquote(guiMsg.args[0]);
+
+		if (!_classNames.size() || ofFind(_classNames, className) == _classNames.size()){
+			_classNames.push_back(className);
+		}
+	}
 	else {
 
 		// ofLogVerbose() << guiMsg.command;
 		// ofLogVerbose() << "todo:";
 	}
 
-	ofLogVerbose() << aMsg;
+	// ofLogVerbose() << aMsg;
 }
 

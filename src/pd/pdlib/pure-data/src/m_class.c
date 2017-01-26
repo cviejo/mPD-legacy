@@ -219,6 +219,9 @@ t_class *classtable_findbyname(t_symbol *s)
 t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
     size_t size, int flags, t_atomtype type1, ...)
 {
+    // mPD
+    gui_vmess("gui_class_new", "s", s->s_name);
+
     va_list ap;
     t_atomtype vec[MAXPDARG+1], *vp = vec;
     int count = 0;

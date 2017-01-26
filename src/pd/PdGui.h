@@ -55,6 +55,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		int               _sampleRate;
 		int               _outputChannels;
 		int               _inputChannels;
+		vector<string>    _classNames;
 
 		void              displaceObject(PdNode* aNode, ofPoint aOffset);
 		string            unquote(string& str);
