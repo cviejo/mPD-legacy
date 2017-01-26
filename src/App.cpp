@@ -101,6 +101,8 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
+	ofLogVerbose() << key;
+
 	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 
 	ofNotifyEvent(AppEvent::events, event);

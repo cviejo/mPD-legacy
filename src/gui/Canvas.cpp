@@ -578,6 +578,9 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				else if (aAppEvent.message == "paste-button"){
 					cmd = _current->id + " paste";
 				}
+				else if (aAppEvent.message == "trash-button"){
+					cmd = _current->id + " erase";
+				}
 				else if (aAppEvent.message == "undo-button"){
 					cmd = _current->id + " undo";
 				}

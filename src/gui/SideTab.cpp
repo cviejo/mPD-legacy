@@ -27,6 +27,8 @@ void SideTab::draw(){
 	// ofSetColor(Globals::Theme.tab.color.background);
 	ofSetColor(30, 30, 33);
 	ofDrawRectangle(this->x, this->y, this->width, this->height);
+
+	this->drawChildren();
 }
 
 
@@ -67,6 +69,10 @@ void SideTab::updateState(){
 			
 		default:
 			break;
+	}
+
+	for (auto& child : this->children){
+		child->visible = this->state != STATE_COLLAPSED;
 	}
 }
 

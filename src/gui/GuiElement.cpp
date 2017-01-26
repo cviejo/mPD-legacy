@@ -42,8 +42,6 @@ void GuiElement::drawChildren(){
 //--------------------------------------------------------------
 bool GuiElement::touchDown(ofPoint aLoc){
 
-	ofLogVerbose() << this->id << " " << aLoc.x << " " << aLoc.y;;
-
 	if (!this->touchTest(aLoc)){ return false; }
 
 	this->pressed = true;

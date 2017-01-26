@@ -23,12 +23,12 @@ class GuiElement : public ofRectangle {
 		virtual void        init(int aWidth, int aHeight){};
 		virtual void        onAppEvent(AppEvent& aAppEvent){};
 		virtual void        onClick(){};
-		virtual void        onPressed(ofPoint& aLoc){};
-		virtual void        onDragged(ofPoint& aLoc){};
-		virtual void        onReleased(ofPoint& aLoc){};
 		virtual void        onPressed(int aX, int aY, int aId){};
+		virtual void        onPressed(ofPoint& aLoc){};
 		virtual void        onDragged(int aX, int aY, int aId){};
+		virtual void        onDragged(ofPoint& aLoc){};
 		virtual void        onReleased(int aX, int aY, int aId){};
+		virtual void        onReleased(ofPoint& aLoc){};
 		virtual void        onDoubleClick(ofPoint& aLoc){};
 		virtual void        onPressCancel(){};
 

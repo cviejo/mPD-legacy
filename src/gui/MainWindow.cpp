@@ -3,16 +3,24 @@
 #include "Canvas.h"
 #include "SideTab.h"
 #include "Button.h"
+#include "IndexScroller.h"
 // #include "Bar.h"
+
+// TODO: real dpi
+// float dpi = 444.0f;
+float dpi = 150.0f;
 
 
 //--------------------------------------------------------------
 MainWindow::MainWindow(){
 
+	ofAddListener(PdEvent::events, this, &MainWindow::onPdEvent);
+
 	this->setPosition(0, 0);
 	this->setSize(ofGetWidth(), ofGetHeight());
 
-	int         buttonWidth = 120;
+	int buttonWidth    = (int)(dpi / 100.0f * 30.0f);
+	int collapsedWidth = (int)(dpi / 100.0f * 5.0f);
 
 	Canvas*     cnv;
 	Button*     btn;
@@ -32,8 +40,29 @@ MainWindow::MainWindow(){
 	tab->id = "menu-tab";
 	tab->setPosition(0, buttonWidth);
 	tab->setSize(buttonWidth, cnv->height);
-	tab->collapsedX = -buttonWidth + 5;
+	tab->collapsedX = -buttonWidth + collapsedWidth;
 	tab->expandedX = 0;
+
+	btn = new Button("copy");
+	btn->setPosition(0, tab->height - buttonWidth * 3);
+	btn->setSize(tab->width, tab->width);
+	tab->children.push_back(btn);
+
+	btn = new Button("paste");
+	btn->setPosition(0, tab->height - buttonWidth * 2);
+	btn->setSize(tab->width, tab->width);
+	tab->children.push_back(btn);
+
+	btn = new Button("trash");
+	btn->setPosition(0, tab->height - buttonWidth * 1);
+	btn->setSize(tab->width, tab->width);
+	tab->children.push_back(btn);
+
+	btn = new Button("undo");
+	btn->setPosition(0, tab->height - buttonWidth * 4);
+	btn->setSize(tab->width, tab->width);
+	tab->children.push_back(btn);
+
 	this->children.push_back(tab);
 	// menu-tab
 
@@ -43,8 +72,28 @@ MainWindow::MainWindow(){
 	tab->id = "object-tab";
 	tab->setSize(buttonWidth * 3, cnv->height);
 	tab->setPosition(ofGetWidth() - tab->width, buttonWidth);
-	tab->collapsedX = ofGetWidth() - 5;
+	tab->collapsedX = ofGetWidth() - collapsedWidth;
 	tab->expandedX = tab->x;
+
+	// this->width  = 10;//Globals::Theme.indexScroller.width;
+	IndexScroller* scroller = new IndexScroller();
+	scroller->setSize(buttonWidth / 2, cnv->height);
+
+	vector<string> items = { "+-", "UI", "AB" };
+
+	for (char letter = 'Z'; letter >= 'A'; --letter){
+		items.insert(items.begin() + 1, string(1, letter));
+	}
+
+	scroller->setContent(items);
+	scroller->setPosition(tab->width - scroller->width, 0);
+	tab->children.push_back(scroller);
+
+	// btn = new Button("grid");
+	// btn->setPosition(0, tab->height - buttonWidth * 4);
+	// btn->setSize(tab->width, tab->width);
+	// tab->children.push_back(btn);
+
 	this->children.push_back(tab);
 	// object-tab
 
@@ -78,6 +127,11 @@ MainWindow::MainWindow(){
 	btn->setSize(bar->height, bar->height);
 	bar->children.push_back(btn);
 
+	btn = new Button("settings", Button::TYPE_TOGGLE);
+	btn->setPosition(bar->width - bar->height, 0);
+	btn->setSize(bar->height, bar->height);
+	bar->children.push_back(btn);
+
 	this->children.push_back(bar);
 	// bottom-bar
 
@@ -100,6 +154,23 @@ void MainWindow::onAppEvent(AppEvent& aAppEvent){
 		case AppEvent::TYPE_BUTTON_PRESSED:
 			if (aAppEvent.message == "edit-button"){
 			}
+			break;
+
+		default:
+			break;
+	}
+}
+
+
+//--------------------------------------------------------------
+void MainWindow::onPdEvent (PdEvent&  aPdEvent){
+
+	switch(aPdEvent.type){
+
+		case PdEvent::TYPE_CANVAS_OPEN:
+			break;
+
+		case PdEvent::TYPE_CANVAS_EDIT:
 			break;
 
 		default:

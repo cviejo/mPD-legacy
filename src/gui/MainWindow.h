@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GuiElement.h"
+#include "PdEvent.h"
 
 
 //--------------------------------------------------------------
@@ -11,5 +12,6 @@ class MainWindow : public GuiElement {
 		MainWindow();
 
 		virtual void onAppEvent(AppEvent& aAppEvent);
+		void         onPdEvent (PdEvent&  aPdEvent);
 };
 
