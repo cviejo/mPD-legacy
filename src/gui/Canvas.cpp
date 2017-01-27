@@ -557,10 +557,12 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				if (aAppEvent.message == "edit-button"){
 					cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1");
 				}
-				// else if (aAppEvent.message == "grid-button"){
-					// Globals::Settings.gridActive = aAppEvent.value;
-					// Globals::Pd.setCanvasGridMode(aAppEvent.value);
-				// }
+				else if (aAppEvent.message == "grid-button"){
+				// TODO gridsize
+				string temp = _current->id + " gridsize 20";
+				PdGui::instance().pdsend(temp);
+					cmd = _current->id + " gridactive " + (_current->gridMode ? "0" : "1");
+				}
 				// else if (aAppEvent.message == "settings-button"){
 				// }
 				// else if (aAppEvent.message == "trash-button"){

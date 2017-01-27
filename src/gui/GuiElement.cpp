@@ -12,10 +12,7 @@ GuiElement::GuiElement(){
 //--------------------------------------------------------------
 void GuiElement::draw(){
 
-	ofSetColor(34, 35, 38);
-			// <background r="34" g="35" b="38"/>
-
-	ofDrawRectangle(*this);
+	this->drawBackground();
 
 	this->drawChildren();
 }
@@ -40,6 +37,27 @@ void GuiElement::drawChildren(){
 
 
 //--------------------------------------------------------------
+void GuiElement::drawBackground(){
+
+	// TODO: backgroundColor;
+	ofSetColor(34, 35, 38);
+
+	ofDrawRectangle(*this);
+}
+
+
+//--------------------------------------------------------------
+void GuiElement::clear(){
+
+	for (auto& item : this->children){
+		delete item;
+	}
+
+	this->children.clear();
+}
+
+
+//--------------------------------------------------------------
 bool GuiElement::touchDown(ofPoint aLoc){
 
 	if (!this->touchTest(aLoc)){ return false; }
@@ -47,6 +65,7 @@ bool GuiElement::touchDown(ofPoint aLoc){
 	this->pressed = true;
 	this->pressedPoint.set(aLoc);
 
+	// for (auto i = this->children.rbegin(); i != this->children.rend(); ++i){
 	for (auto& child : reverse(this->children)){
 
 		if (child->touchDown(aLoc - this->getPosition())){
@@ -66,10 +85,6 @@ bool GuiElement::touchDown(ofPoint aLoc){
 void GuiElement::touchUp(ofPoint aLoc){
 
 	if (!this->pressed){ return; }
-
-	// for (auto i = this->children.rbegin(); i != this->children.rend(); ++i){
-
-		// GuiElement* child = *i;
 
 	for (auto& child : reverse(this->children)){
 
@@ -93,9 +108,6 @@ void GuiElement::touchUp(ofPoint aLoc){
 void GuiElement::touchMoved(ofPoint aLoc){
 
 	if (!this->pressed){ return; }
-
-	// for (auto i = this->children.rbegin(); i != this->children.rend(); ++i){
-		// GuiElement* child = *i;
 
 	for (auto& child : reverse(this->children)){
 

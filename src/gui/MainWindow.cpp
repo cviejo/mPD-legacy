@@ -7,8 +7,8 @@
 // #include "Bar.h"
 
 // TODO: real dpi
-// float dpi = 444.0f;
-float dpi = 150.0f;
+float dpi = 444.0f;
+// float dpi = 150.0f;
 
 
 //--------------------------------------------------------------
@@ -43,23 +43,17 @@ MainWindow::MainWindow(){
 	tab->collapsedX = -buttonWidth + collapsedWidth;
 	tab->expandedX = 0;
 
-	btn = new Button("copy");
-	btn->setPosition(0, tab->height - buttonWidth * 3);
-	btn->setSize(tab->width, tab->width);
-	tab->children.push_back(btn);
+	vector<string> buttons = { "trash", "undo", "paste", "copy" };
 
-	btn = new Button("paste");
-	btn->setPosition(0, tab->height - buttonWidth * 2);
-	btn->setSize(tab->width, tab->width);
-	tab->children.push_back(btn);
+	for (int i = 0; i < buttons.size(); i++) {
+		btn = new Button(buttons[i]);
+		btn->setPosition(0, tab->height - buttonWidth * (i + 2));
+		btn->setSize(tab->width, tab->width);
+		tab->children.push_back(btn);
+	}
 
-	btn = new Button("trash");
-	btn->setPosition(0, tab->height - buttonWidth * 1);
-	btn->setSize(tab->width, tab->width);
-	tab->children.push_back(btn);
-
-	btn = new Button("undo");
-	btn->setPosition(0, tab->height - buttonWidth * 4);
+	btn = new Button("grid", Button::TYPE_TOGGLE);
+	btn->setPosition(0, tab->height - buttonWidth * 7);
 	btn->setSize(tab->width, tab->width);
 	tab->children.push_back(btn);
 
@@ -88,11 +82,6 @@ MainWindow::MainWindow(){
 	scroller->setContent(items);
 	scroller->setPosition(tab->width - scroller->width, 0);
 	tab->children.push_back(scroller);
-
-	// btn = new Button("grid");
-	// btn->setPosition(0, tab->height - buttonWidth * 4);
-	// btn->setSize(tab->width, tab->width);
-	// tab->children.push_back(btn);
 
 	this->children.push_back(tab);
 	// object-tab

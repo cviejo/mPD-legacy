@@ -669,7 +669,7 @@ void PdGui::guiMessage(string aMsg){
 
 		string className = this->unquote(guiMsg.args[0]);
 
-		if (!_classNames.size() || ofFind(_classNames, className) == _classNames.size()){
+		if (!ofContains(_classNames, className)){
 			_classNames.push_back(className);
 		}
 	}

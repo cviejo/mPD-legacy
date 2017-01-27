@@ -26,7 +26,7 @@ void App::setup(){
 	PdGui::instance().openPatch(ofToDataPath("main.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("main-all.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("settings.pd"));
-	// PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
+	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
 }
@@ -178,6 +178,9 @@ void App::touchDoubleTap(int aX, int aY, int aId){
 
 	ofPoint loc(aX, aY);
 
+	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)'e');
+
+	ofNotifyEvent(AppEvent::events, event);
 	// for (auto& elem : _guiElements){
 
 		// if (elem->visible && elem->clickable && elem->inside(loc)){

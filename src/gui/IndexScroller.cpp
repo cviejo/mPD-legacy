@@ -12,12 +12,12 @@ void IndexScroller::draw(){
 
 	// // ofSetColor(Globals::Theme.indexScroller.color.selection);
 	ofSetColor(115);
-	ofDrawRectangle(this->x, this->y + _scrollY - _itemHeight * .5f, this->width, _itemHeight);
+	ofDrawRectangle(this->x, this->y + _scrollY - _itemHalfHeight, this->width, _itemHeight);
 
 	// ofSetColor(Globals::Theme.indexScroller.color.front);
 	ofSetColor(130);
 
-	for (auto& item : _content){
+	for (auto& item : this->children){
 		_font.drawString(item->id, this->x + item->x, this->y + item->y);
 	}
 }
@@ -34,7 +34,7 @@ void IndexScroller::onDragged(int aX, int aY, int aId){ this->updateScroll(aX, a
 //--------------------------------------------------------------
 void IndexScroller::onReleased  (int aX, int aY, int aId){
 
-	this->updateScroll(aX, (int)(this->selection * _itemHeight + _itemHeight * 0.5f));
+	this->updateScroll(aX, (int)(this->selection * _itemHeight + _itemHalfHeight));
 }
 
 
@@ -43,14 +43,13 @@ void IndexScroller::updateScroll(int aX, int aY) {
 
 	_scrollY = aY - this->y;
 
-	auto limit = _itemHeight * 0.5f;
-	auto count = (float)_content.size();
+	auto count = (float)this->children.size();
 
-	if (_scrollY < limit) {
-		_scrollY = limit;
+	if (_scrollY < _itemHalfHeight) {
+		_scrollY = _itemHalfHeight;
 	}
-	else if ( _scrollY > this->height - limit) {
-		_scrollY = this->height - limit;
+	else if ( _scrollY > this->height - _itemHalfHeight) {
+		_scrollY = this->height - _itemHalfHeight;
 	}
 
 	int selectionIndex = (int)(count / this->height * _scrollY);
@@ -63,7 +62,7 @@ void IndexScroller::updateScroll(int aX, int aY) {
 
 		this->selection = selectionIndex;
 
-		AppEvent event(AppEvent::TYPE_SCROLLER_LETTER_CHANGED, _content[this->selection]->id);
+		AppEvent event(AppEvent::TYPE_SCROLLER_LETTER_CHANGED, this->children[this->selection]->id);
 
 		ofNotifyEvent(AppEvent::events, event);
 	}
@@ -73,11 +72,10 @@ void IndexScroller::updateScroll(int aX, int aY) {
 //--------------------------------------------------------------
 void IndexScroller::setContent(vector<string> aContent){
 
-	// TODO: delete previous content?
+	this->clear();
 
-	_itemHeight = (float)this->height / (float)aContent.size();
-
-	float fontHeight = _itemHeight * .5f;
+	_itemHeight     = (float)this->height / (float)aContent.size();
+	_itemHalfHeight = _itemHeight * .5f;
 
 	// TODO: set some maxHeight based on DPI
 	// float maxHeight  = (int)(0.07f * Globals::DPI);
@@ -86,13 +84,13 @@ void IndexScroller::setContent(vector<string> aContent){
 		// fontHeight = maxHeight;
 	// }
 
-	_font.load("fonts/DejaVuSansMono.ttf", fontHeight, true, true);
+	_font.load("fonts/DejaVuSansMono.ttf", _itemHalfHeight, true, true);
 	_font.setLineHeight(_itemHeight);
 
 	for (auto& contentItem : aContent){
 
 		auto item       = new GuiElement();
-		auto itemY      = _itemHeight + _content.size() * _itemHeight;
+		auto itemY      = _itemHeight + this->children.size() * _itemHeight;
 		auto itemSize   = _font.getStringBoundingBox(contentItem, 0, 0);
 		auto totalWidth = _font.getStringBoundingBox(contentItem + "-", 0, 0).width;
 
@@ -101,18 +99,18 @@ void IndexScroller::setContent(vector<string> aContent){
 
 		item->setSize(itemSize.width, itemSize.height);
 
-		_content.push_back(item);
+		this->children.push_back(item);
 
 		if (this->width < totalWidth){
 			this->width = totalWidth;
 		}
 	}
 
-	for (auto& item : _content){
+	for (auto& item : this->children){
 		item->x = (this->width - item->width) * .5f;
 	}
 
-	this->selection = _content.size() - 1;
+	this->selection = this->children.size() - 1;
 
 	this->onPressed (0, 0, 0);
 	this->onDragged (0, 0, 0);

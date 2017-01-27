@@ -32,11 +32,13 @@ class GuiElement : public ofRectangle {
 		virtual void        onDoubleClick(ofPoint& aLoc){};
 		virtual void        onPressCancel(){};
 
+		void                clear();
 		void                drawChildren();
-		// void                updatePosition()
+		void                drawBackground();
 		bool                touchDown (ofPoint aLoc);
 		void                touchUp   (ofPoint aLoc);
 		void                touchMoved(ofPoint aLoc);
 		bool                touchTest (ofPoint aLoc);
+
 };
 

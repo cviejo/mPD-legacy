@@ -25,9 +25,9 @@ class IndexScroller : public GuiElement {
 	private:
 
 		ofTrueTypeFont     _font;
-		vector<GuiElement*> _content;
 		int                _scrollY;
 		float              _itemHeight;
+		float              _itemHalfHeight;
 		// vector<ScrollerItem*> _content;
 		// vector<string> _content;
 		// mFont                  _font;
