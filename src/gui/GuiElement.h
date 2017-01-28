@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "AppEvent.h"
+#include "json.h"
 
 
 //--------------------------------------------------------------
@@ -9,14 +10,20 @@ class GuiElement : public ofRectangle {
 
 	public:
 
-		GuiElement();
+		static Json::Value  theme;
+
+		GuiElement(string aType = "");
 
 		string              id        = "";
+		string              type      = "";
 		bool                visible   = true;
 		bool                clickable = true;
 		bool                pressed   = false;
 		ofPoint             pressedPoint;
 		vector<GuiElement*> children;
+		ofColor             frontColor;
+		ofColor             backgroundColor;
+		ofColor             selectionColor;
 
 		virtual void        draw();
 		virtual void        update(){};
@@ -40,5 +47,6 @@ class GuiElement : public ofRectangle {
 		void                touchMoved(ofPoint aLoc);
 		bool                touchTest (ofPoint aLoc);
 
+		static void         LoadTheme(string aPath);
 };
 

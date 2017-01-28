@@ -6,16 +6,14 @@
 //--------------------------------------------------------------
 void IndexScroller::draw(){
 
-	// ofSetColor(Globals::Theme.indexScroller.color.background);
-	ofSetColor(30, 30, 33);
-	ofDrawRectangle(*this);
+	this->drawBackground();
 
 	// // ofSetColor(Globals::Theme.indexScroller.color.selection);
-	ofSetColor(115);
+	ofSetColor(this->selectionColor);
 	ofDrawRectangle(this->x, this->y + _scrollY - _itemHalfHeight, this->width, _itemHeight);
 
 	// ofSetColor(Globals::Theme.indexScroller.color.front);
-	ofSetColor(130);
+	ofSetColor(this->frontColor);
 
 	for (auto& item : this->children){
 		_font.drawString(item->id, this->x + item->x, this->y + item->y);

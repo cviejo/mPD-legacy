@@ -2,8 +2,29 @@
 #include "ReverseIterator.h"
 
 
+
+Json::Value GuiElement::theme;
+
+
 //--------------------------------------------------------------
-GuiElement::GuiElement(){
+GuiElement::GuiElement(string aType){
+
+	this->type = aType;
+
+	// TODO: real dpi
+	float dpi = 150.0f;
+	// float dpi = 444.0f;
+
+	if (this->type != ""){
+
+		Json::Value json = GuiElement::theme[this->type];
+
+		auto temp = ofToInt(json["backgroundColor"].asString());
+
+		this->backgroundColor.setHex(ofHexToInt(json["backgroundColor"].asString()));
+		this->frontColor.setHex(ofHexToInt(json["frontColor"].asString()));
+		this->selectionColor.setHex(ofHexToInt(json["selectionColor"].asString()));
+	}
 
 	ofAddListener(AppEvent::events, this, &GuiElement::onAppEvent);
 }
@@ -39,8 +60,7 @@ void GuiElement::drawChildren(){
 //--------------------------------------------------------------
 void GuiElement::drawBackground(){
 
-	// TODO: backgroundColor;
-	ofSetColor(34, 35, 38);
+	ofSetColor(this->backgroundColor);
 
 	ofDrawRectangle(*this);
 }
@@ -125,5 +145,24 @@ void GuiElement::touchMoved(ofPoint aLoc){
 bool GuiElement::touchTest(ofPoint aLoc){
 
 	return this->visible && this->clickable && this->inside(aLoc);
+}
+
+
+//--------------------------------------------------------------
+void GuiElement::LoadTheme(string aPath){
+
+	ofBuffer     buffer = ofBufferFromFile(aPath);
+	Json::Reader reader;
+
+	if (reader.parse(buffer.getText(), GuiElement::theme)){
+		Json::Value val = GuiElement::theme["bar"];
+		ofLogVerbose() << val["backgroundColor"].asString();
+		ofLogVerbose() << "okkkk";
+		// TODO: notify / reload gui
+	}
+	else {
+		ofLogVerbose() << "dafuq";
+		// TODO: load default / log to console
+	}
 }
 

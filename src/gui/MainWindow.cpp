@@ -6,9 +6,6 @@
 #include "IndexScroller.h"
 // #include "Bar.h"
 
-// TODO: real dpi
-float dpi = 444.0f;
-// float dpi = 150.0f;
 
 
 //--------------------------------------------------------------
@@ -18,6 +15,10 @@ MainWindow::MainWindow(){
 
 	this->setPosition(0, 0);
 	this->setSize(ofGetWidth(), ofGetHeight());
+
+	// TODO: real dpi
+	float dpi = 150.0f;
+	// float dpi = 444.0f;
 
 	int buttonWidth    = (int)(dpi / 100.0f * 30.0f);
 	int collapsedWidth = (int)(dpi / 100.0f * 5.0f);
@@ -88,7 +89,7 @@ MainWindow::MainWindow(){
 
 
 	// top-bar
-	bar = new GuiElement();
+	bar = new GuiElement("bar");
 	bar->set(0, 0, ofGetWidth(), buttonWidth);
 	bar->id = "top-bar";
 
@@ -107,7 +108,7 @@ MainWindow::MainWindow(){
 
 	
 	// bottom-bar
-	bar = new GuiElement();
+	bar = new GuiElement("bar");
 	bar->set(0, ofGetHeight() - buttonWidth, ofGetWidth(), buttonWidth);
 	bar->id = "bottom-bar";
 
@@ -126,6 +127,11 @@ MainWindow::MainWindow(){
 
 
 	cnv->set(PdGui::instance().getCanvases()[0]);
+}
+
+
+//--------------------------------------------------------------
+void MainWindow::reload(){
 }
 
 

@@ -11,6 +11,8 @@ class IndexScroller : public GuiElement {
 
 	public:
 
+		IndexScroller() : GuiElement("index-scroller"){};
+
 		// ScrollerItem* selection;
 		int selection;
 

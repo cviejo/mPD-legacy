@@ -11,6 +11,7 @@ class MainWindow : public GuiElement {
 
 		MainWindow();
 
+		void         reload();
 		virtual void onAppEvent(AppEvent& aAppEvent);
 		void         onPdEvent (PdEvent&  aPdEvent);
 };

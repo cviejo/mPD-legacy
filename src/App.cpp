@@ -1,13 +1,25 @@
 #include "App.h"
 #include "PdGui.h"
 #include "MainWindow.h"
+#include "json.h"
 
 
 bool computing = true;
 
-
+bool whot = false;
+Json::Value value;
 //--------------------------------------------------------------
 void App::setup(){
+
+	ofSetLogLevel(OF_LOG_VERBOSE);
+
+	// if (reader.parse(buffer.getText(), value)){
+		// ofLogVerbose() << "testtt";
+		// ofLogVerbose() << value["temp"].asString();
+	// }
+	// else {
+		// ofLogVerbose() << "YOLO";
+	// }
 
 	// ofSetBackgroundAuto(false);
 	// ofBackground(0);
@@ -15,6 +27,8 @@ void App::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
 	ofSetWindowPosition(152,1094);
+
+	GuiElement::LoadTheme("themes/default.json");
 
 	this->initSearchPaths();
 	this->initAudio();
@@ -27,6 +41,7 @@ void App::setup(){
 	// PdGui::instance().openPatch(ofToDataPath("main-all.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("settings.pd"));
 	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
+
 
 	_mainWindow = (GuiElement*)new MainWindow();
 }
@@ -92,7 +107,12 @@ void App::draw(){
 
 	ofDisableAlphaBlending();
 
-	// ofDrawBitmapString("fps: " + ofToString(ofGetFrameRate(),2), 30, ofGetHeight()-90);
+		// ofLogVerbose() << value["test"].asInt();
+	ofSetColor(0);
+	ofDrawBitmapString(
+		"fps: " + ofToString(value["test"].asInt()),
+		ofGetWidth()  / 2,
+		ofGetHeight() / 2);
 	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
 	// ofDrawBitmapString("y:   " + ofToString(ofGetWindowPositionY()), 30, 50);
 }
