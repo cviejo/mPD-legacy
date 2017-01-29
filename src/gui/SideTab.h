@@ -37,6 +37,7 @@ class SideTab : public GuiElement {
 
 		SideTab(DockSide aDockingSide);
 
+		virtual void update();
 		virtual void draw();
 		virtual void onAppEvent(AppEvent& AppEvent);
 

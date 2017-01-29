@@ -21,7 +21,7 @@ class Button : public GuiElement {
 		bool       enabled = true;
 		bool*      togglePointer = NULL;
 
-		Button(string aId, ButtonType aType = TYPE_PUSH, bool* aTogglePointer = NULL);
+		Button(string aId = "", ButtonType aType = TYPE_PUSH, bool* aTogglePointer = NULL);
 
 		virtual void draw();
 		virtual void onPressed(int aX, int aY, int aId);

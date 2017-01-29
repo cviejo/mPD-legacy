@@ -3,7 +3,7 @@
 
 
 
-Json::Value GuiElement::theme;
+JsonTheme GuiElement::Theme;
 
 
 //--------------------------------------------------------------
@@ -11,22 +11,29 @@ GuiElement::GuiElement(string aType){
 
 	this->type = aType;
 
-	// TODO: real dpi
-	float dpi = 150.0f;
-	// float dpi = 444.0f;
+	ofAddListener(AppEvent::events, this, &GuiElement::onAppEvent);
 
 	if (this->type != ""){
 
-		Json::Value json = GuiElement::theme[this->type];
+		Json::Value json = GuiElement::Theme[this->type];
 
-		auto temp = ofToInt(json["backgroundColor"].asString());
 
-		this->backgroundColor.setHex(ofHexToInt(json["backgroundColor"].asString()));
-		this->frontColor.setHex(ofHexToInt(json["frontColor"].asString()));
-		this->selectionColor.setHex(ofHexToInt(json["selectionColor"].asString()));
+		this->setSize(Theme.getScaledValue(this->type, "width"),
+		              Theme.getScaledValue(this->type, "height"));
+
+		this->backgroundColor.setHex(Theme.getHex(this->type, "backgroundColor"));
+		this->selectionColor .setHex(Theme.getHex(this->type, "selectionColor"));
+		this->frontColor     .setHex(Theme.getHex(this->type, "frontColor"));
 	}
+}
 
-	ofAddListener(AppEvent::events, this, &GuiElement::onAppEvent);
+
+//--------------------------------------------------------------
+GuiElement::~GuiElement(){
+
+	ofRemoveListener(AppEvent::events, this, &GuiElement::onAppEvent);
+
+	this->clear();
 }
 
 
@@ -67,6 +74,23 @@ void GuiElement::drawBackground(){
 
 
 //--------------------------------------------------------------
+void GuiElement::addChild(GuiElement* aChild){
+
+	this->children.push_back(aChild);
+
+	if (this->width < aChild->getRight()){
+		this->width = aChild->getRight();
+	}
+
+	if (this->height < aChild->getBottom()){
+		this->height = aChild->getBottom();
+	}
+
+	this->update();
+}
+
+
+//--------------------------------------------------------------
 void GuiElement::clear(){
 
 	for (auto& item : this->children){
@@ -92,8 +116,6 @@ bool GuiElement::touchDown(ofPoint aLoc){
 			return true;
 		}
 	}
-
-	ofLogVerbose() << aLoc.x << " " << aLoc.y;
 
 	this->onPressed(aLoc.x, aLoc.y, 0);
 
@@ -149,20 +171,15 @@ bool GuiElement::touchTest(ofPoint aLoc){
 
 
 //--------------------------------------------------------------
-void GuiElement::LoadTheme(string aPath){
+// void GuiElement::LoadTheme(string aPath){
 
-	ofBuffer     buffer = ofBufferFromFile(aPath);
-	Json::Reader reader;
+	// ofBuffer     buffer = ofBufferFromFile(aPath);
+	// Json::Reader reader;
 
-	if (reader.parse(buffer.getText(), GuiElement::theme)){
-		Json::Value val = GuiElement::theme["bar"];
-		ofLogVerbose() << val["backgroundColor"].asString();
-		ofLogVerbose() << "okkkk";
-		// TODO: notify / reload gui
-	}
-	else {
-		ofLogVerbose() << "dafuq";
-		// TODO: load default / log to console
-	}
-}
-
+	// if (reader.parse(buffer.getText(), GuiElement::Theme)){
+		// // TODO: notify / reload gui
+	// }
+	// else {
+		// // TODO: load default / log to console
+	// }
+// }

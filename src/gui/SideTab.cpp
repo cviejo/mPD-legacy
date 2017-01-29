@@ -5,16 +5,30 @@
 
 
 //--------------------------------------------------------------
-SideTab::SideTab(DockSide aDockingSide){
+SideTab::SideTab(DockSide aDockingSide) : GuiElement("side-tab"){
 
 	this->side = aDockingSide;
 
+	this->update();
+}
+
+
+//--------------------------------------------------------------
+void SideTab::update(){
+
+	auto collapsedWidth = Theme.getScaledValue(this->type, "collapsedWidth");
+	auto collapseSpeed  = Theme.getScaledValue(this->type, "collapseSpeed");
+
 	if(this->side == DOCK_SIDE_RIGHT){
-		_animationSpeed  = 30;
+		_animationSpeed = collapseSpeed;
+		this->collapsedX = ofGetWidth() - collapsedWidth;
 	}
 	else {
-		_animationSpeed  = -15;
+		_animationSpeed = -collapseSpeed;
+		this->collapsedX = -this->width + collapsedWidth;
 	}
+
+	ofLogVerbose() << this->collapsedX;
 }
 
 
@@ -22,7 +36,6 @@ SideTab::SideTab(DockSide aDockingSide){
 void SideTab::draw(){
 
 	this->updateState();
-	this->update();
 
 	// ofSetColor(Globals::Theme.tab.color.background);
 	ofSetColor(30, 30, 33);

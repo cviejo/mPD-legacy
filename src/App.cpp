@@ -6,29 +6,18 @@
 
 bool computing = true;
 
-bool whot = false;
-Json::Value value;
+
 //--------------------------------------------------------------
 void App::setup(){
 
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
-	// if (reader.parse(buffer.getText(), value)){
-		// ofLogVerbose() << "testtt";
-		// ofLogVerbose() << value["temp"].asString();
-	// }
-	// else {
-		// ofLogVerbose() << "YOLO";
-	// }
-
-	// ofSetBackgroundAuto(false);
-	// ofBackground(0);
 	ofBackground(255);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
 	ofSetWindowPosition(152,1094);
 
-	GuiElement::LoadTheme("themes/default.json");
+	GuiElement::Theme.load("themes/default.json");
 
 	this->initSearchPaths();
 	this->initAudio();
@@ -58,7 +47,7 @@ void App::initAudio(){
 
 	ofSoundStreamSetup(outputChannels, inputChannels, this, sampleRate, bufferSize, 3);
 
-	if(!PdGui::instance().init(outputChannels, inputChannels, sampleRate, ticksPerBuffer)) {
+	if (!PdGui::instance().init(outputChannels, inputChannels, sampleRate, ticksPerBuffer)){
 		return;
 	}
 
@@ -107,12 +96,6 @@ void App::draw(){
 
 	ofDisableAlphaBlending();
 
-		// ofLogVerbose() << value["test"].asInt();
-	ofSetColor(0);
-	ofDrawBitmapString(
-		"fps: " + ofToString(value["test"].asInt()),
-		ofGetWidth()  / 2,
-		ofGetHeight() / 2);
 	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
 	// ofDrawBitmapString("y:   " + ofToString(ofGetWindowPositionY()), 30, 50);
 }
@@ -121,7 +104,7 @@ void App::draw(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	ofLogVerbose() << key;
+	// ofLogVerbose() << key;
 
 	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 

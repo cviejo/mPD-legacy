@@ -1,22 +1,24 @@
 {
 	"font": "",
 	"bar": {
-		"backgroundColor": "222326"
+		"backgroundColor": "#222326"
 	},
 	"button": {
 		"width": 30,
 		"height": 30,
-		"activeColor": "36373A"
+		"activeColor": "#36373A"
 	},
 	"side-tab": {
 		"collapsedWidth": 5,
-		"backgroundColor": "1E1E21"
+		"collapseSpeed": 15,
+		"backgroundColor": "#1E1E21"
 	},
 	"index-scroller": {
 		"width": 16,
-		"activeColor": "828282",
-		"frontColor": "737373",
-		"backgroundColor": "1E1E21"
+		"factiveColor": "#828282",
+		"activeColor": "#FF22FF",
+		"frontColor": "#737373",
+		"backgroundColor": "#1E1E21"
 	},
 	"object-scroller": {
 		"width": 55,

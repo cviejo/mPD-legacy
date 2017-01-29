@@ -3,10 +3,10 @@
 
 
 //--------------------------------------------------------------
-Button::Button(string aId, ButtonType aType, bool* aTogglePointer){
+Button::Button(string aId, ButtonType aType, bool* aTogglePointer) : GuiElement("button"){
 
-	this->width         = 99;
-	this->height        = 99;
+	// this->width         = 99;
+	// this->height        = 99;
 	// this->width         = Globals::Theme.button.width;
 	// this->height        = Globals::Theme.button.width;
 	this->type          = aType;

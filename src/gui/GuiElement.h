@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "AppEvent.h"
-#include "json.h"
+#include "JsonTheme.h"
 
 
 //--------------------------------------------------------------
@@ -10,9 +10,10 @@ class GuiElement : public ofRectangle {
 
 	public:
 
-		static Json::Value  theme;
+		static JsonTheme   Theme;
 
 		GuiElement(string aType = "");
+		~GuiElement();
 
 		string              id        = "";
 		string              type      = "";
@@ -40,13 +41,12 @@ class GuiElement : public ofRectangle {
 		virtual void        onPressCancel(){};
 
 		void                clear();
+		void                addChild(GuiElement* aChild);
 		void                drawChildren();
 		void                drawBackground();
 		bool                touchDown (ofPoint aLoc);
 		void                touchUp   (ofPoint aLoc);
 		void                touchMoved(ofPoint aLoc);
 		bool                touchTest (ofPoint aLoc);
-
-		static void         LoadTheme(string aPath);
 };
 
