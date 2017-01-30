@@ -27,8 +27,6 @@ void SideTab::update(){
 		_animationSpeed = -collapseSpeed;
 		this->collapsedX = -this->width + collapsedWidth;
 	}
-
-	ofLogVerbose() << this->collapsedX;
 }
 
 
@@ -37,11 +35,7 @@ void SideTab::draw(){
 
 	this->updateState();
 
-	// ofSetColor(Globals::Theme.tab.color.background);
-	ofSetColor(30, 30, 33);
-	ofDrawRectangle(this->x, this->y, this->width, this->height);
-
-	this->drawChildren();
+	GuiElement::draw();
 }
 
 

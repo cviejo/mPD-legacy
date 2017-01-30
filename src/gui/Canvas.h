@@ -25,6 +25,7 @@ class Canvas : public GuiElement {
 		virtual void onDoubleClick(int aX, int aY);
 		virtual void onAppEvent(AppEvent& aAppEvent);
 		virtual void onPressCancel();
+
 		void         set(PdCanvas* canvas);
 
 		// void print(const string& message); // pd receiver callbacks

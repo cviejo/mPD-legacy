@@ -679,6 +679,6 @@ void PdGui::guiMessage(string aMsg){
 		// ofLogVerbose() << "todo:";
 	}
 
-	// ofLogVerbose() << aMsg;
+	ofLogVerbose() << aMsg;
 }
 

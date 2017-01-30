@@ -407,14 +407,6 @@ void Canvas::onPressed(int aX, int aY, int aId){
 
 		this->sendMouseEvent("mouse", loc);
 	}
-
-	// if (!scaling){
-
-		// _pressLoc.set(this->transformLoc(aX, aY, TRANSFORM_MPD_TO_PD));
-		// _mouseLoc.set(_pressLoc);
-
-		// Globals::Pd.canvasPressed(_mouseLoc.x, _mouseLoc.y);
-	// }
 }
 
 
@@ -440,24 +432,6 @@ void Canvas::onDragged(int aX, int aY, int aId){
 
 		this->sendMouseEvent("motion", this->transformToPdCoordinates(aX, aY));
 	}
-
-	// CanvasMode mode = Globals::Pd.getCanvasMode();
-
-	// if (mode != CANVAS_MODE_CONNECT){
-
-		// if (scaling || (!Globals::Pd.getCanvasEditMode() && !Globals::Pd.getNodePressed() && mode == CANVAS_MODE_NONE)){
-		// // if (!Globals::Pd.getCanvasEditMode() && mode == CANVAS_MODE_NONE){
-
-			// _draggedLoc.x = _mouseLoc.x - _pressLoc.x;
-			// _draggedLoc.y = _mouseLoc.y - _pressLoc.y;
-
-			// this->clipOffset();
-		// }
-		// else {
-
-			// Globals::Pd.canvasDragged(_mouseLoc.x, _mouseLoc.y);
-		// }
-	// }
 }
 
 
@@ -533,7 +507,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 
 				if      (key == 'a'){ cmd = _current->id + " selectall"; }
 				else if (key == 'c'){ cmd = _current->id + " copy"; }
-				// else if (key == 'd'){ this->touchDoubleTap(1, 1, 0); }
 				else if (key == 'e'){ cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1"); }
 				else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
 				else if (key == 'p'){ cmd = _current->id + " paste"; }
@@ -563,17 +536,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				PdGui::instance().pdsend(temp);
 					cmd = _current->id + " gridactive " + (_current->gridMode ? "0" : "1");
 				}
-				// else if (aAppEvent.message == "settings-button"){
-				// }
-				// else if (aAppEvent.message == "trash-button"){
-					// Globals::Pd.canvasDelete();
-				// }
-				// else if (aAppEvent.message == "copy-button"){
-					// Globals::Pd.canvasCopy();
-				// }
-				// else if (aAppEvent.message == "paste-button"){
-					// Globals::Pd.canvasPaste();
-				// }
 				else if (aAppEvent.message == "copy-button"){
 					cmd = _current->id + " copy";
 				}
@@ -594,9 +556,6 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 			break;
 	}
 
-	// if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED){
-
-	// }
 	// else if(aAppEvent.type == AppEvent::TYPE_CREATE_OBJECT){
 
 		// PdNode node;

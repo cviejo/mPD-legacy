@@ -2,10 +2,14 @@
 #include "PdGui.h"
 #include "MainWindow.h"
 #include "json.h"
+#include "ofxSvg.h"
 
 
 bool computing = true;
 
+ofxSVG svg;
+float step;
+vector<ofPolyline> outlines;
 
 //--------------------------------------------------------------
 void App::setup(){
@@ -23,11 +27,9 @@ void App::setup(){
 	this->initAudio();
 	this->initEventListeners();
 
-
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("main.pd"));
-	PdGui::instance().openPatch(ofToDataPath("gatom-help.pd"));
-
+	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
+	PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
 }
