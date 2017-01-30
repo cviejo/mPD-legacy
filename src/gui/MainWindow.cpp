@@ -16,17 +16,11 @@ MainWindow::MainWindow(){
 	this->setPosition(0, 0);
 	this->setSize(ofGetWidth(), ofGetHeight());
 
-	// int collapsedWidth = (int)(dpi / 100.0f * 5.0f);
-	// Button dummy;
 
-	// int btnSize = dummy.width;
-
-	// int collapsedWidth = 10;
-
-	Button*     btn;
+	Button* btn;
 
 
-	// top-bar
+	//-------top-bar-------
 	GuiElement* topBar = new GuiElement("bar");
 	topBar->setPosition(0, 0);
 
@@ -39,10 +33,10 @@ MainWindow::MainWindow(){
 	topBar->addChild(btn);
 
 	this->addChild(topBar);
-	// top-bar
+	//-------top-bar-------
 
 
-	// bottom-bar
+	//-------bottom-bar-------
 	GuiElement* bottomBar = new GuiElement("bar");
 
 	btn = new Button("edit", Button::TYPE_TOGGLE);
@@ -55,10 +49,10 @@ MainWindow::MainWindow(){
 
 	bottomBar->setPosition(0, ofGetHeight() - bottomBar->height);
 	this->addChild(bottomBar);
-	// bottom-bar
+	//-------bottom-bar-------
 
 
-	// menu-tab
+	//------- menu-tab-------
 	SideTab* leftTab = new SideTab(SideTab::DOCK_SIDE_LEFT);
 	leftTab->id = "menu-tab";
 	leftTab->setPosition(0, topBar->getBottom());
@@ -78,15 +72,21 @@ MainWindow::MainWindow(){
 	leftTab->addChild(btn);
 
 	this->children.insert(this->children.begin(), leftTab);
-	// menu-tab
+	//------- menu-tab-------
 
 
-	// object-tab
+	//------- object-tab-------
 	SideTab* rightTab = new SideTab(SideTab::DOCK_SIDE_RIGHT);
 	rightTab->id = "object-tab";
 	rightTab->setHeight(leftTab->height);
 
+	GuiElement* dummy = new GuiElement();
+	dummy->backgroundColor.set(0, 0);
+	dummy->setSize(leftTab->width * 3, leftTab->height);
+	rightTab->addChild(dummy);
+
 	IndexScroller* index = new IndexScroller();
+	index->x = rightTab->width;
 	index->setHeight(rightTab->height);
 
 	vector<string> items = { "+-", "UI", "AB" };
@@ -100,14 +100,15 @@ MainWindow::MainWindow(){
 	rightTab->expandedX = ofGetWidth() - rightTab->width;
 
 	this->children.insert(this->children.begin(), rightTab);
-	// object-tab
+	//------- object-tab-------
 
 
-	// canvas
+	//-------canvas-------
 	Canvas* cnv = new Canvas(ofGetWidth(), ofGetHeight());
 	cnv->setPosition(leftTab->collapsedX + leftTab->width, topBar->getBottom());
 	this->children.insert(this->children.begin(), cnv);
-	// canvas
+	//-------canvas-------
+
 
 	cnv->set(PdGui::instance().getCanvases()[0]);
 }
