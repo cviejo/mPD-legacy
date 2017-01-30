@@ -2,14 +2,12 @@
 #include "PdGui.h"
 #include "MainWindow.h"
 #include "json.h"
-#include "ofxSvg.h"
+#include "Svg.h"
 
 
 bool computing = true;
 
-ofxSVG svg;
-float step;
-vector<ofPolyline> outlines;
+Svg svg;
 
 //--------------------------------------------------------------
 void App::setup(){
