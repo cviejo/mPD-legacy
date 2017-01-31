@@ -26,8 +26,8 @@ void App::setup(){
 	this->initEventListeners();
 
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
-	PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
+	PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
 }
