@@ -10,7 +10,7 @@
 #include "m_imp.h"
 #include "g_all_guis.h"
 #include "s_stuff.h"
-
+#include "Svg.h"
 
 //--------------------------------------------------------------
 extern "C" {
@@ -383,6 +383,11 @@ void PdGui::guiMessage(string aMsg){
 				node = new PdIemGui(guiMsg.nodeId);
 				node->borderColor = 0;
 			}
+			else if (type == "graph"){
+				node = new PdCanvas(guiMsg.nodeId);
+				node->borderColor = 204;
+				ofLogVerbose() << "graphId " << guiMsg.nodeId;
+			}
 			else {
 				node = new PdNode(guiMsg.nodeId);
 				node->borderColor = 204;
@@ -487,6 +492,16 @@ void PdGui::guiMessage(string aMsg){
 
 			node->label = new PdNode();
 			node->text  = this->unquote(guiMsg.args[5]);
+			node->textPosition.set(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
+			node->label->backColor = guiMsg.color;
+		}
+	}
+	else if (guiMsg.command == "gui_graph_label"){
+		// gui_graph_label "x24ba490",".x24ba490.t24b93b0",0,10,"array2","DejaVu Sans Mono",5,"normal",0
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+
+			node->label = new PdNode();
+			node->text  = this->unquote(guiMsg.args[4]);
 			node->textPosition.set(ofToInt(guiMsg.args[2]), ofToInt(guiMsg.args[3]));
 			node->label->backColor = guiMsg.color;
 		}
@@ -673,12 +688,99 @@ void PdGui::guiMessage(string aMsg){
 			_classNames.push_back(className);
 		}
 	}
+	else if (guiMsg.command == "gui_scalar_new"){
+		// gui_scalar_new "x24ba490","scalar24ddd18",0,33.3333,0,0,-70,737,240,0
+
+		PdScalar* node   = (PdScalar*)this->getNode(guiMsg.canvasId, guiMsg.nodeId);
+		PdCanvas* canvas = (PdCanvas*)this->getCanvas(guiMsg.canvasId);
+
+		if (canvas == NULL){ return; }
+
+		if (node == NULL){
+			node = new PdScalar(guiMsg.nodeId);
+			canvas->nodes.push_back(node);
+		}
+
+		node->setPosition(ofToInt(guiMsg.args[7]), ofToInt(guiMsg.args[8]));
+		node->scale.set(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[6]));
+
+	}
+	else if (guiMsg.command == "gui_scalar_draw_group"){
+		// gui_scalar_draw_group "x24ba490","dgroup24921f0.24ddd18","scalar24ddd18gobj"
+		
+		string scalarId = this->unquote(guiMsg.args[2]);
+
+		ofStringReplace(scalarId, "gobj", "");
+
+		PdCanvas* canvas = (PdCanvas*)this->getCanvas(guiMsg.canvasId);
+		PdScalar* scalar = (PdScalar*)this->getNode(guiMsg.canvasId, scalarId);
+		PdPath*   path   = (PdPath*)this->getNode(guiMsg.canvasId, guiMsg.nodeId);
+
+		if (path != NULL || scalar == NULL || canvas == NULL){ return; }
+
+		path = new PdPath(guiMsg.nodeId);
+
+		canvas->nodes.push_back(path);
+		scalar->paths.push_back(path);
+	}
+	else if (guiMsg.command == "gui_plot_vis"){
+
+		// TODO: do proper parsing here
+
+		auto pathId = ofSplitString(ofSplitString(aMsg, "[")[3], "\",")[0];
+
+		ofStringReplace(pathId, "\"", "");
+
+		if (auto node = (PdPath*)this->getNode(guiMsg.canvasId, pathId)){
+
+			auto canvas      = (PdCanvas*)this->getCanvas(guiMsg.canvasId);
+			auto data        = ofSplitString(ofSplitString(aMsg, "[")[1], "]")[0];
+			auto formatParts = ofSplitString(ofSplitString(ofSplitString(aMsg, "[")[2], "]")[0], ",");
+
+			string format = "";
+
+			for (int i = 0; i < formatParts.size() - 1; i+=2){
+				if (formatParts[i] != "\"stroke-width\""){
+					format += this->unquote(formatParts[i]) + "=" + formatParts[i+1];
+				}
+				format += " ";
+			}
+
+			format += "stroke-width=\"1\"";
+
+			ofStringReplace(data, "\",", "");
+			ofStringReplace(data, ",\"", "");
+			ofStringReplace(data, "\"",  "");
+
+			node->svg.loadData(format, data);
+		}
+	}
 	else {
 
+		// ofLogVerbose() << aMsg;
 		// ofLogVerbose() << guiMsg.command;
 		// ofLogVerbose() << "todo:";
 	}
 
-	ofLogVerbose() << aMsg;
+	// ofLogVerbose() << aMsg;
 }
 
+/*
+        gui_vmess("gui_scalar_new", "xsiffffiii",
+            glist_getcanvas(owner), 
+            tagbuf,
+            glist_isselected(owner, &x->sc_gobj),
+            xscale, 0.0, 0.0, yscale,
+            (int)glist_xtopixels(owner, basex),
+            (int)glist_ytopixels(owner, basey),
+            glist_istoplevel(owner));
+ 
+[verbose] gui_gobj_new "x24ba490",".x24ba490.t24b93b0","graph",737,170,1
+[verbose] gui_text_draw_border "x24ba490",".x24ba490.t24b93b0","none",0,737,170,937,310
+[verbose] gui_graph_label "x24ba490",".x24ba490.t24b93b0",0,10,"array2","DejaVu Sans Mono",5,"normal",0
+[verbose] gui_scalar_new "x24ba490","scalar24ddd18",0,33.3333,0,0,-70,737,240,0
+[verbose] gui_scalar_draw_group "x24ba490","dgroup24921f0.24ddd18","scalar24ddd18gobj"
+[verbose] gui_plot_vis "x24ba490",0,6,["M",0,-0.342859,"H",1,"V",-0.37143,"H",0,"z","M",1,0.185715,"H",2,"V",0.157144,"H",1,"z","M",2,0.285716,"H",3,"V",0.257145,"H",2,"z","M",3,0.342859,"H",4,"V",0.314288,"H",3,"z","M",4,0.671433,"H",5,"V",0.642862,"H",4,"z","M",5,-0.800005,"H",6,"V",-0.828576,"H",5,"z"],["fill","black","stroke","black","stroke-width",0],["dgroup24921f0.24ddd18","dgroup24921f0.24ddd18"]
+[verbose] gui_find_lowest_and_arrange "x24ba490",".x24ba490.t24b97c0",".x24ba490.x24dc190.template24ddd18"
+
+*/

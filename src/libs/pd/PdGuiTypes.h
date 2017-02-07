@@ -4,6 +4,7 @@
 
 #include "ofMain.h"
 #include "PdTypes.hpp"
+#include "Svg.h"
 
 
 using namespace pd;
@@ -115,6 +116,34 @@ class PdCanvas : public PdNode {
 
 		PdCanvas(string aId) : PdNode(aId) {
 			this->viewPort.setSize(ofGetWidth(), ofGetHeight());
+		}
+};
+
+
+//--------------------------------------------------------------
+class PdPath : public PdNode {
+
+	public:
+
+		string data;
+		Svg    svg;
+
+		PdPath(string aId) : PdNode(aId) {
+			this->type = "path";
+		}
+};
+
+
+//--------------------------------------------------------------
+class PdScalar : public PdNode {
+
+	public:
+
+		vector<PdPath*> paths;
+		ofPoint         scale;
+
+		PdScalar(string aId) : PdNode(aId) {
+			this->type = "scalar";
 		}
 };
 // MODE_DRAG, kinda wrong here

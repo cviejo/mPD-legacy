@@ -2,24 +2,21 @@
 #include "PdGui.h"
 #include "MainWindow.h"
 #include "json.h"
-#include "ofxSvg.h"
+#include "Svg.h"
 
 
 bool computing = true;
 
-ofxSVG svg;
-float step;
-vector<ofPolyline> outlines;
 
 //--------------------------------------------------------------
 void App::setup(){
 
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
-	ofBackground(255);
+	ofBackground(125);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
-	ofSetWindowPosition(152,1094);
+	// ofSetWindowPosition(352,1094);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -29,7 +26,7 @@ void App::setup(){
 
 	// debugging
 	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
-	PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
 }
