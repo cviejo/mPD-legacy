@@ -84,6 +84,7 @@ void Canvas::initGrid(){
 
 //--------------------------------------------------------------
 void Canvas::set(PdCanvas* aCanvas){
+
 	_current = aCanvas;
 }
 
@@ -138,7 +139,19 @@ void Canvas::drawNodes(){
 			this->drawNodeBackground(node);
 			this->drawNodeText(node);
 
-			if (node->type == "iemgui"){
+			if (node->type == "scalar"){
+
+				PdScalar* scalar = (PdScalar*)node;
+
+				ofPushMatrix();
+				ofTranslate(scalar->getPosition());
+				ofScale(scalar->scale.x, scalar->scale.y);
+				for (auto& path : scalar->paths){
+					path->svg.draw();
+				}
+				ofPopMatrix();
+			}
+			else if (node->type == "iemgui"){
 
 				PdIemGui* guiNode = (PdIemGui*)node;
 

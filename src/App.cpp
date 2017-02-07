@@ -7,17 +7,16 @@
 
 bool computing = true;
 
-Svg svg;
 
 //--------------------------------------------------------------
 void App::setup(){
 
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
-	ofBackground(255);
+	ofBackground(125);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(21);
-	ofSetWindowPosition(152,1094);
+	// ofSetWindowPosition(352,1094);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -26,7 +25,7 @@ void App::setup(){
 	this->initEventListeners();
 
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
+	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
 	// PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
