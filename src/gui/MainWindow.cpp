@@ -102,7 +102,7 @@ MainWindow::MainWindow(){
 	rightTab->addChild(scroller);
 	rightTab->addChild(index);
 	rightTab->setPosition(ofGetWidth() - rightTab->width, topBar->getBottom());
-	rightTab->expandedX = ofGetWidth() - rightTab->width;
+	rightTab->expandedX = ofGetWidth() - rightTab->width + 1;
 
 	this->children.insert(this->children.begin(), rightTab);
 	//------- object-tab-------

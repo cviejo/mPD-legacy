@@ -20,9 +20,15 @@
 		"frontColor"      : "#737373",
 		"backgroundColor" : "#1E1E21"
 	},
-	"object-scroller": {
-		"width"   : 55,
-		"margin"  : 7,
-		"padding" : 15
+	"list-scroller": {
+		"width"   : 75,
+		"padding" : 2,
+		"font-height" : 15
+	},
+	"list-scroller-header": {
+		"height"  : 20
+	},
+	"list-scroller-item": {
+		"height"  : 30
 	}
 }
