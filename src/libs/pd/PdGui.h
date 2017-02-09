@@ -35,6 +35,7 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		vector<PdCanvas*> getCanvases();
 		PdCanvas*         getCanvas(string aId);
 		PdNode*           getNode(string aCanvasId, string aNodeId);
+		vector<string>    getNodeNames();
 
 		virtual void      audioIn (float * input,  int bufferSize, int channelCount);
 		virtual void      audioOut(float * output, int bufferSize, int channelCount);

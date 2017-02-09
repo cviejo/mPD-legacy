@@ -4,6 +4,7 @@
 #include "SideTab.h"
 #include "Button.h"
 #include "IndexScroller.h"
+#include "ListScroller.h"
 // #include "Bar.h"
 
 
@@ -80,21 +81,25 @@ MainWindow::MainWindow(){
 	rightTab->id = "object-tab";
 	rightTab->setHeight(leftTab->height);
 
-	GuiElement* dummy = new GuiElement();
-	dummy->backgroundColor.set(0, 0);
-	dummy->setSize(leftTab->width * 3, leftTab->height);
-	rightTab->addChild(dummy);
+	vector<string> sections = { "+-", "UI", "AB" };
+	for (char letter = 'Z'; letter >= 'A'; --letter){
+		sections.insert(sections.begin() + 1, string(1, letter));
+	}
+
+	ListScroller* scroller = new ListScroller();
+	scroller->setPosition(0, 0);
+	scroller->setHeight(leftTab->height);
+	scroller->backgroundColor.set(130);
+	scroller->setContent(sections, true);
+	scroller->setContent(PdGui::instance().getNodeNames(), false);
 
 	IndexScroller* index = new IndexScroller();
 	index->x = rightTab->width;
+	index->setPosition(scroller->width, 0);
 	index->setHeight(rightTab->height);
+	index->setContent(sections);
 
-	vector<string> items = { "+-", "UI", "AB" };
-	for (char letter = 'Z'; letter >= 'A'; --letter){
-		items.insert(items.begin() + 1, string(1, letter));
-	}
-
-	index->setContent(items);
+	rightTab->addChild(scroller);
 	rightTab->addChild(index);
 	rightTab->setPosition(ofGetWidth() - rightTab->width, topBar->getBottom());
 	rightTab->expandedX = ofGetWidth() - rightTab->width;

@@ -228,6 +228,10 @@ PdNode* PdGui::getNode(string aCanvasId, string aNodeId){
 
 
 //--------------------------------------------------------------
+vector<string> PdGui::getNodeNames(){ return _classNames; }
+
+
+//--------------------------------------------------------------
 void PdGui::canvasPressed(PdCanvas* canvas, int x, int y){ canvas_mousedown((t_canvas*)pd_getcanvaslist(), x, y, 0, 0); }
 
 

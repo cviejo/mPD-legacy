@@ -96,7 +96,7 @@ void SideTab::onAppEvent(AppEvent& aAppEvent){
 //--------------------------------------------------------------
 void SideTab::clip(){
 
-	if(this->side == DOCK_SIDE_RIGHT){
+	if (this->side == DOCK_SIDE_RIGHT){
 		
 		if(this->x >= this->collapsedX){ 
 			this->x = this->collapsedX;
@@ -105,7 +105,7 @@ void SideTab::clip(){
 			this->x = this->expandedX;
 		}
 	}
-	else{
+	else {
 
 		if(this->x <= this->collapsedX){
 			this->x = this->collapsedX;

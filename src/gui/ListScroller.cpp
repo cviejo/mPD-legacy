@@ -8,8 +8,110 @@ using std::sort;
 
 
 //--------------------------------------------------------------
-ListScroller::ListScroller(){
+ListScroller::ListScroller() : GuiElement("list-scroller"){
 
+	int fontHeight = Theme.getScaledValue(this->type, "font-height");
+
+	_font.load("fonts/DejaVuSansMono.ttf", fontHeight / 2, true, true);
+	_font.setLineHeight(fontHeight);
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::draw(){
+
+	int fontHeight = Theme.getScaledValue(this->type, "font-height");
+	int padding = Theme.getScaledValue(this->type, "padding");
+
+	ofPushMatrix();
+
+	ofTranslate(this->x, this->y);
+
+	for (auto& item : this->children){
+
+		if (item->visible){
+
+			item->drawBackground();
+
+			ofSetColor(200);
+
+			_font.drawString(item->text, item->x + padding * 2, item->getBottom() - (item->height - fontHeight) / 2);
+		}
+	}
+
+	ofPopMatrix();
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::update(){
+
+	int padding = Theme.getScaledValue(this->type, "padding");
+
+	sort(this->children.begin(), this->children.end(), ListScroller::itemSort);
+
+	int _contentHeight = 0;
+
+	for (auto& item : this->children){
+
+		item->setPosition(padding, _contentHeight);
+		// item->y      = _contentHeight;
+		// item->width  = 30;//this->width; // anything bigger than 0, really
+		// item->height = item->isHeader ? Globals::Theme.objectScroller.header.height :
+												  // Globals::Theme.objectScroller.item.height;
+
+		// item->contentY = item->y + item->height / 2 + _font.lineHeight / 2;
+
+		_contentHeight += padding + item->height;
+	}
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::setContent(vector<string> aItems, bool aHeaderItems){
+
+	int    fontHeight = Theme.getScaledValue(this->type, "font-height");
+	int    padding    = Theme.getScaledValue(this->type, "padding");
+	string itemType   = aHeaderItems ? "list-scroller-header" : "list-scroller-item";
+
+	for (auto item : aItems){
+
+		GuiElement* scrollerItem = new GuiElement(itemType);
+
+		scrollerItem->text = item;
+		scrollerItem->setWidth(this->width - padding * 2);
+
+		this->children.push_back(scrollerItem);
+	}
+
+	this->update();
+}
+
+
+//--------------------------------------------------------------
+bool ListScroller::itemSort(const GuiElement* a, const GuiElement* b){
+
+	if (a->text == "+-"){ return 1; }
+	if (b->text == "+-"){ return 0; }
+	if (a->text == "|") { return 1; }
+	if (b->text == "|") { return 0; }
+	if (a->text == "||"){ return 1; }
+	if (b->text == "||"){ return 0; }
+
+	return ofToUpper(a->text) < ofToUpper(b->text);
+	// return 1;
+}
+
+
+
+/*
+
+
+//--------------------------------------------------------------
+ListScroller::ListScroller() : GuiElement("list-scroller"){
+
+	_font.load("fonts/DejaVuSansMono.ttf", 10, true, true);
+	_font.setLineHeight(10);
 	// _font.load(Globals::DPI * .07f);
 
 	// this->width  = Globals::Theme.objectScroller.width;
@@ -117,7 +219,7 @@ void ListScroller::onDragged  (int aX, int aY, int aId){
 
 	// object created
 	
-	// if(aX < this->x){
+	// if (aX < this->x){
 
 		// if(!_dragging && this->selection){
 			// _dragging = true;
@@ -199,9 +301,14 @@ void ListScroller::onAppEvent(AppEvent& aAppEvent){
 
 //---------------------------PUBLIC---------------------------//
 //--------------------------------------------------------------
+void ListScroller::setHeaders(vector<string> aItems){
+}
+
+
+//--------------------------------------------------------------
 void ListScroller::setContent(vector<string> aItems){
 
-	// this->clear();
+	this->clear();
 
 	// string headers[] = {
 		// "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
@@ -237,7 +344,7 @@ void ListScroller::setContent(vector<string> aItems){
 	// this->header = _content.front();
 }
 
-//--------------------------PRIVATE---------------------------//
+
 //--------------------------------------------------------------
 void ListScroller::setHeader(){
 
@@ -285,22 +392,22 @@ bool ListScroller::itemAllowed(string aItemName){
 		"text tolist", "text fromlist", "text set", "text search"
 	};
 
-	bool duplicate = false;
-
 	for (auto elem : this->children){
 
 		if (elem->id == aItemName){
-			duplicate = true;
+			return false;
 		}
 	}
 
-	return !ofContains(invalid, aItemName) && !duplicate;
+	return !ofContains(invalid, aItemName);
 }
 
 
 //--------------------------------------------------------------
-// bool ListScroller::compareItems(const ScrollerItem* a, const ScrollerItem* b){
+bool ListScroller::compareItems(const GuiElement* a, const GuiElement* b){
 
 	// return ofToUpper(a->content) < ofToUpper(b->content);
-// }
+	return 1;
+}
 
+*/
