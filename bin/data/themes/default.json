@@ -23,12 +23,14 @@
 	"list-scroller": {
 		"width"   : 75,
 		"padding" : 2,
-		"font-height" : 15
+		"font-height" : 8
 	},
 	"list-scroller-header": {
-		"height"  : 20
+		"height"     : 18,
+		"frontColor" : "#737373"
 	},
 	"list-scroller-item": {
-		"height"  : 30
+		"height"     : 30,
+		"frontColor" : "#737373"
 	}
 }

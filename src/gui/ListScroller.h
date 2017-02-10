@@ -12,26 +12,26 @@ class ListScroller : public GuiElement {
 
 		ListScroller();
 
-		virtual void draw();
-		virtual void update();
-		virtual void onPressed(int aX, int aY, int aId);
-		virtual void onDragged(int aX, int aY, int aId);
-		virtual void onReleased(int aX, int aY, int aId);
+		virtual void   draw();
+		virtual void   update();
+		virtual void   onPressed(int aX, int aY, int aId);
+		virtual void   onDragged(int aX, int aY, int aId);
+		virtual void   onReleased(int aX, int aY, int aId);
 
-		void setContent(vector<string> aItems, bool aHeaderItems);
+		void           setContent(vector<string> aItems, bool aHeaderItems);
 
 
 	private:
 
-		static bool itemSort(const GuiElement* a, const GuiElement* b);
+		static bool    itemSort(const GuiElement* a, const GuiElement* b);
 
-		int                _draggedY      = 0;
-		int                _offsetY       = 0;
-		int                _contentHeight = 0;
-		ofTrueTypeFont     _font;
-		int                _fontHeight;
+		int            _draggedY      = 0;
+		int            _offsetY       = 0;
+		int            _contentHeight = 0;
+		ofTrueTypeFont _font;
+		int            _fontHeight;
 
-		void               clip();
+		void           clip();
 };
 
 
