@@ -81,7 +81,8 @@ MainWindow::MainWindow(){
 	rightTab->id = "object-tab";
 	rightTab->setHeight(leftTab->height);
 
-	vector<string> sections = { "+-", "UI", "AB" };
+	// vector<string> sections = { "+-", "UI", "AB" };
+	vector<string> sections = { "+-" };
 	for (char letter = 'Z'; letter >= 'A'; --letter){
 		sections.insert(sections.begin() + 1, string(1, letter));
 	}

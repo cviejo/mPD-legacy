@@ -25,7 +25,7 @@ void ListScroller::draw(){
 
 	ofPushMatrix();
 
-	ofTranslate(this->x, this->y);
+	ofTranslate(this->x, this->y - _offsetY - _draggedY);
 
 	for (auto& item : this->children){
 
@@ -42,6 +42,31 @@ void ListScroller::draw(){
 	ofPopMatrix();
 }
 
+//--------------------------------------------------------------
+void ListScroller::onPressed(int aX, int aY, int aId){
+
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::onDragged(int aX, int aY, int aId){
+
+	if (aX > this->x){
+		_draggedY = this->pressedPosition.y - aY;
+	}
+
+	this->clip();
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::onReleased(int aX, int aY, int aId){
+
+	_offsetY += _draggedY;
+
+	_draggedY = 0;
+}
+
 
 //--------------------------------------------------------------
 void ListScroller::update(){
@@ -50,7 +75,7 @@ void ListScroller::update(){
 
 	sort(this->children.begin(), this->children.end(), ListScroller::itemSort);
 
-	int _contentHeight = 0;
+	_contentHeight = 0;
 
 	for (auto& item : this->children){
 
@@ -76,10 +101,13 @@ void ListScroller::setContent(vector<string> aItems, bool aHeaderItems){
 
 	for (auto item : aItems){
 
+		if (this->children.size() > 30){ continue; }
+
 		GuiElement* scrollerItem = new GuiElement(itemType);
 
 		scrollerItem->text = item;
 		scrollerItem->setWidth(this->width - padding * 2);
+		scrollerItem->clickable = false;
 
 		this->children.push_back(scrollerItem);
 	}
@@ -102,6 +130,19 @@ bool ListScroller::itemSort(const GuiElement* a, const GuiElement* b){
 	// return 1;
 }
 
+
+//--------------------------------------------------------------
+void ListScroller::clip(){
+
+	int offset = _offsetY + _draggedY;
+
+	if (offset < 0){
+		_draggedY = -_offsetY;
+	}
+	else if (offset >= _contentHeight - this->height){
+		_draggedY = _contentHeight - this->height - _offsetY;
+	}
+}
 
 
 /*

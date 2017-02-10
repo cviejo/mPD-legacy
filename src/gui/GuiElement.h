@@ -21,7 +21,8 @@ class GuiElement : public ofRectangle {
 		bool                visible   = true;
 		bool                clickable = true;
 		bool                pressed   = false;
-		ofPoint             pressedPoint;
+		ofPoint             pressedPosition;
+		ofPoint             draggedPosition;
 		ofPoint             textPosition;
 		vector<GuiElement*> children;
 		ofColor             frontColor;
