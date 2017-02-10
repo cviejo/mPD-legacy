@@ -107,7 +107,7 @@ bool GuiElement::touchDown(ofPoint aLoc){
 	if (!this->touchTest(aLoc)){ return false; }
 
 	this->pressed = true;
-	this->pressedPoint.set(aLoc);
+	this->pressedPosition.set(aLoc);
 
 	// for (auto i = this->children.rbegin(); i != this->children.rend(); ++i){
 	for (auto& child : reverse(this->children)){

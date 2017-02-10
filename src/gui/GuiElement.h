@@ -17,10 +17,13 @@ class GuiElement : public ofRectangle {
 
 		string              id        = "";
 		string              type      = "";
+		string              text      = "";
 		bool                visible   = true;
 		bool                clickable = true;
 		bool                pressed   = false;
-		ofPoint             pressedPoint;
+		ofPoint             pressedPosition;
+		// ofPoint             draggedPosition;
+		ofPoint             textPosition;
 		vector<GuiElement*> children;
 		ofColor             frontColor;
 		ofColor             backgroundColor;

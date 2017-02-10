@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 #include "GuiElement.h"
-// #include "ScrollerItem.h"
-// #include "../util/Font.h"
 #include "AppEvent.h"
 
 
@@ -12,6 +10,46 @@ class ListScroller : public GuiElement {
 
 	public:
 
+		ListScroller();
+
+		virtual void   draw();
+		virtual void   update();
+		virtual void   onPressed(int aX, int aY, int aId);
+		virtual void   onDragged(int aX, int aY, int aId);
+		virtual void   onReleased(int aX, int aY, int aId);
+
+		void           setContent(vector<string> aItems, bool aHeaderItems);
+
+
+	private:
+
+		static bool    itemSort(const GuiElement* a, const GuiElement* b);
+
+		int            _draggedY      = 0;
+		int            _offsetY       = 0;
+		int            _contentHeight = 0;
+		ofTrueTypeFont _font;
+		int            _fontHeight;
+
+		void           clip();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 		// ScrollerItem* header    = NULL;
 		// ScrollerItem* selection = NULL;
 
@@ -24,7 +62,8 @@ class ListScroller : public GuiElement {
 		virtual void onAppEvent(AppEvent& aAppEvent);
 
 		void setContent(vector<string> aItems);
-		void clear();
+		void setHeaders(vector<string> aItems);
+
 
 	private:
 
@@ -34,16 +73,16 @@ class ListScroller : public GuiElement {
 		float _scrollValue   = 0;
 		int   _contentHeight = 0;
 
-		// mFont                  _font;
+		ofTrueTypeFont     _font;
 		// vector<ScrollerItem*> _content;
 		ofPoint               _draggedLoc;
 
-		// static bool compareItems(const ScrollerItem* a, const ScrollerItem* b);
+		static bool compareItems(const GuiElement* a, const GuiElement* b);
 
 		void setHeader();
 		void positionContent();
 		void drawItems();
 		void drawDraggedItem();
 		bool itemAllowed(string aItemName);
-};
 
+*/
