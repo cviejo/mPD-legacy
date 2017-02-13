@@ -53,6 +53,7 @@ void SideTab::updateState(){
 			break;
 
 		case STATE_COLLAPSING:
+			_updateNeeded = true;
 			this->x += _animationSpeed;
 			this->clip();
 
@@ -64,6 +65,7 @@ void SideTab::updateState(){
 			break;
 
 		case STATE_EXPANDING:
+			_updateNeeded = true;
 			this->x -= _animationSpeed;
 			this->clip();
 
@@ -86,6 +88,8 @@ void SideTab::updateState(){
 
 //--------------------------------------------------------------
 void SideTab::onAppEvent(AppEvent& aAppEvent){
+
+	_updateNeeded = true;
 
 	if (aAppEvent.type == AppEvent::TYPE_BUTTON_PRESSED && ofIsStringInString(aAppEvent.message, this->id)) {
 		this->state = aAppEvent.value ? STATE_EXPANDING : STATE_COLLAPSING;

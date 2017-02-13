@@ -40,11 +40,16 @@ void ListScroller::draw(){
 
 
 //--------------------------------------------------------------
-void ListScroller::onPressed(int aX, int aY, int aId){ }
+void ListScroller::onPressed(int aX, int aY, int aId){ 
+
+	_updateNeeded = true;
+}
 
 
 //--------------------------------------------------------------
 void ListScroller::onDragged(int aX, int aY, int aId){
+
+	_updateNeeded = true;
 
 	if (aX > this->x){
 		_draggedY = this->pressedPosition.y - aY;
@@ -59,6 +64,8 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void ListScroller::onReleased(int aX, int aY, int aId){
+
+	_updateNeeded = true;
 
 	_offsetY += _draggedY;
 
@@ -89,18 +96,16 @@ void ListScroller::update(){
 //--------------------------------------------------------------
 void ListScroller::setContent(vector<string> aItems, bool aHeaderItems){
 
-	auto   fontHeight = Theme.getScaledValue(this->type, "font-height");
-	auto   padding    = Theme.getScaledValue(this->type, "padding");
-	string itemType   = aHeaderItems ? "list-scroller-header" : "list-scroller-item";
+	auto fontHeight = Theme.getScaledValue(this->type, "font-height");
+	auto padding    = Theme.getScaledValue(this->type, "padding");
+	auto itemType   = aHeaderItems ? "list-scroller-header" : "list-scroller-item";
 
 	for (auto item : aItems){
-
-		if (this->children.size() > 35){ continue; }
 
 		GuiElement* scrollerItem = new GuiElement(itemType);
 
 		scrollerItem->text = item;
-		scrollerItem->setWidth(this->width - padding * 2);
+		scrollerItem->setWidth(this->width - padding);
 		scrollerItem->clickable = false;
 
 		this->children.push_back(scrollerItem);

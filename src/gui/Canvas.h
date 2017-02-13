@@ -19,6 +19,7 @@ class Canvas : public GuiElement {
 		Canvas(int aWidth, int aHeight);
 
 		virtual void draw();
+		virtual bool updateNeeded();
 		virtual void onPressed    (int aX, int aY, int aId);
 		virtual void onDragged    (int aX, int aY, int aId);
 		virtual void onReleased   (int aX, int aY, int aId);

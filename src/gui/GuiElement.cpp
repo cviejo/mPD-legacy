@@ -2,7 +2,6 @@
 #include "ReverseIterator.h"
 
 
-
 JsonTheme GuiElement::Theme;
 
 
@@ -43,6 +42,24 @@ void GuiElement::draw(){
 	this->drawBackground();
 
 	this->drawChildren();
+}
+
+
+//--------------------------------------------------------------
+bool GuiElement::updateNeeded(){
+
+	for (auto& child : this->children){
+
+		if (child->updateNeeded()){
+			return true;
+		}
+	}
+
+	auto tmp = _updateNeeded;
+
+	_updateNeeded = false;
+
+	return tmp;
 }
 
 
@@ -168,6 +185,36 @@ bool GuiElement::touchTest(ofPoint aLoc){
 
 	return this->visible && this->clickable && this->inside(aLoc);
 }
+
+
+// //--------------------------------------------------------------
+// void GuiElement::freeze(){
+
+	// if (this->fbo.isAllocated()){
+
+		// this->fbo.clear();
+	// }
+	// else {
+
+		// this->fbo.allocate(this->width, this->height, GL_RGBA);
+		// this->fbo.begin();
+
+		// ofEnableAlphaBlending();
+		// ofEnableSmoothing();
+
+		// ofPushMatrix();
+
+		// ofTranslate(-this->x, -this->y);
+
+		// this->draw();
+
+		// ofPopMatrix();
+		// ofDisableAlphaBlending();
+
+		// this->fbo.end();
+	// }
+// }
+
 
 
 //--------------------------------------------------------------

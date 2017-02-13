@@ -8,15 +8,19 @@
 bool computing = true;
 
 
+ofFbo frame;
+
+
 //--------------------------------------------------------------
 void App::setup(){
 
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	frame.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
-	ofBackground(125);
+	// ofSetBackgroundAuto(false);
+	ofSetWindowShape(ofGetWidth(), ofGetHeight());
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	ofSetFrameRate(21);
-	// ofSetWindowPosition(352,1094);
+	ofSetFrameRate(20);
+	// ofBackground(125);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -84,23 +88,39 @@ void App::initEventListeners(){
 //--------------------------------------------------------------
 void App::draw(){
 
-	// if (Globals::AppState == APP_STATE_START){ return; }
+	auto updated = false;
 
-	ofEnableAlphaBlending();
+	// if (PdGui::instance().updateNeeded){
+	if (_mainWindow->updateNeeded()){
 
-	_mainWindow->draw();
+		updated = true;
 
-	ofDisableAlphaBlending();
+		ofLogVerbose() << "update needed";
 
-	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
-	// ofDrawBitmapString("y:   " + ofToString(ofGetWindowPositionY()), 30, 50);
+		frame.begin();
+
+		ofEnableAlphaBlending();
+
+		_mainWindow->draw();
+
+		ofDisableAlphaBlending();
+
+		frame.end();
+	}
+
+	ofSetColor(255, 255, 255, 255);
+
+	frame.draw(0, 0);
+
+	if (updated){
+		ofSetColor(255, 0, 0);
+		ofDrawBitmapString(ofToString(ofGetElapsedTimeMillis()), 100, 100);
+	}
 }
 
 
 //--------------------------------------------------------------
 void App::keyPressed(int key){
-
-	// ofLogVerbose() << key;
 
 	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 

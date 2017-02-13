@@ -17,7 +17,7 @@
 		"width"           : 16,
 		"factiveColor"    : "#828282",
 		"activeColor"     : "#FF22FF",
-		"frontColor"      : "#737373",
+		"frontColor"      : "#FFFFFF",
 		"backgroundColor" : "#1E1E21"
 	},
 	"list-scroller": {
@@ -26,11 +26,12 @@
 		"font-height" : 8
 	},
 	"list-scroller-header": {
-		"height"     : 18,
-		"frontColor" : "#737373"
+		"height"          : 18,
+		"frontColor"      : "#FFFFFF",
+		"backgroundColor" : "#36373A"
 	},
 	"list-scroller-item": {
 		"height"     : 30,
-		"frontColor" : "#737373"
+		"frontColor" : "#FFFFFF"
 	}
 }

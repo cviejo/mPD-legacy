@@ -91,6 +91,17 @@ void Canvas::set(PdCanvas* aCanvas){
 
 //---------------------------VIRTUAL--------------------------//
 //--------------------------------------------------------------
+bool Canvas::updateNeeded(){
+
+	auto tmp = PdGui::instance().updateNeeded || _updateNeeded;
+
+	PdGui::instance().updateNeeded = _updateNeeded = false;
+
+	return tmp;
+}
+
+
+//--------------------------------------------------------------
 void Canvas::draw(){
 
 	if (!_current){ return; }
@@ -144,7 +155,7 @@ void Canvas::drawNodes(){
 				PdScalar* scalar = (PdScalar*)node;
 
 				ofPushMatrix();
-				ofTranslate(scalar->getPosition());
+				ofTranslate(scalar->getPosition().x + 1, scalar->getPosition().y);
 				ofScale(scalar->scale.x, scalar->scale.y);
 				for (auto& path : scalar->paths){
 					path->svg.draw();
@@ -165,19 +176,21 @@ void Canvas::drawNodes(){
 				}
 
 				if (guiNode->iemType == "slider"){
+
 					ofDrawRectangle(guiNode->slider);
 				}
 				else if (guiNode->iemType == "radio"){
+
+					ofSetLineWidth(_current->scale);
+					ofNoFill();
+					ofSetColor(0);
 					for (auto& radio : guiNode->radios){
-						ofNoFill();
-						ofSetColor(0);
 						ofDrawRectangle(radio);
 					}
-					// for (auto& button : guiNode->radioButtons){
-						ofFill();
-						ofSetHexColor(guiNode->frontColor);
-						ofDrawRectangle(guiNode->radioButtons[guiNode->value]);
-					// }
+
+					ofFill();
+					ofSetHexColor(guiNode->frontColor);
+					ofDrawRectangle(guiNode->radioButtons[guiNode->value]);
 				}
 				else if (guiNode->iemType == "bng"){
 
@@ -502,6 +515,7 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 			break;
 
 		case AppEvent::TYPE_SCALE:
+			_updateNeeded = true;
 			#ifdef TARGET_ANDROID
 			_current->scale *= aAppEvent.value;
 			#else
@@ -521,6 +535,7 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				if      (key == 'a'){ cmd = _current->id + " selectall"; }
 				else if (key == 'c'){ cmd = _current->id + " copy"; }
 				else if (key == 'e'){ cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1"); }
+				// else if (key == 'f'){ this->freeze(); }
 				else if (key == 'o'){ PdGui::instance().openPatch(ofToDataPath("main.pd")); }
 				else if (key == 'p'){ cmd = _current->id + " paste"; }
 				else if (key == 'u'){ cmd = _current->id + " undo"; }
@@ -561,6 +576,15 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				else if (aAppEvent.message == "undo-button"){
 					cmd = _current->id + " undo";
 				}
+				// else if (aAppEvent.message == "settings-button"){
+
+					// char key = 'f';
+
+					// AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
+
+					// ofNotifyEvent(AppEvent::events, event);
+				// }
+
 				PdGui::instance().pdsend(cmd);
 			}
 			break;

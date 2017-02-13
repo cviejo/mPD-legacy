@@ -13,8 +13,9 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 	public:
 
-		// singleton
-		static PdGui& instance();
+		bool              updateNeeded = true;
+
+		static PdGui&     instance(); // singleton
 
 		bool              init(const int in, const int out, const int sampleRate, const int ticks=32,bool queued=false);
 		void              clear();

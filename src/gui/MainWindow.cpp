@@ -25,11 +25,7 @@ MainWindow::MainWindow(){
 	GuiElement* topBar = new GuiElement("bar");
 	topBar->setPosition(0, 0);
 
-	btn = new Button("menu-tab", Button::TYPE_TOGGLE);
-	btn->setPosition(0, 0);
-	topBar->addChild(btn);
-
-	btn = new Button("object-tab", Button::TYPE_TOGGLE);
+	btn = new Button("settings", Button::TYPE_TOGGLE);
 	btn->setPosition(ofGetWidth() - btn->width, 0);
 	topBar->addChild(btn);
 
@@ -41,10 +37,14 @@ MainWindow::MainWindow(){
 	GuiElement* bottomBar = new GuiElement("bar");
 
 	btn = new Button("edit", Button::TYPE_TOGGLE);
+	btn->setPosition((ofGetWidth() - btn->width) / 2, 0);
+	bottomBar->addChild(btn);
+
+	btn = new Button("menu-tab", Button::TYPE_TOGGLE);
 	btn->setPosition(0, 0);
 	bottomBar->addChild(btn);
 
-	btn = new Button("settings", Button::TYPE_TOGGLE);
+	btn = new Button("object-tab", Button::TYPE_TOGGLE);
 	btn->setPosition(ofGetWidth() - btn->width, 0);
 	bottomBar->addChild(btn);
 
@@ -113,7 +113,7 @@ MainWindow::MainWindow(){
 	Canvas* cnv = new Canvas(ofGetWidth(), ofGetHeight());
 	cnv->setPosition(leftTab->collapsedX + leftTab->width, topBar->getBottom());
 	this->children.insert(this->children.begin(), cnv);
-	//-------canvas-------
+	// //-------canvas-------
 
 
 	cnv->set(PdGui::instance().getCanvases()[0]);
@@ -166,5 +166,6 @@ void MainWindow::onPdEvent (PdEvent&  aPdEvent){
 //--------------------------------------------------------------
 // void MainWindow::draw(){
 
+	// this->drawChildren();
 // }
 

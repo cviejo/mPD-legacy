@@ -12,6 +12,7 @@
 #include "s_stuff.h"
 #include "Svg.h"
 
+
 //--------------------------------------------------------------
 extern "C" {
 
@@ -355,6 +356,8 @@ void PdGui::displaceObject(PdNode* aNode, ofPoint aOffset){
 
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
+
+	this->updateNeeded = true;
 
 	PdGuiMessage guiMsg(aMsg);
 
