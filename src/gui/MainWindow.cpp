@@ -94,6 +94,10 @@ MainWindow::MainWindow(){
 	scroller->setContent(sections, true);
 	scroller->setContent(PdGui::instance().getNodeNames(), false);
 
+	ofLogVerbose() << "temp";
+	ofLogVerbose() << scroller->width;
+	ofLogVerbose() << scroller->height;
+
 	IndexScroller* index = new IndexScroller();
 	index->x = rightTab->width;
 	index->setPosition(scroller->width, 0);

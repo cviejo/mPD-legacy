@@ -836,10 +836,12 @@ t_symbol *pd_getdirname(void)
     else
         buf[len] = '\0';
     sys_unbashfilename(buf, buf);
-#elif defined(__APPLE__)
-    len = sizeof(buf);
-    _NSGetExecutablePath(buf, &len);
-    if (len != -1) buf[len] = '\0';
+// mPD
+// TODO: review this for iOS
+//#elif defined(__APPLE__)
+//    len = sizeof(buf);
+//    _NSGetExecutablePath(buf, &len);
+//    if (len != -1) buf[len] = '\0';
 #elif defined(__FreeBSD__)
     len = (ssize_t)(readlink("/proc/curproc/file", buf, sizeof(buf)-1));
     if (len != -1) buf[len] = '\0';

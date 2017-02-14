@@ -75,11 +75,11 @@ void App::initSearchPaths(){
 //--------------------------------------------------------------
 void App::initEventListeners(){
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 	ofAddListener(ofxAndroidEvents().scaleBegin, this, &App::onScaleBegin);
 	ofAddListener(ofxAndroidEvents().scale,      this, &App::onScale);
 	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &App::onScaleEnd);
-#else
+#elif !defined(TARGET_OF_IOS)
 	ofAddListener(ofEvents().mouseScrolled,      this, &App::mouseScrolled);
 #endif
 }
@@ -247,7 +247,7 @@ void App::okPressed(){ }
 //--------------------------------------------------------------
 void App::cancelPressed(){ }
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 //--------------------------------------------------------------
 void App::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
 
@@ -289,7 +289,7 @@ bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 	return true;
 }
-#else
+#elif !defined(TARGET_OF_IOS)
 
 //--------------------------------------------------------------
 void App::mouseScrolled(ofMouseEventArgs& mouse){
