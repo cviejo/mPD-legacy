@@ -1,6 +1,7 @@
 {
 	"font": "",
 	"bar": {
+		"backgroundCfolor": "#00FF00",
 		"backgroundColor": "#222326"
 	},
 	"button": {
@@ -21,9 +22,9 @@
 		"backgroundColor" : "#1E1E21"
 	},
 	"list-scroller": {
-		"width"   : 75,
+		"width"   : 60,
 		"padding" : 2,
-		"font-height" : 8
+		"font-height" : 7
 	},
 	"list-scroller-header": {
 		"height"          : 18,
@@ -31,7 +32,7 @@
 		"backgroundColor" : "#36373A"
 	},
 	"list-scroller-item": {
-		"height"     : 30,
+		"height"     : 23,
 		"frontColor" : "#FFFFFF"
 	}
 }
