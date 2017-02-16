@@ -20,16 +20,16 @@ extern "C" {
 	void canvas_motion    (t_canvas *x, t_floatarg xpos,  t_floatarg ypos,  t_floatarg fmod);
 	void canvas_mouseup   (t_canvas *x, t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich);
 	void canvas_editmode  (t_canvas *x, t_floatarg state);
-	void canvas_doclear   (t_canvas *x);
-	void canvas_copy      (t_canvas *x);
-	void canvas_paste     (t_canvas *x);
-	// void canvas_undo_undo (t_canvas *x);
-	void canvas_duplicate (t_canvas *x);
-	void canvas_cut       (t_canvas *x);
-	void canvas_menusave  (t_canvas *x);
-	void canvas_menusaveas(t_canvas *x);
-	void canvas_gridmode  (t_canvas *x, int aState);
-	void canvas_gridsize  (t_canvas *x, int cellWidth, int cellHeight);
+	// void canvas_doclear   (t_canvas *x);
+	// void canvas_copy      (t_canvas *x);
+	// void canvas_paste     (t_canvas *x);
+	// // void canvas_undo_undo (t_canvas *x);
+	// void canvas_duplicate (t_canvas *x);
+	// void canvas_cut       (t_canvas *x);
+	// void canvas_menusave  (t_canvas *x);
+	// void canvas_menusaveas(t_canvas *x);
+	// void canvas_gridmode  (t_canvas *x, int aState);
+	// void canvas_gridsize  (t_canvas *x, int cellWidth, int cellHeight);
 	// void canvas_updatelines(t_canvas *x);
 	// void canvas_updateconnections(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
 }

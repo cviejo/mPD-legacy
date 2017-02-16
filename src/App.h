@@ -6,6 +6,7 @@
 #include "ofxAndroid.h"
 #elif defined(TARGET_OF_IOS)
 #include "ofxiOS.h"
+#include "ofPinchGestureRecognizer.h"
 #endif
 
 
@@ -54,6 +55,8 @@ class App : public ofBaseApp {
 		void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
 		void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
 		void mouseScrolled(ofMouseEventArgs & mouse);
+#else
+		ofPinchGestureRecognizer* zoom;
 #endif
 
 	private:

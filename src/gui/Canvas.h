@@ -29,8 +29,6 @@ class Canvas : public GuiElement {
 
 		void         set(PdCanvas* canvas);
 
-		// void print(const string& message); // pd receiver callbacks
-		// void setFocus(int x, int y);
 
 	private:
 
@@ -39,8 +37,6 @@ class Canvas : public GuiElement {
 		ofTrueTypeFont _font;
 		ofPoint        _previousMouse;
 		PdIo*          _connectionStart;
-		// float          _scale;
-		// ofRectangle    _viewPort; // in PD coordinates
 
 		// CanvasRenderer* _renderer;
 		// ofPoint         _mouseLoc;   // stored in PD coordinates
@@ -62,15 +58,6 @@ class Canvas : public GuiElement {
 		void    drawNodeIo(PdIo* aIo);
 		void    drawConnecting();
 		// void    drawConsole();
-		// void    drawControl(PdNode& aNode);
-		// void    drawControlBackground(PdNode& aNode);
-		// void    drawNodeText(PdNode& aNode);
-		// void    drawNodeLabel(PdNode& aNode);
-		// void    drawIO(PdNode& aNode, bool aInlet);
-		// ofPoint transformLoc(float aX, float aY, CoordinateTransformation aTransform);
-
-		// void    drawMessage(PdNode& aNode);
-		// void    drawAtom(PdNode& aNode);
 		void    sendMouseEvent(string aEventType, ofPoint aLoc);
 		PdNode* getNodeAtPosition(int aX, int aY);
 		PdIo*   getClosestIo(vector<PdIo*> aIoArray, ofPoint aLoc);

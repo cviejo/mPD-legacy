@@ -20,7 +20,7 @@ float JsonTheme::getScaledValue(string aType, string aName){
 #if defined(TARGET_ANDROID)
 	return 440.0f / 100.0f * value;
 #elif defined(TARGET_OF_IOS)
-	return 326.0f / 100.0f * value;
+	return 316.0f / 100.0f * value;
 #else
 	return 150.0f / 100.0f * value;
 #endif

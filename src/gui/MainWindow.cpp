@@ -60,6 +60,14 @@ MainWindow::MainWindow(){
 	leftTab->setHeight(ofGetHeight() - topBar->height - bottomBar->height);
 	leftTab->expandedX = 0;
 
+	vector<string> zoomBtns = { "zoom-in", "zoom-out", "grid" };
+
+	for (int i = 0; i < zoomBtns.size(); i++) {
+		btn = new Button(zoomBtns[i]);
+		btn->setPosition(0, btn->height * (i + 1));
+		leftTab->addChild(btn);
+	}
+
 	vector<string> buttons = { "trash", "undo", "paste", "copy" };
 
 	for (int i = 0; i < buttons.size(); i++) {
@@ -68,9 +76,9 @@ MainWindow::MainWindow(){
 		leftTab->addChild(btn);
 	}
 
-	btn = new Button("grid", Button::TYPE_TOGGLE);
-	btn->setPosition(0, leftTab->height - btn->height * 7);
-	leftTab->addChild(btn);
+	// btn = new Button("grid", Button::TYPE_TOGGLE);
+	// btn->setPosition(0, leftTab->height - btn->height * 7);
+	// leftTab->addChild(btn);
 
 	this->children.insert(this->children.begin(), leftTab);
 	//------- menu-tab-------

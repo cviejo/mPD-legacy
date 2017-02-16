@@ -2,6 +2,7 @@
 
 
 #include "ofMain.h"
+#include "PdGuiTypes.h"
 
 
 //--------------------------------------------------------------
@@ -17,14 +18,12 @@ class PdEvent : public ofEventArgs {
 		static ofEvent<PdEvent> events;
 
 		EventType type;
+		PdCanvas* canvas;
 		// string    message;
 		// float     value;
 		// int       x;
 		// int       y;
 
-		// PdEvent(EventType aType, string aMsg = "")            : type(aType), message(aMsg){}
-		// PdEvent(EventType aType, float aFloat)                : type(aType), value (aFloat){}
-		// PdEvent(EventType aType, string aMsg, float aFloat)   : type(aType), message(aMsg), value (aFloat){}
-		// PdEvent(EventType aType, string aMsg, int aX, int aY) : type(aType), message(aMsg), x(aX), y(aY){}
+		PdEvent(EventType aType, PdCanvas* aCanvas = NULL) : type(aType), canvas(aCanvas){}
 };
 

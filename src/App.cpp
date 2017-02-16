@@ -6,6 +6,7 @@
 
 
 bool computing = true;
+int cnt = 0;
 
 
 ofFbo frame;
@@ -29,10 +30,13 @@ void App::setup(){
 	this->initEventListeners();
 
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
-	// PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
+	PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
+	// // PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
+	
+	EAGLView *view = ofxiPhoneGetGLView();
+	zoom = [[ofPinchGestureRecognizer alloc] initWithView:view];
 }
 
 
@@ -88,9 +92,20 @@ void App::initEventListeners(){
 //--------------------------------------------------------------
 void App::draw(){
 
+	if (zoom->pinching){
+
+		ofLogVerbose() << zoom->scale;
+
+		AppEvent event(AppEvent::TYPE_SCALE, "", 0, 0);
+
+		// event.value = aArgs.getScaleFactor();
+		event.value = zoom->scale;
+
+		ofNotifyEvent(AppEvent::events, event);
+	}
+
 	auto updated = false;
 
-	// if (PdGui::instance().updateNeeded){
 	if (_mainWindow->updateNeeded()){
 
 		updated = true;
@@ -171,6 +186,8 @@ void App::touchDown(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void App::touchMoved(int aX, int aY, int aId){
 
+	ofLogVerbose() << zoom->scale;
+		
 	if (_scaling || aId){ return; }
 
 	ofPoint loc(aX, aY);
