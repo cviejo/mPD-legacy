@@ -55,15 +55,17 @@ class App : public ofBaseApp {
 		void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
 		void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
 		void mouseScrolled(ofMouseEventArgs & mouse);
-#else
-		ofPinchGestureRecognizer* zoom;
 #endif
 
 	private:
 
-		bool        _scaling = false;
+		bool        _scaling   = false;
+		bool        _computing = true;
+		ofFbo       _frame;
 		GuiElement* _mainWindow;
-		// vector<GuiElement*> _guiElements;
+#if TARGET_OF_IOS
+		ofPinchGestureRecognizer* _pinch;
+#endif
 
 		void initAudio();
 		void initSearchPaths();

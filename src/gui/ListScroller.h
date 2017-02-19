@@ -10,12 +10,14 @@ class ListScroller : public GuiElement {
 
 	public:
 
+		GuiElement*    selection = NULL;
+
 		ListScroller();
 
 		virtual void   draw();
 		virtual void   update();
-		virtual void   onPressed(int aX, int aY, int aId);
-		virtual void   onDragged(int aX, int aY, int aId);
+		virtual void   onPressed (int aX, int aY, int aId);
+		virtual void   onDragged (int aX, int aY, int aId);
 		virtual void   onReleased(int aX, int aY, int aId);
 
 		void           setContent(vector<string> aItems, bool aHeaderItems);

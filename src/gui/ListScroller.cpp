@@ -20,18 +20,23 @@ ListScroller::ListScroller() : GuiElement("list-scroller"){
 //--------------------------------------------------------------
 void ListScroller::draw(){
 
-	ofPushMatrix();
-	ofTranslate(this->x, this->y - _offsetY - _draggedY);
+	ofPoint offset(0, - _offsetY - _draggedY);
 
-	for (auto& item : this->children){
+	ofPushMatrix();
+	// ofTranslate(this->x, this->y + offset);
+	ofTranslate(this->getPosition() + offset);
+
+	for (auto& child : this->children){
 
 		// TODO: only draw if visible
-		if (item->visible){
+		// if (child->visible){
+		// if (this->inside(child->x, child->y + offset + 1)){
+		if (this->intersects(*child + offset)){
 
-			item->drawBackground();
+			child->drawBackground();
 
-			ofSetColor(item->frontColor);
-			_font.drawString(item->text, item->textPosition.x, item->textPosition.y);
+			ofSetColor(child->frontColor);
+			_font.drawString(child->text, child->textPosition.x, child->textPosition.y);
 		}
 	}
 
@@ -43,6 +48,13 @@ void ListScroller::draw(){
 void ListScroller::onPressed(int aX, int aY, int aId){ 
 
 	_updateNeeded = true;
+
+	for (auto& child : this->children){
+
+		if (child->type == "list-scroller-item" && child->inside(aX, aY + _offsetY)){
+			this->selection = child;
+		}
+	}
 }
 
 
@@ -54,9 +66,9 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 	if (aX > this->x){
 		_draggedY = this->pressedPosition.y - aY;
 	}
-	else {
+	// else if (){
 		// TODO: new object
-	}
+	// }
 
 	this->clip();
 }

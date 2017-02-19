@@ -123,6 +123,8 @@ bool GuiElement::touchDown(ofPoint aLoc){
 
 	if (!this->touchTest(aLoc)){ return false; }
 
+	ofLogVerbose() << this->type;
+
 	this->pressed = true;
 	this->pressedPosition.set(aLoc);
 

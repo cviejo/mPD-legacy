@@ -5,23 +5,16 @@
 #include "Svg.h"
 
 
-bool computing = true;
-int cnt = 0;
-
-
-ofFbo frame;
-
-
 //--------------------------------------------------------------
 void App::setup(){
 
-	frame.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	_frame.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
 	// ofSetBackgroundAuto(false);
 	ofSetWindowShape(ofGetWidth(), ofGetHeight());
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(20);
-	// ofBackground(125);
+	ofBackground(125);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -35,8 +28,9 @@ void App::setup(){
 
 	_mainWindow = (GuiElement*)new MainWindow();
 	
-	EAGLView *view = ofxiPhoneGetGLView();
-	zoom = [[ofPinchGestureRecognizer alloc] initWithView:view];
+#if TARGET_OF_IOS
+	_pinch = [[ofPinchGestureRecognizer alloc] initWithView: ofxiPhoneGetGLView()];
+#endif
 }
 
 
@@ -92,27 +86,23 @@ void App::initEventListeners(){
 //--------------------------------------------------------------
 void App::draw(){
 
-	if (zoom->pinching){
 
-		ofLogVerbose() << zoom->scale;
+#if defined(TARGET_OF_IOS)
+	if (_pinch->pinching){
 
 		AppEvent event(AppEvent::TYPE_SCALE, "", 0, 0);
 
-		// event.value = aArgs.getScaleFactor();
-		event.value = zoom->scale;
+		event.value = _pinch->scale;
 
 		ofNotifyEvent(AppEvent::events, event);
 	}
-
-	auto updated = false;
+#endif
 
 	if (_mainWindow->updateNeeded()){
 
-		updated = true;
+		_frame.begin();
 
-		ofLogVerbose() << "update needed";
-
-		frame.begin();
+		ofBackground(120);
 
 		ofEnableAlphaBlending();
 
@@ -120,17 +110,12 @@ void App::draw(){
 
 		ofDisableAlphaBlending();
 
-		frame.end();
+		_frame.end();
 	}
 
 	ofSetColor(255, 255, 255, 255);
 
-	frame.draw(0, 0);
-
-	if (updated){
-		ofSetColor(255, 0, 0);
-		ofDrawBitmapString(ofToString(ofGetElapsedTimeMillis()), 100, 100);
-	}
+	_frame.draw(0, 0);
 }
 
 
@@ -155,7 +140,7 @@ void App::gotMessage(ofMessage msg){ }
 //--------------------------------------------------------------
 void App::audioReceived(float * input, int bufferSize, int nChannels) {
 
-	if (!computing){ return; }
+	if (!_computing){ return; }
 
 	// TODO: if computing
 	PdGui::instance().audioIn(input, bufferSize, nChannels);
@@ -165,7 +150,7 @@ void App::audioReceived(float * input, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void App::audioRequested(float * output, int bufferSize, int nChannels) {
 
-	if (!computing){ return; }
+	if (!_computing){ return; }
 
 	// TODO: if computing
 	PdGui::instance().audioOut(output, bufferSize, nChannels);
@@ -185,8 +170,6 @@ void App::touchDown(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void App::touchMoved(int aX, int aY, int aId){
-
-	ofLogVerbose() << zoom->scale;
 		
 	if (_scaling || aId){ return; }
 
@@ -233,19 +216,19 @@ void App::touchCancelled(int x, int y, int id){ }
 
 //--------------------------------------------------------------
 void App::pause(){
-	computing = false;
+	_computing = false;
 }
 
 
 //--------------------------------------------------------------
 void App::stop(){
-	computing = false;
+	_computing = false;
 }
 
 
 //--------------------------------------------------------------
 void App::resume(){
-	computing = true;
+	_computing = true;
 }
 
 

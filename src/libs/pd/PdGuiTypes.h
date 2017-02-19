@@ -115,6 +115,7 @@ class PdCanvas : public PdNode {
 		ofRectangle           viewPort;
 
 		PdCanvas(string aId) : PdNode(aId) {
+			// TODO: actual viewPort / canvas size
 			this->viewPort.setSize(ofGetWidth(), ofGetHeight());
 		}
 };

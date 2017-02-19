@@ -125,9 +125,11 @@ void Canvas::drawNodes(){
 				ofPushMatrix();
 				ofTranslate(scalar->getPosition().x + 1, scalar->getPosition().y);
 				ofScale(scalar->scale.x, scalar->scale.y);
+
 				for (auto& path : scalar->paths){
 					path->svg.draw();
 				}
+
 				ofPopMatrix();
 			}
 			else if (node->type == "iemgui"){
@@ -485,12 +487,13 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 
 		case AppEvent::TYPE_SCALE:
 			_updateNeeded = true;
-			// #ifdef TARGET_ANDROID
-			// _current->scale *= aAppEvent.value;
+#ifdef TARGET_ANDROID
+			_current->scale *= aAppEvent.value;
+#elif  TARGET_OF_IOS
 			_current->scale = aAppEvent.value;
-			// #else
+else
 			// _current->scale += aAppEvent.value;
-			// #endif
+			#endif
 			_current->viewPort.setSize(this->width / _current->scale, this->height / _current->scale);
 			break;
 
