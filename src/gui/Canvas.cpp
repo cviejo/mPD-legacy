@@ -482,6 +482,24 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 
 	switch(aAppEvent.type){
 
+		case AppEvent::TYPE_CREATE_OBJECT:
+			{
+				ofPoint mousePos = this->transformToPdCoordinates(aAppEvent.x, aAppEvent.y) + ofPoint(7, 7);
+				string cmd;
+				cmd = _current->id + " dirty 1";
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj 0";
+				this->sendMouseEvent("motion", mousePos);
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj_addtobuf " + aAppEvent.message;
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj_buftotext";
+				PdGui::instance().pdsend(cmd);
+				this->sendMouseEvent("mouse", ofPoint(-1, -1));
+				this->sendMouseEvent("mouseup", ofPoint(-1, -1));
+			}
+			break;
+
 		case AppEvent::TYPE_SCALE_BEGIN:
 			break;
 
@@ -542,7 +560,9 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 					cmd = _current->id + " paste";
 				}
 				else if (aAppEvent.message == "trash-button"){
-					cmd = _current->id + " erase";
+					cmd = _current->id + " key 1 8 0 1 0";
+					PdGui::instance().pdsend(cmd);
+					cmd = _current->id + " key 0 8 0 1 0";
 				}
 				else if (aAppEvent.message == "undo-button"){
 					cmd = _current->id + " undo";

@@ -53,7 +53,7 @@ void ListScroller::drawPreview(){
 
 		ofTranslate(translation);
 
-		ofSetColor(120, 120);
+		ofSetColor(100, 100);
 
 		ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
 		ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
@@ -100,6 +100,21 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void ListScroller::onReleased(int aX, int aY, int aId){
+
+	if (_objectPreview){
+
+		// ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
+		// ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
+
+		// ofDrawRectangle(previewPos, _selection->width, _selection->height);
+
+		AppEvent event(AppEvent::TYPE_CREATE_OBJECT,
+		               _selection->text,
+		               ofGetMouseX() - _selection->width  / 2,
+		               ofGetMouseY() - _selection->height / 2);
+
+		ofNotifyEvent(AppEvent::events, event);
+	}
 
 	_updateNeeded  = true;
 	_objectPreview = false;
