@@ -1,6 +1,7 @@
 {
 	"font": "",
 	"bar": {
+		"backgroundCfolor": "#00FF00",
 		"backgroundColor": "#222326"
 	},
 	"button": {
@@ -17,20 +18,25 @@
 		"width"           : 16,
 		"factiveColor"    : "#828282",
 		"activeColor"     : "#FF22FF",
-		"frontColor"      : "#737373",
+		"frontColor"      : "#FFFFFF",
 		"backgroundColor" : "#1E1E21"
 	},
 	"list-scroller": {
-		"width"   : 75,
+		"width"   : 60,
 		"padding" : 2,
-		"font-height" : 8
+		"font-height" : 7
 	},
 	"list-scroller-header": {
-		"height"     : 18,
-		"frontColor" : "#737373"
+		"height"          : 18,
+		"frontColor"      : "#FFFFFF",
+		"backgroundColor" : "#36373A"
 	},
 	"list-scroller-item": {
-		"height"     : 30,
-		"frontColor" : "#737373"
+		"height"     : 23,
+		"frontColor" : "#FFFFFF"
+	},
+	"list-scroller-preview": {
+		"width"           : 90,
+		"height"          : 20
 	}
 }

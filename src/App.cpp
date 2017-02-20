@@ -5,18 +5,16 @@
 #include "Svg.h"
 
 
-bool computing = true;
-
-
 //--------------------------------------------------------------
 void App::setup(){
 
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	_frame.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
-	ofBackground(125);
+	// ofSetBackgroundAuto(false);
+	ofSetWindowShape(ofGetWidth(), ofGetHeight());
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	ofSetFrameRate(21);
-	// ofSetWindowPosition(352,1094);
+	ofSetFrameRate(20);
+	ofBackground(125);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -25,10 +23,15 @@ void App::setup(){
 	this->initEventListeners();
 
 	// debugging
+	// PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
 	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
-	// PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
+	// // PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
+	
+#if defined(TARGET_OF_IOS)
+	_pinch = [[ofPinchGestureRecognizer alloc] initWithView: ofxiPhoneGetGLView()];
+#endif
 }
 
 
@@ -71,11 +74,11 @@ void App::initSearchPaths(){
 //--------------------------------------------------------------
 void App::initEventListeners(){
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 	ofAddListener(ofxAndroidEvents().scaleBegin, this, &App::onScaleBegin);
 	ofAddListener(ofxAndroidEvents().scale,      this, &App::onScale);
 	ofAddListener(ofxAndroidEvents().scaleEnd,   this, &App::onScaleEnd);
-#else
+#elif !defined(TARGET_OF_IOS)
 	ofAddListener(ofEvents().mouseScrolled,      this, &App::mouseScrolled);
 #endif
 }
@@ -84,23 +87,40 @@ void App::initEventListeners(){
 //--------------------------------------------------------------
 void App::draw(){
 
-	// if (Globals::AppState == APP_STATE_START){ return; }
+#if defined(TARGET_OF_IOS)
+	if (_pinch->pinching){
 
-	ofEnableAlphaBlending();
+		AppEvent event(AppEvent::TYPE_SCALE, "", 0, 0);
 
-	_mainWindow->draw();
+		event.value = _pinch->scale;
 
-	ofDisableAlphaBlending();
+		ofNotifyEvent(AppEvent::events, event);
+	}
+#endif
 
-	// ofDrawBitmapString("x:   " + ofToString(ofGetWindowPositionX()), 30, 30);
-	// ofDrawBitmapString("y:   " + ofToString(ofGetWindowPositionY()), 30, 50);
+	if (_mainWindow->updateNeeded()){
+
+		_frame.begin();
+
+		ofBackground(120);
+
+		ofEnableAlphaBlending();
+
+		_mainWindow->draw();
+
+		ofDisableAlphaBlending();
+
+		_frame.end();
+	}
+
+	ofSetColor(255, 255, 255, 255);
+
+	_frame.draw(0, 0);
 }
 
 
 //--------------------------------------------------------------
 void App::keyPressed(int key){
-
-	// ofLogVerbose() << key;
 
 	AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 
@@ -120,7 +140,7 @@ void App::gotMessage(ofMessage msg){ }
 //--------------------------------------------------------------
 void App::audioReceived(float * input, int bufferSize, int nChannels) {
 
-	if (!computing){ return; }
+	if (!_computing){ return; }
 
 	// TODO: if computing
 	PdGui::instance().audioIn(input, bufferSize, nChannels);
@@ -130,7 +150,7 @@ void App::audioReceived(float * input, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void App::audioRequested(float * output, int bufferSize, int nChannels) {
 
-	if (!computing){ return; }
+	if (!_computing){ return; }
 
 	// TODO: if computing
 	PdGui::instance().audioOut(output, bufferSize, nChannels);
@@ -150,7 +170,7 @@ void App::touchDown(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void App::touchMoved(int aX, int aY, int aId){
-
+		
 	if (_scaling || aId){ return; }
 
 	ofPoint loc(aX, aY);
@@ -196,19 +216,19 @@ void App::touchCancelled(int x, int y, int id){ }
 
 //--------------------------------------------------------------
 void App::pause(){
-	computing = false;
+	_computing = false;
 }
 
 
 //--------------------------------------------------------------
 void App::stop(){
-	computing = false;
+	_computing = false;
 }
 
 
 //--------------------------------------------------------------
 void App::resume(){
-	computing = true;
+	_computing = true;
 }
 
 
@@ -227,7 +247,7 @@ void App::okPressed(){ }
 //--------------------------------------------------------------
 void App::cancelPressed(){ }
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 //--------------------------------------------------------------
 void App::swipe(ofxAndroidSwipeDir swipeDir, int id){ }
 
@@ -269,7 +289,7 @@ bool App::onScaleEnd(ofxAndroidScaleEventArgs& aArgs) {
 
 	return true;
 }
-#else
+#elif !defined(TARGET_OF_IOS)
 
 //--------------------------------------------------------------
 void App::mouseScrolled(ofMouseEventArgs& mouse){

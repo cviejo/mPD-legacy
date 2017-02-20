@@ -2,13 +2,18 @@
 
 #include "ofMain.h"
 #include "GuiElement.h"
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 #include "ofxAndroid.h"
+#elif defined(TARGET_OF_IOS)
+#include "ofxiOS.h"
+#include "ofPinchGestureRecognizer.h"
 #endif
 
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 class App : public ofxAndroidApp {
+#elif defined(TARGET_OF_IOS)
+class App : public ofxiOSApp {
 #else
 class App : public ofBaseApp {
 #endif
@@ -40,12 +45,12 @@ class App : public ofBaseApp {
 		void okPressed();
 		void cancelPressed();
 
-#ifdef TARGET_ANDROID
+#if defined(TARGET_ANDROID)
 		bool onScaleBegin(ofxAndroidScaleEventArgs& aArgs);
 		bool onScale(ofxAndroidScaleEventArgs& aArgs);
 		bool onScaleEnd(ofxAndroidScaleEventArgs& aArgs);
 		void swipe(ofxAndroidSwipeDir swipeDir, int id);
-#else
+#elif !defined(TARGET_OF_IOS)
 		void mouseDragged (int aX, int aY, int aButton) { touchMoved(aX, aY, aButton); }
 		void mousePressed (int aX, int aY, int aButton) { touchDown (aX, aY, aButton); }
 		void mouseReleased(int aX, int aY, int aButton) { touchUp   (aX, aY, aButton); }
@@ -54,9 +59,13 @@ class App : public ofBaseApp {
 
 	private:
 
-		bool        _scaling = false;
+		bool        _scaling   = false;
+		bool        _computing = true;
+		ofFbo       _frame;
 		GuiElement* _mainWindow;
-		// vector<GuiElement*> _guiElements;
+#if defined(TARGET_OF_IOS)
+		ofPinchGestureRecognizer* _pinch;
+#endif
 
 		void initAudio();
 		void initSearchPaths();

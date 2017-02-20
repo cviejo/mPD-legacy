@@ -60,7 +60,7 @@ void IndexScroller::updateScroll(int aX, int aY) {
 
 		this->selection = selectionIndex;
 
-		AppEvent event(AppEvent::TYPE_SCROLLER_LETTER_CHANGED, this->children[this->selection]->id);
+		AppEvent event(AppEvent::TYPE_INDEX_CHANGED, this->children[this->selection]->id);
 
 		ofNotifyEvent(AppEvent::events, event);
 	}

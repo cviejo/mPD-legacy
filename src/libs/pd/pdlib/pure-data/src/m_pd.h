@@ -783,5 +783,32 @@ EXTERN int pd_getdspstate(void);
 }
 #endif
 
+// mPD
+// #if defined(TARGET_OF_IOS)
+#include <ctype.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+
+int  sys_flushtogui(void);
+void sys_listmididevs(void);
+void binbuf_savetext(t_binbuf *bfrom, t_binbuf *bto);
+int  binbuf_resize(t_binbuf *x, int newsize);
+void scalar_select(t_gobj *z, t_glist *owner, int state);
+void inmidi_sysex(int b, int a);
+void inmidi_realtimein(int b, int a);
+void inmidi_byte(int b, int a);
+int  canvas_getdollarzero(void);
+void canvas_closebang(t_canvas *x);
+int  dummy_open_audio(int nin, int nout, int sr);
+int  dummy_close_audio(void);
+int  dummy_send_dacs(void);
+void dummy_listdevs(void);
+void dummy_getdevs(char *indevlist, int *nindevs, char *outdevlist,
+                   int *noutdevs, int *canmulti, int maxndev, int devdescsize);
+// #endif
+// mPD
+
 #define __m_pd_h_
 #endif /* __m_pd_h_ */

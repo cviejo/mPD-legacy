@@ -7,45 +7,18 @@ int gridStepSize = 20; // Globals::Theme.grid.cell.width
 //--------------------------------------------------------------
 Canvas::Canvas(int aWidth, int aHeight){
 
-	this->id = "canvas";
-
-	// this->x      = 0;
-	// this->y      = 0;
+	this->id     = "canvas";
 	this->width  = aWidth;
 	this->height = aHeight;
 
+
+	_current = new PdCanvas("untitled");
+
 	_font.load("fonts/DejaVuSansMono.ttf", 70, true, true);
-	// _font.load("fonts/VeraMono.ttf",       70, true, true);
-	// _font.load("fonts/DroidSansMono.ttf",  70, true, true);
-	// _font.load("fonts/Inconsolata.otf",    70, true, true);
-	// _font.load("fonts/UbuntuMono-R.ttf",   70, true, true);
+
 	_font.setLineHeight(100.0f);
-	// _renderer = new CanvasRenderer();
-	// // _renderer.font = _font;
-
-	// //todo: tidy up here
-	// _font.load(50);
-	// // _font.load(Globals::Theme.node.font.height);
-	// _consoleFont.load(Globals::Theme.console.font.height);
-
-	// _renderer->font = _font;
-
-	// float lineHeight = _font.lineHeight / 50.0f * Globals::Theme.node.font.height;
-
-	// ofLog(OF_LOG_VERBOSE, "[lin] " +  ofToString(lineHeight) + ".");
-
-	// Globals::Pd.setFontSize(7, lineHeight);
-	// // Globals::Pd.setFontSize(6, 8);
-	// Globals::Pd.setIOHeight(Globals::Theme.node.io.height);
-
-	// this->x      = Globals::Theme.tab.collapsedWidth;
-	// this->y      = Globals::Theme.button.height;
-	// this->width  = ofGetWidth();
-	// this->height = ofGetHeight() - Globals::Theme.button.height * 2;
 
 	this->initGrid();
-
-	// PdGui::instance().canvasPressed(_current, p.x, p.y);
 }
 
 
@@ -59,13 +32,8 @@ void Canvas::initGrid(){
 	_grid.begin();
 
 	ofClear(255, 0);
-	// ofBackground(Globals::Theme.canvas.color.background);
-	// ofSetColor(Globals::Theme.canvas.color.background);
-	// ofSetColor(0);
-	// ofBackground(0,0,255);
 	ofSetColor(255);
 	ofDrawRectangle(0, 0, gridWidth, gridHeight);
-	// ofSetColor(Globals::Theme.grid.color.front);
 
 	ofSetColor(200);
 	for(int i = 0; i < gridWidth; i += gridStepSize){
@@ -90,6 +58,17 @@ void Canvas::set(PdCanvas* aCanvas){
 
 
 //---------------------------VIRTUAL--------------------------//
+//--------------------------------------------------------------
+bool Canvas::updateNeeded(){
+
+	auto updated = PdGui::instance().updateNeeded || _updateNeeded || _current->moveMode == PdCanvas::MODE_CONNECT;
+
+	PdGui::instance().updateNeeded = _updateNeeded = false;
+
+	return updated;
+}
+
+
 //--------------------------------------------------------------
 void Canvas::draw(){
 
@@ -119,7 +98,7 @@ void Canvas::draw(){
 //--------------------------------------------------------------
 void Canvas::drawGrid(){
 
-	if (_current->gridMode && _current->scale >= 1){ // TODO: && grid active
+	if (_current->gridMode && _current->scale >= 1){
 
 		ofSetColor(255);
 
@@ -144,11 +123,13 @@ void Canvas::drawNodes(){
 				PdScalar* scalar = (PdScalar*)node;
 
 				ofPushMatrix();
-				ofTranslate(scalar->getPosition());
+				ofTranslate(scalar->getPosition().x + 1, scalar->getPosition().y);
 				ofScale(scalar->scale.x, scalar->scale.y);
+
 				for (auto& path : scalar->paths){
 					path->svg.draw();
 				}
+
 				ofPopMatrix();
 			}
 			else if (node->type == "iemgui"){
@@ -165,19 +146,21 @@ void Canvas::drawNodes(){
 				}
 
 				if (guiNode->iemType == "slider"){
+
 					ofDrawRectangle(guiNode->slider);
 				}
 				else if (guiNode->iemType == "radio"){
+
+					ofSetLineWidth(_current->scale);
+					ofNoFill();
+					ofSetColor(0);
 					for (auto& radio : guiNode->radios){
-						ofNoFill();
-						ofSetColor(0);
 						ofDrawRectangle(radio);
 					}
-					// for (auto& button : guiNode->radioButtons){
-						ofFill();
-						ofSetHexColor(guiNode->frontColor);
-						ofDrawRectangle(guiNode->radioButtons[guiNode->value]);
-					// }
+
+					ofFill();
+					ofSetHexColor(guiNode->frontColor);
+					ofDrawRectangle(guiNode->radioButtons[guiNode->value]);
 				}
 				else if (guiNode->iemType == "bng"){
 
@@ -339,7 +322,6 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 
 		if (aNode->type == "numbox") {
 
-			// ofSetColor(numboxBorderCol);
 			ofSetColor(aNode->borderColor);
 			ofDrawTriangle(left + 0, top + 0,
 			               left + 0, bottom - 0,
@@ -413,7 +395,7 @@ void Canvas::onPressed(int aX, int aY, int aId){
 	}
 	else if (_current->editMode && node && !node->selected && node->outlets.size()){
 
-		_current->moveMode   = PdCanvas::MODE_CONNECT;
+		_current->moveMode = PdCanvas::MODE_CONNECT;
 		_connectionStart = this->getClosestIo(node->outlets, loc);
 	}
 	else {
@@ -440,6 +422,8 @@ void Canvas::onDragged(int aX, int aY, int aId){
 		if (_current->viewPort.y < 0){
 			_current->viewPort.y = 0;
 		}
+
+		_updateNeeded = true;
 	}
 	else if (_current->moveMode != PdCanvas::MODE_CONNECT){
 
@@ -498,15 +482,36 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 
 	switch(aAppEvent.type){
 
+		case AppEvent::TYPE_CREATE_OBJECT:
+			{
+				ofPoint mousePos = this->transformToPdCoordinates(aAppEvent.x, aAppEvent.y) + ofPoint(7, 7);
+				string cmd;
+				cmd = _current->id + " dirty 1";
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj 0";
+				this->sendMouseEvent("motion", mousePos);
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj_addtobuf " + aAppEvent.message;
+				PdGui::instance().pdsend(cmd);
+				cmd = _current->id + " obj_buftotext";
+				PdGui::instance().pdsend(cmd);
+				this->sendMouseEvent("mouse", ofPoint(-1, -1));
+				this->sendMouseEvent("mouseup", ofPoint(-1, -1));
+			}
+			break;
+
 		case AppEvent::TYPE_SCALE_BEGIN:
 			break;
 
 		case AppEvent::TYPE_SCALE:
-			#ifdef TARGET_ANDROID
+			_updateNeeded = true;
+#ifdef TARGET_ANDROID
 			_current->scale *= aAppEvent.value;
-			#else
+#elif  defined(TARGET_OF_IOS)
+			_current->scale = aAppEvent.value;
+#else 
 			_current->scale += aAppEvent.value;
-			#endif
+#endif
 			_current->viewPort.setSize(this->width / _current->scale, this->height / _current->scale);
 			break;
 
@@ -543,10 +548,9 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				if (aAppEvent.message == "edit-button"){
 					cmd = _current->id + " editmode " + (_current->editMode ? "0" : "1");
 				}
-				else if (aAppEvent.message == "grid-button"){
-				// TODO gridsize
-				string temp = _current->id + " gridsize 20";
-				PdGui::instance().pdsend(temp);
+				else if (aAppEvent.message == "grid-button"){ // TODO gridsize setting
+					cmd = string(_current->id + " gridsize 20");
+					PdGui::instance().pdsend(cmd);
 					cmd = _current->id + " gridactive " + (_current->gridMode ? "0" : "1");
 				}
 				else if (aAppEvent.message == "copy-button"){
@@ -556,11 +560,28 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 					cmd = _current->id + " paste";
 				}
 				else if (aAppEvent.message == "trash-button"){
-					cmd = _current->id + " erase";
+					cmd = _current->id + " key 1 8 0 1 0";
+					PdGui::instance().pdsend(cmd);
+					cmd = _current->id + " key 0 8 0 1 0";
 				}
 				else if (aAppEvent.message == "undo-button"){
 					cmd = _current->id + " undo";
 				}
+				else if (aAppEvent.message == "zoom-in-button"){
+					_current->scale += 0.5;
+				}
+				else if (aAppEvent.message == "zoom-out-button"){
+					_current->scale -= 0.5;
+				}
+				// else if (aAppEvent.message == "settings-button"){
+
+					// char key = 'f';
+
+					// AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
+
+					// ofNotifyEvent(AppEvent::events, event);
+				// }
+
 				PdGui::instance().pdsend(cmd);
 			}
 			break;

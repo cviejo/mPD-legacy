@@ -10,12 +10,14 @@ class ListScroller : public GuiElement {
 
 	public:
 
+		GuiElement*    selection = NULL;
+
 		ListScroller();
 
 		virtual void   draw();
 		virtual void   update();
-		virtual void   onPressed(int aX, int aY, int aId);
-		virtual void   onDragged(int aX, int aY, int aId);
+		virtual void   onPressed (int aX, int aY, int aId);
+		virtual void   onDragged (int aX, int aY, int aId);
 		virtual void   onReleased(int aX, int aY, int aId);
 
 		void           setContent(vector<string> aItems, bool aHeaderItems);
@@ -25,13 +27,17 @@ class ListScroller : public GuiElement {
 
 		static bool    itemSort(const GuiElement* a, const GuiElement* b);
 
+		GuiElement*    _selection     = NULL;
 		int            _draggedY      = 0;
 		int            _offsetY       = 0;
 		int            _contentHeight = 0;
+		bool           _previewActive = false;
+		ofRectangle    _previewRect;
 		ofTrueTypeFont _font;
 		int            _fontHeight;
 
 		void           clip();
+		void           drawPreview();
 };
 
 

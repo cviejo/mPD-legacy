@@ -12,6 +12,7 @@
 #include "s_stuff.h"
 #include "Svg.h"
 
+
 //--------------------------------------------------------------
 extern "C" {
 
@@ -19,16 +20,11 @@ extern "C" {
 	void canvas_motion    (t_canvas *x, t_floatarg xpos,  t_floatarg ypos,  t_floatarg fmod);
 	void canvas_mouseup   (t_canvas *x, t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich);
 	void canvas_editmode  (t_canvas *x, t_floatarg state);
-	void canvas_doclear   (t_canvas *x);
-	void canvas_copy      (t_canvas *x);
-	void canvas_paste     (t_canvas *x);
-	// void canvas_undo_undo (t_canvas *x);
-	void canvas_duplicate (t_canvas *x);
-	void canvas_cut       (t_canvas *x);
-	void canvas_menusave  (t_canvas *x);
-	void canvas_menusaveas(t_canvas *x);
-	void canvas_gridmode  (t_canvas *x, int aState);
-	void canvas_gridsize  (t_canvas *x, int cellWidth, int cellHeight);
+	// void canvas_doclear   (t_canvas *x);
+	// void canvas_menusave  (t_canvas *x);
+	// void canvas_menusaveas(t_canvas *x);
+	// void canvas_gridmode  (t_canvas *x, int aState);
+	// void canvas_gridsize  (t_canvas *x, int cellWidth, int cellHeight);
 	// void canvas_updatelines(t_canvas *x);
 	// void canvas_updateconnections(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
 }
@@ -190,9 +186,7 @@ void PdGui::audioOut(float* output, int bufferSize, int nChannels) {
 
 
 //--------------------------------------------------------------
-vector<PdCanvas*> PdGui::getCanvases(){
-	return _canvases;
-}
+vector<PdCanvas*> PdGui::getCanvases(){ return _canvases; }
 
 
 //--------------------------------------------------------------
@@ -229,39 +223,6 @@ PdNode* PdGui::getNode(string aCanvasId, string aNodeId){
 
 //--------------------------------------------------------------
 vector<string> PdGui::getNodeNames(){ return _classNames; }
-
-
-//--------------------------------------------------------------
-void PdGui::canvasPressed(PdCanvas* canvas, int x, int y){ canvas_mousedown((t_canvas*)pd_getcanvaslist(), x, y, 0, 0); }
-
-
-//--------------------------------------------------------------
-void PdGui::canvasDragged(PdCanvas* canvas, int x, int y){ canvas_motion((t_canvas*)pd_getcanvaslist(), x, y, 0); }
-
-
-//--------------------------------------------------------------
-void PdGui::canvasReleased(PdCanvas* canvas, int x, int y){ canvas_mouseup((t_canvas*)pd_getcanvaslist(), x, y, 0); }
-
-
-// //--------------------------------------------------------------
-// void PdGui::canvasDelete(PdCanvas* canvas){ canvas_doclear(pd_getcanvaslist()); }
-
-
-                    // // else binbuf_eval(inbinbuf, 0, 0, 0);
-// //--------------------------------------------------------------
-// // void PdGui::canvasUndo(PdCanvas* canvas){ canvas_undo_undo(pd_getcanvaslist()); }
-// void PdGui::canvasUndo(PdCanvas* canvas){
-	// auto cmd = (_canvases[0])->id + " undo";
-	// this->evaluateBuffer(cmd);
-// }
-
-
-// //--------------------------------------------------------------
-// void PdGui::canvasCopy(PdCanvas* canvas){ canvas_copy(pd_getcanvaslist()); }
-
-
-// //--------------------------------------------------------------
-// void PdGui::canvasPaste(PdCanvas* canvas){ canvas_paste(pd_getcanvaslist()); }
 
 // move to some utils class / module
 //--------------------------------------------------------------
@@ -301,7 +262,6 @@ void PdGui::pdsend(string& aCmd, bool aLock){
 	if (aLock){
 		this->unlock();
 	}
-	// this->hh(aCmd.c_str(), aCmd.length());
 }
 
 
@@ -356,6 +316,10 @@ void PdGui::displaceObject(PdNode* aNode, ofPoint aOffset){
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
+	ofLogVerbose() << aMsg;
+
+	this->updateNeeded = true;
+
 	PdGuiMessage guiMsg(aMsg);
 
 	if (guiMsg.command == "gui_canvas_new"){
@@ -404,6 +368,7 @@ void PdGui::guiMessage(string aMsg){
 			node->setPosition(ofToInt(guiMsg.args[3]), ofToInt(guiMsg.args[4]));
 		}
 	}
+	// else if (guiMsg.command == "gui_gobj_erase" || guiMsg.command == "gui_scalar_erase"){
 	else if (guiMsg.command == "gui_gobj_erase"){
 		// gui_gobj_erase "x7fbe328f2400","x7fbe32a10400"
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
@@ -421,6 +386,23 @@ void PdGui::guiMessage(string aMsg){
 			);
 		}
 	}
+	// else if (guiMsg.command == "gui_scalar_erase"){
+
+		// if (auto canvas = this->getCanvas(guiMsg.canvasId)){
+
+			// for (auto& node : canvas->nodes){
+				// if (node->id == guiMsg.nodeId){
+					  // delete node;
+					  // node = NULL;
+				// }
+			// }
+
+			// canvas->nodes.erase(
+				// remove(canvas->nodes.begin(), canvas->nodes.end(), static_cast<PdNode*>(NULL)),
+				// end(canvas->nodes)
+			// );
+		// }
+	// }
 	else if (guiMsg.command == "gui_numbox_new"){
 		// gui_numbox_new "x2380d10","x2345550","xfcfcfc",168,248,54,14,1
 		if (auto canvas = this->getCanvas(guiMsg.canvasId)){
@@ -761,9 +743,6 @@ void PdGui::guiMessage(string aMsg){
 	}
 	else {
 
-		// ofLogVerbose() << aMsg;
-		// ofLogVerbose() << guiMsg.command;
-		// ofLogVerbose() << "todo:";
 	}
 
 	// ofLogVerbose() << aMsg;

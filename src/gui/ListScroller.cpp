@@ -14,43 +14,87 @@ ListScroller::ListScroller() : GuiElement("list-scroller"){
 
 	_font.load("fonts/DejaVuSansMono.ttf", fontHeight, true, true);
 	_font.setLineHeight(fontHeight);
+
+	_previewRect.setSize(Theme.getScaledValue("list-scroller-preview", "width"),
+	                     Theme.getScaledValue("list-scroller-preview", "height"));
 }
 
 
 //--------------------------------------------------------------
 void ListScroller::draw(){
 
-	ofPushMatrix();
-	ofTranslate(this->x, this->y - _offsetY - _draggedY);
+	ofPoint offset(0, - _offsetY - _draggedY);
 
-	for (auto& item : this->children){
+	ofTranslate(this->getPosition() + offset);
 
-		// TODO: only draw if visible
-		if (item->visible){
+	for (auto& child : this->children){
 
-			item->drawBackground();
+		if (this->intersects(*child + offset)){
 
-			ofSetColor(item->frontColor);
-			_font.drawString(item->text, item->textPosition.x, item->textPosition.y);
+			child->drawBackground();
+
+			ofSetColor(child->frontColor);
+			_font.drawString(child->text, child->textPosition.x, child->textPosition.y);
 		}
 	}
 
-	ofPopMatrix();
+	ofTranslate(-this->getPosition() - offset);
+
+	this->drawPreview();
 }
 
 
 //--------------------------------------------------------------
-void ListScroller::onPressed(int aX, int aY, int aId){ }
+void ListScroller::drawPreview(){
+
+	if (_previewActive){
+
+		auto translation1 = ofGetCurrentViewMatrix().getTranslation();
+		auto translation2 = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW).getTranslation();
+		auto translation  = translation1 - translation2;
+		auto textSize     = _font.getStringBoundingBox(_selection->text, 0, 0);
+
+		ofTranslate(translation);
+
+		ofSetColor(100, 100);
+
+		ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
+		ofPoint previewPos = mousePos - ofPoint(_previewRect.width / 2, _previewRect.height / 2);
+
+		ofDrawRectangle(previewPos, _previewRect.width, _previewRect.height);
+
+		_font.drawString(_selection->text, mousePos.x - textSize.width / 2, mousePos.y - _previewRect.height);
+
+		ofTranslate(translation * -1);
+	}
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::onPressed(int aX, int aY, int aId){ 
+
+	_updateNeeded = true;
+
+	for (auto& child : this->children){
+
+		if (child->type == "list-scroller-item" && child->inside(aX, aY + _offsetY)){
+			_selection = child;
+		}
+	}
+}
 
 
 //--------------------------------------------------------------
 void ListScroller::onDragged(int aX, int aY, int aId){
 
+	_updateNeeded  = true;
+	_previewActive = false;
+
 	if (aX > this->x){
 		_draggedY = this->pressedPosition.y - aY;
 	}
-	else {
-		// TODO: new object
+	else if (_selection){
+		_previewActive = true;
 	}
 
 	this->clip();
@@ -59,6 +103,20 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 
 //--------------------------------------------------------------
 void ListScroller::onReleased(int aX, int aY, int aId){
+
+	if (_previewActive){
+
+		AppEvent event(AppEvent::TYPE_CREATE_OBJECT,
+		               _selection->text,
+		               ofGetMouseX() - _previewRect.width  / 2,
+		               ofGetMouseY() - _previewRect.height / 2);
+
+		ofNotifyEvent(AppEvent::events, event);
+	}
+
+	_updateNeeded  = true;
+	_previewActive = false;
+	_selection     = NULL;
 
 	_offsetY += _draggedY;
 
@@ -89,18 +147,16 @@ void ListScroller::update(){
 //--------------------------------------------------------------
 void ListScroller::setContent(vector<string> aItems, bool aHeaderItems){
 
-	auto   fontHeight = Theme.getScaledValue(this->type, "font-height");
-	auto   padding    = Theme.getScaledValue(this->type, "padding");
-	string itemType   = aHeaderItems ? "list-scroller-header" : "list-scroller-item";
+	auto fontHeight = Theme.getScaledValue(this->type, "font-height");
+	auto padding    = Theme.getScaledValue(this->type, "padding");
+	auto itemType   = aHeaderItems ? "list-scroller-header" : "list-scroller-item";
 
 	for (auto item : aItems){
-
-		if (this->children.size() > 35){ continue; }
 
 		GuiElement* scrollerItem = new GuiElement(itemType);
 
 		scrollerItem->text = item;
-		scrollerItem->setWidth(this->width - padding * 2);
+		scrollerItem->setWidth(this->width - padding);
 		scrollerItem->clickable = false;
 
 		this->children.push_back(scrollerItem);
@@ -187,7 +243,7 @@ void ListScroller::drawItems(){
 			// if (item->isHeader){
 				// ofSetColor(Globals::Theme.objectScroller.header.color.background);
 			// }
-			// else if (this->selection == item){
+			// else if (_selection == item){
 				// ofSetColor(Globals::Theme.objectScroller.item.color.selection);
 			// }
 			// else {

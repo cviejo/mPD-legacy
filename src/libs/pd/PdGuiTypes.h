@@ -115,6 +115,7 @@ class PdCanvas : public PdNode {
 		ofRectangle           viewPort;
 
 		PdCanvas(string aId) : PdNode(aId) {
+			// TODO: actual viewPort / canvas size
 			this->viewPort.setSize(ofGetWidth(), ofGetHeight());
 		}
 };
@@ -144,6 +145,16 @@ class PdScalar : public PdNode {
 
 		PdScalar(string aId) : PdNode(aId) {
 			this->type = "scalar";
+		}
+
+		~PdScalar(){
+			// for (auto& node : this->paths){
+				// delete node;
+				// node = NULL;
+			// }
+			// for (auto it = paths.begin(); it != paths.end(); ++it){
+				 // delete *it;
+			// }
 		}
 };
 // MODE_DRAG, kinda wrong here

@@ -13,8 +13,9 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 
 	public:
 
-		// singleton
-		static PdGui& instance();
+		bool              updateNeeded = true;
+
+		static PdGui&     instance(); // singleton
 
 		bool              init(const int in, const int out, const int sampleRate, const int ticks=32,bool queued=false);
 		void              clear();
@@ -23,14 +24,6 @@ class PdGui : public PdBase, protected PdReceiver, protected PdMidiReceiver {
 		PdCanvas*         openPatch(const string& aPath); // naming/types are a bit off on these two
 		void              closePatch(PdCanvas& aPatch);
 		void              pdsend(string& cmd, bool aLock = true);
-		// void              pdsend(string n, ...);
-		void              canvasPressed (PdCanvas* canvas, int x, int y);
-		void              canvasDragged (PdCanvas* canvas, int x, int y);
-		void              canvasReleased(PdCanvas* canvas, int x, int y);
-		// void              canvasDelete  (PdCanvas* canvas);
-		// void              canvasCopy    (PdCanvas* canvas);
-		// void              canvasPaste   (PdCanvas* canvas);
-		// void              canvasUndo    (PdCanvas* canvas);
 		void              guiMessage(string aMessage);
 		vector<PdCanvas*> getCanvases();
 		PdCanvas*         getCanvas(string aId);

@@ -29,7 +29,11 @@ class GuiElement : public ofRectangle {
 		ofColor             backgroundColor;
 		ofColor             selectionColor;
 
+		ofFbo               fbo;
+		bool froze = false;
+
 		virtual void        draw();
+		virtual bool        updateNeeded();
 		virtual void        update(){};
 		virtual void        init(int aWidth, int aHeight){};
 		virtual void        onAppEvent(AppEvent& aAppEvent){};
@@ -44,6 +48,7 @@ class GuiElement : public ofRectangle {
 		virtual void        onPressCancel(){};
 
 		void                clear();
+		void                freeze();
 		void                addChild(GuiElement* aChild);
 		void                drawChildren();
 		void                drawBackground();
@@ -51,5 +56,10 @@ class GuiElement : public ofRectangle {
 		void                touchUp   (ofPoint aLoc);
 		void                touchMoved(ofPoint aLoc);
 		bool                touchTest (ofPoint aLoc);
+
+
+	protected:
+
+		bool                _updateNeeded = false;
 };
 
