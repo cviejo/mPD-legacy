@@ -482,6 +482,12 @@ void PdGui::guiMessage(string aMsg){
 			node->label->backColor = guiMsg.color;
 		}
 	}
+	else if (guiMsg.command == "gui_iemgui_base_color"){
+		// gui_iemgui_base_color "x16e1930","x16e6550","xfcfcfc"
+		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
+				node->backColor = guiMsg.parseColor(2);
+		}
+	}
 	else if (guiMsg.command == "gui_graph_label"){
 		// gui_graph_label "x24ba490",".x24ba490.t24b93b0",0,10,"array2","DejaVu Sans Mono",5,"normal",0
 		if (auto node = (PdIemGui*)this->getNode(guiMsg.canvasId, guiMsg.nodeId)){
@@ -766,4 +772,6 @@ void PdGui::guiMessage(string aMsg){
 [verbose] gui_plot_vis "x24ba490",0,6,["M",0,-0.342859,"H",1,"V",-0.37143,"H",0,"z","M",1,0.185715,"H",2,"V",0.157144,"H",1,"z","M",2,0.285716,"H",3,"V",0.257145,"H",2,"z","M",3,0.342859,"H",4,"V",0.314288,"H",3,"z","M",4,0.671433,"H",5,"V",0.642862,"H",4,"z","M",5,-0.800005,"H",6,"V",-0.828576,"H",5,"z"],["fill","black","stroke","black","stroke-width",0],["dgroup24921f0.24ddd18","dgroup24921f0.24ddd18"]
 [verbose] gui_find_lowest_and_arrange "x24ba490",".x24ba490.t24b97c0",".x24ba490.x24dc190.template24ddd18"
 
+[verbose] gui_text_draw_border "x16e1930","x16e6550","#fcfcfc",0,76,103,91,118
+[verbose] gui_iemgui_base_color "x16e1930","x16e6550","xfcfcfc"
 */

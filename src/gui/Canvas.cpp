@@ -262,10 +262,6 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 	int right  = aNode->getRight();
 	int bottom = aNode->getBottom();
 
-	int borderCol       = 204;
-	int numboxBorderCol = 168;
-	int backCol         = 240;
-
 	if (aNode->selected){
 		ofSetColor(140);
 		ofDrawRectangle(aNode->x - 2, aNode->y - 2, aNode->width + 4, aNode->height + 4);
@@ -273,7 +269,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 
 	if (aNode->type == "msg"){
 		// ofSetColor(Globals::Theme.node.color.border);
-		ofSetColor(borderCol);
+		ofSetColor(204);
 		ofBeginShape();
 			ofVertex(left,      top);
 			ofVertex(right + 4, top);
@@ -327,7 +323,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 			               left + 0, bottom - 0,
 			               left + 7, top + aNode->height / 2);
 
-			ofSetColor(backCol);
+			ofSetColor(240);
 			ofDrawTriangle(left + 1, top + 2,
 			               left + 1, bottom - 2,
 			               left + 6, top + aNode->height / 2);
@@ -338,9 +334,7 @@ void Canvas::drawNodeBackground(PdNode* aNode){
 		ofSetColor(aNode->borderColor);
 		ofDrawRectangle(*aNode);
 
-		// ofSetColor(249, 249, 248);
-		ofSetColor(248, 248, 246);
-		// ofSetHexColor(aNode->backColor);
+		ofSetHexColor(aNode->backColor);
 		ofDrawRectangle(aNode->x + 1, aNode->y + 1, aNode->width - 2, aNode->height - 2);
 	}
 }

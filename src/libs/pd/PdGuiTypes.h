@@ -43,7 +43,7 @@ class PdNode : public ofRectangle
 			// TYPE_INVALID,
 		// };
 
-		int           backColor   = 255;
+		int           backColor   = 247;
 		int           frontColor  = 0;
 		int           borderColor = 0;
 		bool          selected    = false;
