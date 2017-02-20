@@ -27,11 +27,12 @@ class ListScroller : public GuiElement {
 
 		static bool    itemSort(const GuiElement* a, const GuiElement* b);
 
+		GuiElement*    _selection     = NULL;
 		int            _draggedY      = 0;
 		int            _offsetY       = 0;
 		int            _contentHeight = 0;
-		bool           _objectPreview = false;
-		GuiElement*    _selection     = NULL;
+		bool           _previewActive = false;
+		ofRectangle    _previewRect;
 		ofTrueTypeFont _font;
 		int            _fontHeight;
 

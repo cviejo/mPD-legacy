@@ -34,5 +34,9 @@
 	"list-scroller-item": {
 		"height"     : 23,
 		"frontColor" : "#FFFFFF"
+	},
+	"list-scroller-preview": {
+		"width"           : 90,
+		"height"          : 20
 	}
 }

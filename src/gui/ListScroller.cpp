@@ -14,6 +14,9 @@ ListScroller::ListScroller() : GuiElement("list-scroller"){
 
 	_font.load("fonts/DejaVuSansMono.ttf", fontHeight, true, true);
 	_font.setLineHeight(fontHeight);
+
+	_previewRect.setSize(Theme.getScaledValue("list-scroller-preview", "width"),
+	                     Theme.getScaledValue("list-scroller-preview", "height"));
 }
 
 
@@ -44,7 +47,7 @@ void ListScroller::draw(){
 //--------------------------------------------------------------
 void ListScroller::drawPreview(){
 
-	if (_objectPreview){
+	if (_previewActive){
 
 		auto translation1 = ofGetCurrentViewMatrix().getTranslation();
 		auto translation2 = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW).getTranslation();
@@ -58,7 +61,7 @@ void ListScroller::drawPreview(){
 		ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
 		ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
 
-		ofDrawRectangle(previewPos, _selection->width, _selection->height);
+		ofDrawRectangle(previewPos, _previewRect.width, _previewRect.height);
 
 		_font.drawString(_selection->text, mousePos.x - textSize.width / 2, mousePos.y - _selection->height);
 
@@ -85,13 +88,13 @@ void ListScroller::onPressed(int aX, int aY, int aId){
 void ListScroller::onDragged(int aX, int aY, int aId){
 
 	_updateNeeded  = true;
-	_objectPreview = false;
+	_previewActive = false;
 
 	if (aX > this->x){
 		_draggedY = this->pressedPosition.y - aY;
 	}
 	else if (_selection){
-		_objectPreview = true;
+		_previewActive = true;
 	}
 
 	this->clip();
@@ -101,12 +104,7 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void ListScroller::onReleased(int aX, int aY, int aId){
 
-	if (_objectPreview){
-
-		// ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
-		// ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
-
-		// ofDrawRectangle(previewPos, _selection->width, _selection->height);
+	if (_previewActive){
 
 		AppEvent event(AppEvent::TYPE_CREATE_OBJECT,
 		               _selection->text,
@@ -117,7 +115,7 @@ void ListScroller::onReleased(int aX, int aY, int aId){
 	}
 
 	_updateNeeded  = true;
-	_objectPreview = false;
+	_previewActive = false;
 	_selection     = NULL;
 
 	_offsetY += _draggedY;
