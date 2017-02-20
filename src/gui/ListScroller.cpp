@@ -59,11 +59,11 @@ void ListScroller::drawPreview(){
 		ofSetColor(100, 100);
 
 		ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
-		ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
+		ofPoint previewPos = mousePos - ofPoint(_previewRect.width / 2, _previewRect.height / 2);
 
 		ofDrawRectangle(previewPos, _previewRect.width, _previewRect.height);
 
-		_font.drawString(_selection->text, mousePos.x - textSize.width / 2, mousePos.y - _selection->height);
+		_font.drawString(_selection->text, mousePos.x - textSize.width / 2, mousePos.y - _previewRect.height);
 
 		ofTranslate(translation * -1);
 	}
@@ -108,8 +108,8 @@ void ListScroller::onReleased(int aX, int aY, int aId){
 
 		AppEvent event(AppEvent::TYPE_CREATE_OBJECT,
 		               _selection->text,
-		               ofGetMouseX() - _selection->width  / 2,
-		               ofGetMouseY() - _selection->height / 2);
+		               ofGetMouseX() - _previewRect.width  / 2,
+		               ofGetMouseY() - _previewRect.height / 2);
 
 		ofNotifyEvent(AppEvent::events, event);
 	}

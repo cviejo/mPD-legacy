@@ -148,10 +148,10 @@ class PdScalar : public PdNode {
 		}
 
 		~PdScalar(){
-			for (auto& node : this->paths){
-				delete node;
-				node = NULL;
-			}
+			// for (auto& node : this->paths){
+				// delete node;
+				// node = NULL;
+			// }
 			// for (auto it = paths.begin(); it != paths.end(); ++it){
 				 // delete *it;
 			// }

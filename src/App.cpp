@@ -23,7 +23,8 @@ void App::setup(){
 	this->initEventListeners();
 
 	// debugging
-	PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
+	// PdGui::instance().openPatch(ofToDataPath("patches/main-all.pd"));
+	PdGui::instance().openPatch(ofToDataPath("patches/main.pd"));
 	// // PdGui::instance().openPatch(ofToDataPath("patches/gatom-help.pd"));
 
 	_mainWindow = (GuiElement*)new MainWindow();
@@ -85,7 +86,6 @@ void App::initEventListeners(){
 
 //--------------------------------------------------------------
 void App::draw(){
-
 
 #if defined(TARGET_OF_IOS)
 	if (_pinch->pinching){
