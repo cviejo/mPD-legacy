@@ -146,6 +146,16 @@ class PdScalar : public PdNode {
 		PdScalar(string aId) : PdNode(aId) {
 			this->type = "scalar";
 		}
+
+		~PdScalar(){
+			for (auto& node : this->paths){
+				delete node;
+				node = NULL;
+			}
+			// for (auto it = paths.begin(); it != paths.end(); ++it){
+				 // delete *it;
+			// }
+		}
 };
 // MODE_DRAG, kinda wrong here
 
