@@ -14,8 +14,11 @@ MainWindow::MainWindow(){
 
 	ofAddListener(PdEvent::events, this, &MainWindow::onPdEvent);
 
-	this->setPosition(200, 200);
-	this->setSize(ofGetWidth() - 400, ofGetHeight() - 400);
+//	this->setPosition(200, 200);
+//	this->setSize(ofGetWidth() - 400, ofGetHeight() - 400);
+	
+	this->setPosition(0, 0);
+	this->setSize(ofGetWidth(), ofGetHeight());
 
 
 	Button* btn;

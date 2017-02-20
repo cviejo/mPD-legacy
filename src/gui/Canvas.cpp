@@ -489,11 +489,11 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 			_updateNeeded = true;
 #ifdef TARGET_ANDROID
 			_current->scale *= aAppEvent.value;
-#elif  TARGET_OF_IOS
+#elif  defined(TARGET_OF_IOS)
 			_current->scale = aAppEvent.value;
-else
-			// _current->scale += aAppEvent.value;
-			#endif
+#else 
+			_current->scale += aAppEvent.value;
+#endif
 			_current->viewPort.setSize(this->width / _current->scale, this->height / _current->scale);
 			break;
 

@@ -63,7 +63,7 @@ class App : public ofBaseApp {
 		bool        _computing = true;
 		ofFbo       _frame;
 		GuiElement* _mainWindow;
-#if TARGET_OF_IOS
+#if defined(TARGET_OF_IOS)
 		ofPinchGestureRecognizer* _pinch;
 #endif
 

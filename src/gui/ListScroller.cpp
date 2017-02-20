@@ -22,15 +22,10 @@ void ListScroller::draw(){
 
 	ofPoint offset(0, - _offsetY - _draggedY);
 
-	ofPushMatrix();
-	// ofTranslate(this->x, this->y + offset);
 	ofTranslate(this->getPosition() + offset);
 
 	for (auto& child : this->children){
 
-		// TODO: only draw if visible
-		// if (child->visible){
-		// if (this->inside(child->x, child->y + offset + 1)){
 		if (this->intersects(*child + offset)){
 
 			child->drawBackground();
@@ -40,7 +35,35 @@ void ListScroller::draw(){
 		}
 	}
 
-	ofPopMatrix();
+	ofTranslate(-this->getPosition() - offset);
+
+	this->drawPreview();
+}
+
+
+//--------------------------------------------------------------
+void ListScroller::drawPreview(){
+
+	if (_objectPreview){
+
+		auto translation1 = ofGetCurrentViewMatrix().getTranslation();
+		auto translation2 = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW).getTranslation();
+		auto translation  = translation1 - translation2;
+		auto textSize     = _font.getStringBoundingBox(_selection->text, 0, 0);
+
+		ofTranslate(translation);
+
+		ofSetColor(120, 120);
+
+		ofPoint mousePos(ofGetMouseX(), ofGetMouseY());
+		ofPoint previewPos = mousePos - ofPoint(_selection->width / 2, _selection->height / 2);
+
+		ofDrawRectangle(previewPos, _selection->width, _selection->height);
+
+		_font.drawString(_selection->text, mousePos.x - textSize.width / 2, mousePos.y - _selection->height);
+
+		ofTranslate(translation * -1);
+	}
 }
 
 
@@ -52,7 +75,7 @@ void ListScroller::onPressed(int aX, int aY, int aId){
 	for (auto& child : this->children){
 
 		if (child->type == "list-scroller-item" && child->inside(aX, aY + _offsetY)){
-			this->selection = child;
+			_selection = child;
 		}
 	}
 }
@@ -61,14 +84,15 @@ void ListScroller::onPressed(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void ListScroller::onDragged(int aX, int aY, int aId){
 
-	_updateNeeded = true;
+	_updateNeeded  = true;
+	_objectPreview = false;
 
 	if (aX > this->x){
 		_draggedY = this->pressedPosition.y - aY;
 	}
-	// else if (){
-		// TODO: new object
-	// }
+	else if (_selection){
+		_objectPreview = true;
+	}
 
 	this->clip();
 }
@@ -77,7 +101,9 @@ void ListScroller::onDragged(int aX, int aY, int aId){
 //--------------------------------------------------------------
 void ListScroller::onReleased(int aX, int aY, int aId){
 
-	_updateNeeded = true;
+	_updateNeeded  = true;
+	_objectPreview = false;
+	_selection     = NULL;
 
 	_offsetY += _draggedY;
 
@@ -204,7 +230,7 @@ void ListScroller::drawItems(){
 			// if (item->isHeader){
 				// ofSetColor(Globals::Theme.objectScroller.header.color.background);
 			// }
-			// else if (this->selection == item){
+			// else if (_selection == item){
 				// ofSetColor(Globals::Theme.objectScroller.item.color.selection);
 			// }
 			// else {

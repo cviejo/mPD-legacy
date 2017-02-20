@@ -28,7 +28,7 @@ void App::setup(){
 
 	_mainWindow = (GuiElement*)new MainWindow();
 	
-#if TARGET_OF_IOS
+#if defined(TARGET_OF_IOS)
 	_pinch = [[ofPinchGestureRecognizer alloc] initWithView: ofxiPhoneGetGLView()];
 #endif
 }

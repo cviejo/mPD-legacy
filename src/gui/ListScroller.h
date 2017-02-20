@@ -30,10 +30,13 @@ class ListScroller : public GuiElement {
 		int            _draggedY      = 0;
 		int            _offsetY       = 0;
 		int            _contentHeight = 0;
+		bool           _objectPreview = false;
+		GuiElement*    _selection     = NULL;
 		ofTrueTypeFont _font;
 		int            _fontHeight;
 
 		void           clip();
+		void           drawPreview();
 };
 
 
