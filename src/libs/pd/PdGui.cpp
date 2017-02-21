@@ -316,7 +316,7 @@ void PdGui::displaceObject(PdNode* aNode, ofPoint aOffset){
 //--------------------------------------------------------------
 void PdGui::guiMessage(string aMsg){
 
-	ofLogVerbose() << aMsg;
+	// ofLogVerbose() << aMsg;
 
 	this->updateNeeded = true;
 
@@ -425,7 +425,8 @@ void PdGui::guiMessage(string aMsg){
 			node->setSize(ofToInt(guiMsg.args[7]) - node->x,
 			              ofToInt(guiMsg.args[8]) - node->y);
 
-			node->backColor = guiMsg.color;
+			// node->backColor = guiMsg.color;
+			node->backColor = guiMsg.parseColor(2);
 
 			node->canvas = new PdNode();
 			node->canvas->type = "mycanvas";

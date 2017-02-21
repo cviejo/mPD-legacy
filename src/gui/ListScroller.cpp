@@ -71,6 +71,23 @@ void ListScroller::drawPreview(){
 
 
 //--------------------------------------------------------------
+void ListScroller::onAppEvent(AppEvent& aAppEvent){
+
+	if(aAppEvent.type == AppEvent::TYPE_INDEX_CHANGED){
+
+		for (auto& child : this->children){
+
+			if (child->type == "list-scroller-header" && ofToUpper(child->text) == ofToUpper(aAppEvent.message)){
+
+				_offsetY = child->y;
+				break;
+			}
+		}
+	}
+}
+
+
+//--------------------------------------------------------------
 void ListScroller::onPressed(int aX, int aY, int aId){ 
 
 	_updateNeeded = true;

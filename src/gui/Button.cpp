@@ -5,10 +5,6 @@
 //--------------------------------------------------------------
 Button::Button(string aId, ButtonType aType, bool* aTogglePointer) : GuiElement("button"){
 
-	// this->width         = 99;
-	// this->height        = 99;
-	// this->width         = Globals::Theme.button.width;
-	// this->height        = Globals::Theme.button.width;
 	this->type          = aType;
 	this->togglePointer = aTogglePointer;
 
@@ -27,12 +23,9 @@ void Button::draw(){
 
 	if(this->pressed || this->on){
 		ofSetColor(54, 55, 58);
-		// ofSetColor(Globals::Theme.button.color.pressed);
 	}
 	else {
 		ofSetColor(0, 0);
-			// <pressed r="54" g="55" b="58"/>
-		// ofSetColor(Globals::Theme.button.color.background);
 	}
 
 	ofDrawRectangle(*this);
@@ -40,11 +33,6 @@ void Button::draw(){
 	ofSetColor(this->enabled ? 255 : 100);
 
 	_image.draw(*this);
-
-	// _image.draw(this->x + Globals::Theme.button.padding,
-					// this->y + Globals::Theme.button.padding,
-					// this->width  - Globals::Theme.button.padding * 2,
-					// this->height - Globals::Theme.button.padding * 2);
 
 	// if (this->type == TYPE_DRAG && this->pressed){
 

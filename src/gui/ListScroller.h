@@ -16,6 +16,7 @@ class ListScroller : public GuiElement {
 
 		virtual void   draw();
 		virtual void   update();
+		virtual void   onAppEvent(AppEvent& aAppEvent);
 		virtual void   onPressed (int aX, int aY, int aId);
 		virtual void   onDragged (int aX, int aY, int aId);
 		virtual void   onReleased(int aX, int aY, int aId);

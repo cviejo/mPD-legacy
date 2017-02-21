@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "ofxiOSKeyboard.h"
 
 
 int gridStepSize = 20; // Globals::Theme.grid.cell.width 
@@ -567,14 +568,17 @@ void Canvas::onAppEvent(AppEvent& aAppEvent){
 				else if (aAppEvent.message == "zoom-out-button"){
 					_current->scale -= 0.5;
 				}
-				// else if (aAppEvent.message == "settings-button"){
+				else if (aAppEvent.message == "settings-button"){
+
+
+				//ofLogVerbose(ofxiOSKeyboard::getText());
 
 					// char key = 'f';
 
 					// AppEvent event(AppEvent::TYPE_KEY_PRESSED, (float)key);
 
 					// ofNotifyEvent(AppEvent::events, event);
-				// }
+				}
 
 				PdGui::instance().pdsend(cmd);
 			}

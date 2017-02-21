@@ -59,6 +59,10 @@ bool GuiElement::updateNeeded(){
 
 	_updateNeeded = false;
 
+	if (tmp){
+		ofLogVerbose() << this->type;
+	}
+
 	return tmp;
 }
 

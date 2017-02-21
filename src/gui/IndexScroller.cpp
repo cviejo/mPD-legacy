@@ -39,6 +39,8 @@ void IndexScroller::onReleased  (int aX, int aY, int aId){
 //--------------------------------------------------------------
 void IndexScroller::updateScroll(int aX, int aY) {
 
+	_updateNeeded = true;
+
 	_scrollY = aY - this->y;
 
 	auto count = (float)this->children.size();
@@ -94,6 +96,7 @@ void IndexScroller::setContent(vector<string> aContent){
 
 		item->id = contentItem;
 		item->y  = itemY - (_itemHeight - itemSize.height) / 2;
+		item->clickable = false;
 
 		item->setSize(itemSize.width, itemSize.height);
 
