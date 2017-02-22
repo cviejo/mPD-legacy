@@ -1,5 +1,4 @@
 #include "Canvas.h"
-#include "ofxiOSKeyboard.h"
 
 
 int gridStepSize = 20; // Globals::Theme.grid.cell.width 
