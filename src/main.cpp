@@ -8,6 +8,8 @@
 //--------------------------------------------------------------
 int main( ){
 
+	ofSetLogLevel(OF_LOG_VERBOSE);
+
 #if defined(TARGET_OF_IOS)
 	ofiOSWindowSettings settings;
 
@@ -20,7 +22,12 @@ int main( ){
 	settings.glesVersion = OFXIOS_RENDERER_ES1; // type of renderer to use, ES1, ES2, etc.
 
 	ofCreateWindow(settings);
-#else
+#elif defined(TARGET_ANDROID)
+	ofGLESWindowSettings settings;
+	settings.setGLESVersion(2);
+
+	ofCreateWindow(settings);			// <-------- setup the GL context
+#else 
 	ofSetupOpenGL(1024, 768, OF_WINDOW);
 #endif
 

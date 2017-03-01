@@ -10,6 +10,7 @@
 #endif
 
 
+
 #if defined(TARGET_ANDROID)
 class App : public ofxAndroidApp {
 #elif defined(TARGET_OF_IOS)

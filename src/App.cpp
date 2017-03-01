@@ -14,7 +14,7 @@ void App::setup(){
 	ofSetWindowShape(ofGetWidth(), ofGetHeight());
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(20);
-	ofBackground(125);
+	// ofBackground(125);
 
 	GuiElement::Theme.load("themes/default.json");
 
@@ -99,7 +99,6 @@ void App::draw(){
 #endif
 
 	if (_mainWindow->updateNeeded()){
-		ofLogVerbose() << "whe";
 
 		_frame.begin();
 
